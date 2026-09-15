@@ -42,6 +42,68 @@
   --mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
 }
 
+/* ============================= DARK MODE ============================= */
+html.dark{
+  --navy:#141A2E;
+  --navy-2:#1E2740;
+  --paper:#0E1016;
+  --paper-2:#171A24;
+  --ink:#ECEDF2;
+  --ink-soft:#B6BAC7;
+  --ink-faint:#82869A;
+  --border:#2A2E3D;
+  --border-2:#383D50;
+  --white:#191C27;
+}
+html.dark body{background:var(--paper);}
+html.dark .hero-visual{box-shadow:0 30px 60px -25px rgba(0,0,0,0.7);}
+html.dark #screen-exam{background:#0B0C10;}
+html.dark .exam-header{background:#171A24; border-bottom-color:#2A2E3D;}
+html.dark .cand-info{color:#c7cad4;}
+html.dark .cand-info b{color:#fff;}
+html.dark .qpanel{background:#171A24;}
+html.dark .qpanel-head{border-bottom-color:#2A2E3D;}
+html.dark .qpanel-head h3{color:#ECEDF2;}
+html.dark .qmeta-tag{background:#232838; color:#c7cad4;}
+html.dark .qtext{color:#ECEDF2;}
+html.dark .option-row:hover{background:#1F2536;}
+html.dark .option-row.selected{background:#193254; border-color:#2C5C94;}
+html.dark .opt-num{color:#c7cad4;}
+html.dark .opt-text{color:#ECEDF2;}
+html.dark .integer-input-wrap label{color:#c7cad4;}
+html.dark .integer-input-wrap input{background:#20242F; color:#ECEDF2; border-color:#3a3f52;}
+html.dark .action-row{border-top-color:#2A2E3D;}
+html.dark .act-clear{background:#20242F; color:#ECEDF2; border-color:#3a3f52;}
+html.dark .nav-btn{background:#20242F; color:#ECEDF2; border-color:#3a3f52;}
+html.dark .palette{background:#12141C; border-left-color:#2A2E3D;}
+html.dark .subject-section-label{color:#9195a3;}
+html.dark .legend-mini .li{color:#c7cad4;}
+html.dark .pal-btn{color:#fff;}
+html.dark .modal-box{background:#191C27; color:#ECEDF2;}
+html.dark .modal-box h3{color:#ECEDF2;}
+html.dark .modal-stat{background:#20242F;}
+html.dark .review-row:nth-child(even){background:#171A24;}
+html.dark .review-row{border-bottom-color:#2A2E3D;}
+html.dark .qmeta-row{}
+html.dark textarea.paste-area{background:#171A24; color:#ECEDF2; border-color:#383D50;}
+html.dark .drop-zone{background:#171A24;}
+html.dark .chip{background:#191C27;}
+html.dark .badge.correct{background:#123322; color:#5FD98F;}
+html.dark .badge.incorrect{background:#3A1616; color:#F29C9C;}
+html.dark .badge.unattempted{background:#232838; color:#a9adbb;}
+html.dark .badge.perfect{background:#3A1730; color:#F58EC4;}
+html.dark .badge.wasted{background:#132A40; color:#7FB8ED;}
+html.dark .badge.overtime{background:#2B1A38; color:#C79CE6;}
+html.dark .badge.confused{background:#332A0B; color:#E8C86A;}
+html.dark .badge.dash{background:#232838; color:#8b8f9e;}
+
+.theme-toggle-btn{
+  position:fixed; bottom:18px; right:18px; z-index:900;
+  background:var(--navy); color:#fff; border:none; border-radius:22px; padding:10px 18px;
+  font-size:12.5px; font-weight:700; box-shadow:0 10px 24px rgba(10,14,30,0.28);
+}
+html.dark .theme-toggle-btn{background:var(--amber); color:#171A24;}
+
 *,*::before,*::after{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
 body{
@@ -49,6 +111,7 @@ body{
   color:var(--ink);
   background:var(--paper);
   -webkit-font-smoothing:antialiased;
+  transition:background .2s ease, color .2s ease;
 }
 h1,h2,h3,h4{font-family:var(--serif); margin:0; font-weight:600; letter-spacing:-0.01em;}
 p{margin:0;}
@@ -261,7 +324,8 @@ textarea.paste-area:focus{outline:none; border-color:var(--nta-blue);}
 .instr-actions{display:flex; justify-content:space-between; align-items:center; margin-top:26px; gap:12px; flex-wrap:wrap;}
 
 /* ============================= EXAM SCREEN ============================= */
-#screen-exam{background:#EDEDED; height:100vh; display:flex; flex-direction:column; overflow:hidden;}
+#screen-exam{background:#EDEDED; height:100vh; flex-direction:column; overflow:hidden;}
+#screen-exam.active{display:flex;}
 .exam-header{
   background:var(--white); display:flex; justify-content:space-between; align-items:center;
   padding:9px 22px; border-bottom:2px solid #ddd; flex-shrink:0;
@@ -456,6 +520,8 @@ table.data-tbl tr:last-child td{border-bottom:none;}
 </style>
 </head>
 <body>
+
+<button class="theme-toggle-btn" id="theme-toggle" onclick="toggleTheme()">Dark mode</button>
 
 <!-- ============================================================ HOME ============================================================ -->
 <div id="screen-home" class="screen active">
@@ -764,6 +830,15 @@ function fmtMinSec(totalSeconds){
   var m = Math.floor(totalSeconds/60);
   var s = totalSeconds%60;
   return m + 'm ' + (s<10?'0':'') + s + 's';
+}
+
+/* ---------- dark mode ---------- */
+function toggleTheme(){
+  var isDark = document.documentElement.classList.toggle('dark');
+  document.getElementById('theme-toggle').textContent = isDark ? 'Light mode' : 'Dark mode';
+  if(document.getElementById('screen-analysis').classList.contains('active') && window.__lastReport){
+    renderAnalysisReport(window.__lastReport, window.__lastReportAuto);
+  }
 }
 
 /* ---------- default per-difficulty allotted time (seconds) ---------- */
@@ -1307,11 +1382,40 @@ var PALETTE_COLORS = {
   'marked':'st-marked', 'answered-marked':'st-answered-marked'
 };
 
-function buildExamState(paper, candidateName){
-  var order = [];
+function subjectAbbrev(name){
+  var n = (name||'').trim().toLowerCase();
+  if(n.indexOf('phy')===0) return 'PHYSICS';
+  if(n.indexOf('chem')===0) return 'CHEMISTRY';
+  if(n.indexOf('math')===0) return 'MATHS';
+  if(n.indexOf('bio')===0) return 'BIOLOGY';
+  return (name||'General').toUpperCase();
+}
+
+/* Split every subject into Section A (MCQ) and Section B (Integer type),
+   mirroring the real JEE Main paper structure. Sections with zero questions
+   of that type are skipped. */
+function buildSections(paper){
+  var sections = [];
   paper.subjects.forEach(function(s, si){
-    s.questions.forEach(function(q, qi){
-      order.push({ id:q.number, si:si, qi:qi });
+    var mcqQs = s.questions.filter(function(q){ return q.type === 'mcq'; });
+    var intQs = s.questions.filter(function(q){ return q.type === 'integer'; });
+    var abbr = subjectAbbrev(s.name);
+    if(mcqQs.length){
+      sections.push({ si:si, subjectName:s.name, sectionType:'A', label:s.name+' \u2014 Section A (MCQ)', shortLabel:abbr+' A', questions:mcqQs });
+    }
+    if(intQs.length){
+      sections.push({ si:si, subjectName:s.name, sectionType:'B', label:s.name+' \u2014 Section B (Numerical)', shortLabel:abbr+' B', questions:intQs });
+    }
+  });
+  return sections;
+}
+
+function buildExamState(paper, candidateName){
+  var sections = buildSections(paper);
+  var order = [];
+  sections.forEach(function(sec, secIdx){
+    sec.questions.forEach(function(q){
+      order.push({ id:q.number, secIdx:secIdx, question:q });
     });
   });
   var status = {}, answers = {}, timeSpent = {}, visited = {};
@@ -1320,13 +1424,14 @@ function buildExamState(paper, candidateName){
   return {
     paper: paper,
     candidateName: candidateName,
+    sections: sections,
     order: order,
     status: status, answers: answers, timeSpent: timeSpent, visited: visited,
     answerFinalTs: {}, // qid -> last save timestamp (ms since exam start)
     currentIndex: 0,
-    currentSubjectIdx: 0,
-    lastVisitedInSubject: {},
-    subjectMovements: [], // {subject, startTs, endTs}
+    currentSectionIdx: 0,
+    lastVisitedInSection: {},
+    subjectMovements: [], // {subject, durationSeconds} -- one entry per section visited, in order
     currentMovementStart: 0,
     remainingSeconds: paper.durationMinutes*60,
     examStartTs: null,
@@ -1337,8 +1442,7 @@ function buildExamState(paper, candidateName){
 }
 
 function currentQuestionObj(){
-  var o = exam.order[exam.currentIndex];
-  return exam.paper.subjects[o.si].questions[o.qi];
+  return exam.order[exam.currentIndex].question;
 }
 
 function startExam(){
@@ -1352,10 +1456,7 @@ function startExam(){
   document.getElementById('hdr-paper-name').textContent = paper.title;
   document.getElementById('topbar-paper-name').textContent = (paper.subjects.length>1?'JEE MAIN':paper.title.toUpperCase());
 
-  renderSubjectTabs();
   goToQuestionByIndex(0, true);
-  renderPalette();
-  updateLegendCounts();
 
   showScreen('exam');
   requestFullscreenSafe();
@@ -1394,33 +1495,30 @@ function tickTimer(){
   }
 }
 
-function renderSubjectTabs(){
+function renderSectionTabs(){
   var wrap = document.getElementById('subject-tabs');
-  wrap.innerHTML = exam.paper.subjects.map(function(s, i){
-    return '<button class="subject-tab'+(i===exam.currentSubjectIdx?' active':'')+'" onclick="switchSubject('+i+')">'+esc(s.name.toUpperCase())+'</button>';
+  wrap.innerHTML = exam.sections.map(function(sec, i){
+    return '<button class="subject-tab'+(i===exam.currentSectionIdx?' active':'')+'" onclick="switchSection('+i+')">'+esc(sec.shortLabel)+'</button>';
   }).join('');
 }
 
-function switchSubject(si){
-  if(si === exam.currentSubjectIdx) return;
+function switchSection(secIdx){
+  if(secIdx === exam.currentSectionIdx) return;
   recordSubjectMovementSegment();
-  exam.currentSubjectIdx = si;
-  renderSubjectTabs();
-  var targetId = exam.lastVisitedInSubject[si];
-  var idx = 0;
-  if(targetId){
+  var targetId = exam.lastVisitedInSection[secIdx];
+  var idx = -1;
+  if(targetId !== undefined){
     idx = exam.order.findIndex(function(o){ return o.id===targetId; });
-  } else {
-    idx = exam.order.findIndex(function(o){ return o.si===si; });
   }
+  if(idx<0) idx = exam.order.findIndex(function(o){ return o.secIdx===secIdx; });
   if(idx<0) idx=0;
   goToQuestionByIndex(idx, false);
 }
 
 function recordSubjectMovementSegment(){
   var elapsed = (Date.now() - exam.examStartTs)/1000;
-  var subjName = exam.paper.subjects[exam.currentSubjectIdx].name;
-  exam.subjectMovements.push({ subject: subjName, durationSeconds: elapsed - exam.currentMovementStart });
+  var secLabel = exam.sections[exam.currentSectionIdx].label;
+  exam.subjectMovements.push({ subject: secLabel, durationSeconds: elapsed - exam.currentMovementStart });
   exam.currentMovementStart = elapsed;
 }
 
@@ -1432,15 +1530,15 @@ function goToQuestionByIndex(idx, isFirst){
   }
   exam.currentIndex = idx;
   var o = exam.order[idx];
-  exam.currentSubjectIdx = o.si;
-  exam.lastVisitedInSubject[o.si] = o.id;
+  exam.currentSectionIdx = o.secIdx;
+  exam.lastVisitedInSection[o.secIdx] = o.id;
   exam.questionStartTs = now;
 
   if(!exam.visited[o.id]){
     exam.visited[o.id] = true;
     if(exam.status[o.id] === 'not-visited') exam.status[o.id] = 'not-answered';
   }
-  renderSubjectTabs();
+  renderSectionTabs();
   renderCurrentQuestion();
   renderPalette();
   updateLegendCounts();
@@ -1448,10 +1546,11 @@ function goToQuestionByIndex(idx, isFirst){
 
 function renderCurrentQuestion(){
   var o = exam.order[exam.currentIndex];
-  var q = currentQuestionObj();
+  var q = o.question;
+  var sec = exam.sections[o.secIdx];
   document.getElementById('q-heading').textContent = 'Question ' + q.number + ':';
   document.getElementById('q-meta-row').innerHTML =
-    '<span class="qmeta-tag">'+esc(exam.paper.subjects[o.si].name)+'</span>'+
+    '<span class="qmeta-tag">'+esc(sec.subjectName)+' \u00b7 Section '+esc(sec.sectionType)+'</span>'+
     (q.chapter ? '<span class="qmeta-tag">'+esc(q.chapter)+'</span>' : '') ;
   document.getElementById('q-text').textContent = q.text;
 
@@ -1468,7 +1567,7 @@ function renderCurrentQuestion(){
     }).join('') + '</div>';
   } else {
     answerArea.innerHTML = '<div class="integer-input-wrap">'+
-      '<label>Enter your numerical answer</label>'+
+      '<label>Enter your numerical answer (Section B \u2014 no options, type the value)</label>'+
       '<input type="number" id="integer-answer" value="'+(saved!==undefined && saved!==null? saved : '')+'" oninput="selectIntegerAnswer(this.value)" placeholder="e.g. 47">'+
     '</div>';
   }
@@ -1487,20 +1586,20 @@ function selectIntegerAnswer(val){
   exam.answers[q.number] = parseInt(val,10);
 }
 
+/* Palette shows ONLY the currently active section's questions -- not the
+   whole paper -- so it always matches what's in the tab bar above it. */
 function renderPalette(){
   var body = document.getElementById('palette-body');
-  var html = '';
-  exam.paper.subjects.forEach(function(s, si){
-    html += '<div class="subject-section-label">'+esc(s.name)+'</div><div class="palette-grid">';
-    s.questions.forEach(function(q){
-      var idx = exam.order.findIndex(function(o){ return o.id===q.number; });
-      var st = exam.status[q.number];
-      var cls = PALETTE_COLORS[st] || '';
-      var isCurrent = idx === exam.currentIndex;
-      html += '<button class="pal-btn '+cls+(isCurrent?' current':'')+'" onclick="jumpTo('+idx+')">'+q.number+'</button>';
-    });
-    html += '</div>';
+  var sec = exam.sections[exam.currentSectionIdx];
+  var html = '<div class="subject-section-label">'+esc(sec.label)+'</div><div class="palette-grid">';
+  sec.questions.forEach(function(q){
+    var idx = exam.order.findIndex(function(o){ return o.id===q.number; });
+    var st = exam.status[q.number];
+    var cls = PALETTE_COLORS[st] || '';
+    var isCurrent = idx === exam.currentIndex;
+    html += '<button class="pal-btn '+cls+(isCurrent?' current':'')+'" onclick="jumpTo('+idx+')">'+q.number+'</button>';
   });
+  html += '</div>';
   body.innerHTML = html;
 }
 
@@ -1508,9 +1607,12 @@ function jumpTo(idx){
   goToQuestionByIndex(idx, false);
 }
 
+/* Legend counts are also scoped to the current section, so the numbers
+   always match the squares visible in the palette below them. */
 function updateLegendCounts(){
   var counts = {'not-visited':0,'not-answered':0,'answered':0,'marked':0,'answered-marked':0};
-  exam.order.forEach(function(o){ counts[exam.status[o.id]]++; });
+  var sec = exam.sections[exam.currentSectionIdx];
+  sec.questions.forEach(function(q){ counts[exam.status[q.number]]++; });
   document.getElementById('cnt-notvisited').textContent = counts['not-visited'];
   document.getElementById('cnt-notanswered').textContent = counts['not-answered'];
   document.getElementById('cnt-answered').textContent = counts['answered'];
@@ -1589,6 +1691,8 @@ function finalizeAndSubmit(auto){
   exitFullscreenSafe();
 
   var report = computeAnalysis();
+  window.__lastReport = report;
+  window.__lastReportAuto = auto;
   renderAnalysisReport(report, auto);
   showScreen('analysis');
 }
@@ -1868,6 +1972,9 @@ function renderAnalysisReport(report, wasAuto){
   root.innerHTML = sections.join('');
 
   // charts
+  var isDark = document.documentElement.classList.contains('dark');
+  Chart.defaults.color = isDark ? '#D7DAE3' : '#33363f';
+  Chart.defaults.borderColor = isDark ? '#2A2E3D' : '#e3e0d6';
   var okColor='#43A047', badColor='#D64545', grayColor='#B9BEC9', purpleColor='#7C4DBE', blueColor='#1565C0', pinkColor='#AD1457';
   chartInstances.push(new Chart(document.getElementById('chart-attempts'), {
     type:'pie',
