@@ -1,0 +1,1997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JEE CBT Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================= TOKENS ============================= */
+:root{
+  --navy:#10193A;
+  --navy-2:#182552;
+  --amber:#E8A33D;
+  --amber-dark:#C98423;
+  --paper:#F7F5EF;
+  --paper-2:#F0EDE3;
+  --ink:#171A21;
+  --ink-soft:#5B6272;
+  --ink-faint:#9297A6;
+  --green:#1F9D55;
+  --green-dark:#187A42;
+  --red:#D64545;
+  --purple:#7C4DBE;
+  --gray:#9AA0AF;
+  --border:#E3E0D6;
+  --border-2:#DAD6C8;
+  --white:#FFFFFF;
+
+  --nta-orange:#F7941D;
+  --nta-blue:#1565C0;
+  --nta-blue-dark:#0D47A1;
+  --nta-navytext:#1B2A5C;
+  --nta-notvisited:#9E9E9E;
+  --nta-notanswered:#E4572E;
+  --nta-answered:#43A047;
+  --nta-marked:#7C4FA0;
+
+  --serif: 'Source Serif 4', Georgia, serif;
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+}
+
+*,*::before,*::after{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  background:var(--paper);
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:var(--serif); margin:0; font-weight:600; letter-spacing:-0.01em;}
+p{margin:0;}
+button{font-family:inherit; cursor:pointer;}
+input,textarea,select{font-family:inherit;}
+a{color:inherit;}
+::selection{background:var(--amber); color:var(--navy);}
+
+.hidden{display:none !important;}
+
+/* focus visibility */
+button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible{
+  outline:2px solid var(--nta-blue);
+  outline-offset:2px;
+}
+
+/* ============================= SCREENS ============================= */
+.screen{display:none; min-height:100vh;}
+.screen.active{display:block;}
+
+/* ============================= HOME ============================= */
+#screen-home{
+  background:
+    radial-gradient(1100px 480px at 82% -8%, rgba(232,163,61,0.14), transparent 60%),
+    var(--paper);
+}
+.home-wrap{max-width:1140px; margin:0 auto; padding:0 28px 90px;}
+
+.home-nav{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:26px 0 10px;
+}
+.brand{display:flex; align-items:center; gap:10px;}
+.brand-mark{
+  width:34px; height:34px; border-radius:8px;
+  background:var(--navy);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--amber); font-family:var(--serif); font-weight:700; font-size:17px;
+}
+.brand-name{font-family:var(--serif); font-weight:600; font-size:19px; color:var(--navy);}
+.brand-tag{font-size:12px; color:var(--ink-faint); letter-spacing:0.02em;}
+
+.hero{
+  display:grid; grid-template-columns:1.15fr 0.85fr; gap:56px;
+  align-items:center;
+  padding:56px 0 40px;
+}
+.hero-eyebrow{
+  font-size:13px; color:var(--amber-dark); font-weight:600;
+  margin-bottom:14px; letter-spacing:0.01em;
+}
+.hero h1{
+  font-size:44px; line-height:1.1; color:var(--navy); max-width:620px;
+}
+.hero h1 em{font-style:italic; color:var(--amber-dark);}
+.hero-sub{
+  margin-top:18px; font-size:16.5px; line-height:1.6; color:var(--ink-soft);
+  max-width:520px;
+}
+.hero-actions{display:flex; gap:12px; margin-top:28px; flex-wrap:wrap;}
+
+.btn{
+  border:none; border-radius:7px; padding:13px 22px; font-size:14.5px; font-weight:600;
+  display:inline-flex; align-items:center; gap:8px; transition:transform .12s ease, box-shadow .12s ease, background .15s ease;
+}
+.btn:active{transform:translateY(1px);}
+.btn-primary{background:var(--navy); color:var(--white);}
+.btn-primary:hover{background:var(--navy-2);}
+.btn-amber{background:var(--amber); color:var(--navy);}
+.btn-amber:hover{background:var(--amber-dark); color:var(--white);}
+.btn-ghost{background:transparent; color:var(--navy); border:1.5px solid var(--border-2);}
+.btn-ghost:hover{border-color:var(--navy); background:rgba(16,25,58,0.04);}
+.btn-green{background:var(--green); color:var(--white);}
+.btn-green:hover{background:var(--green-dark);}
+.btn-danger-outline{background:transparent; border:1.5px solid var(--red); color:var(--red);}
+.btn-danger-outline:hover{background:rgba(214,69,69,0.08);}
+.btn-sm{padding:8px 14px; font-size:13px; border-radius:6px;}
+.btn:disabled{opacity:0.45; cursor:not-allowed; pointer-events:none;}
+.btn-block{width:100%; justify-content:center;}
+
+.hero-visual{
+  position:relative; background:var(--navy); border-radius:14px; padding:22px;
+  box-shadow:0 30px 60px -25px rgba(16,25,58,0.55);
+}
+.hero-visual .mock-topbar{
+  display:flex; justify-content:space-between; align-items:center;
+  padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.1); margin-bottom:14px;
+}
+.hero-visual .mock-title{color:var(--white); font-family:var(--serif); font-size:14px; font-weight:600;}
+.hero-visual .mock-timer{font-family:var(--mono); color:var(--amber); font-size:13px; background:rgba(232,163,61,0.14); padding:4px 10px; border-radius:5px;}
+.mock-grid{display:grid; grid-template-columns:repeat(8,1fr); gap:6px;}
+.mock-cell{aspect-ratio:1; border-radius:4px; font-family:var(--mono); font-size:10px; display:flex; align-items:center; justify-content:center; color:#fff; opacity:0.92;}
+.mock-legend{display:flex; gap:14px; margin-top:16px; flex-wrap:wrap;}
+.mock-legend span{display:flex; align-items:center; gap:6px; font-size:11px; color:rgba(255,255,255,0.7);}
+.mock-legend i{width:9px; height:9px; border-radius:2px; display:inline-block;}
+
+/* section shell */
+.section-block{padding:44px 0; border-top:1px solid var(--border);}
+.section-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:22px; gap:16px; flex-wrap:wrap;}
+.section-head h2{font-size:24px; color:var(--navy);}
+.section-desc{color:var(--ink-soft); font-size:14.5px; max-width:520px;}
+
+.panel{
+  background:var(--white); border:1px solid var(--border); border-radius:12px; padding:26px;
+}
+
+.tabs{display:flex; gap:6px; border-bottom:1px solid var(--border); margin-bottom:20px;}
+.tab-btn{
+  background:none; border:none; padding:10px 4px; margin-right:22px; font-size:14px; font-weight:600;
+  color:var(--ink-faint); border-bottom:2px solid transparent; margin-bottom:-1px;
+}
+.tab-btn.active{color:var(--navy); border-bottom-color:var(--amber);}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+
+.drop-zone{
+  border:1.5px dashed var(--border-2); border-radius:10px; padding:36px 20px; text-align:center;
+  background:var(--paper); transition:border-color .15s ease, background .15s ease;
+}
+.drop-zone.drag{border-color:var(--amber); background:#FBF3E4;}
+.drop-zone p{color:var(--ink-soft); font-size:13.5px; margin-top:8px;}
+.drop-zone strong{color:var(--navy);}
+
+textarea.paste-area{
+  width:100%; min-height:220px; border:1px solid var(--border-2); border-radius:8px;
+  padding:14px; font-family:var(--mono); font-size:12.5px; line-height:1.6; resize:vertical;
+  background:var(--paper);
+}
+textarea.paste-area:focus{outline:none; border-color:var(--nta-blue);}
+
+.field-label{font-size:12.5px; font-weight:600; color:var(--navy); margin-bottom:6px; display:block;}
+.hint{font-size:12px; color:var(--ink-faint); margin-top:6px; line-height:1.5;}
+.hint code{background:var(--paper-2); padding:1px 5px; border-radius:4px; font-family:var(--mono); font-size:11px;}
+
+.format-toggle{display:flex; gap:8px; margin:14px 0;}
+.chip{
+  border:1px solid var(--border-2); background:var(--white); border-radius:20px; padding:6px 13px;
+  font-size:12.5px; color:var(--ink-soft); font-weight:600;
+}
+.chip.on{background:var(--navy); color:var(--white); border-color:var(--navy);}
+
+.status-msg{
+  margin-top:14px; padding:11px 14px; border-radius:8px; font-size:13px; line-height:1.5; display:none;
+}
+.status-msg.show{display:block;}
+.status-msg.ok{background:#EAF7EF; color:var(--green-dark); border:1px solid #C7E9D2;}
+.status-msg.warn{background:#FDF3E3; color:#8A5A12; border:1px solid #F3DBA8;}
+.status-msg.err{background:#FBEAEA; color:#A33131; border:1px solid #F2C6C6;}
+
+.paper-summary{
+  margin-top:22px; border:1px solid var(--border); border-radius:10px; overflow:hidden;
+}
+.paper-summary-head{
+  background:var(--navy); color:var(--white); padding:16px 20px;
+  display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;
+}
+.paper-summary-head h3{font-size:16px; color:var(--white);}
+.paper-summary-head span{font-size:12px; color:rgba(255,255,255,0.65);}
+.summary-stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1px; background:var(--border);}
+.summary-stat{background:var(--white); padding:16px 20px;}
+.summary-stat .num{font-family:var(--serif); font-size:22px; color:var(--navy); font-weight:600;}
+.summary-stat .lbl{font-size:11.5px; color:var(--ink-faint); margin-top:2px; text-transform:uppercase; letter-spacing:.04em;}
+
+.review-list{max-height:280px; overflow-y:auto; border-top:1px solid var(--border);}
+.review-row{
+  display:grid; grid-template-columns:34px 1fr auto auto; gap:10px; align-items:center;
+  padding:9px 20px; border-bottom:1px solid var(--border); font-size:12.8px;
+}
+.review-row:nth-child(even){background:var(--paper);}
+.review-row .qn{font-family:var(--mono); color:var(--ink-faint); font-weight:600;}
+.review-row .qt{color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.review-row .subj-tag{font-size:10.5px; background:var(--paper-2); color:var(--ink-soft); padding:2px 7px; border-radius:10px; white-space:nowrap;}
+.review-row .rm-btn{border:none; background:none; color:var(--red); font-size:16px; line-height:1; padding:2px 4px;}
+
+.answerkey-box{margin-top:16px; display:none;}
+.answerkey-box.show{display:block;}
+
+.footer-note{color:var(--ink-faint); font-size:12px; text-align:center; padding:30px 0 10px;}
+
+/* ============================= INSTRUCTIONS ============================= */
+#screen-instructions{background:var(--paper);}
+.instr-shell{max-width:880px; margin:0 auto; padding:40px 28px 80px;}
+.instr-head{
+  background:var(--navy); color:var(--white); border-radius:12px 12px 0 0; padding:26px 30px;
+}
+.instr-head .kicker{font-size:12px; color:var(--amber); font-weight:700; letter-spacing:.05em; text-transform:uppercase;}
+.instr-head h2{color:var(--white); font-size:24px; margin-top:6px;}
+.instr-head .meta{display:flex; gap:22px; margin-top:16px; flex-wrap:wrap;}
+.instr-head .meta div{font-size:12px; color:rgba(255,255,255,0.6);}
+.instr-head .meta div b{display:block; font-size:16px; color:var(--white); font-family:var(--serif); margin-top:2px;}
+
+.instr-body{background:var(--white); border:1px solid var(--border); border-top:none; border-radius:0 0 12px 12px; padding:30px;}
+.instr-section{margin-bottom:26px;}
+.instr-section h4{font-size:14.5px; color:var(--navy); margin-bottom:10px;}
+.instr-section ol, .instr-section ul{margin:0; padding-left:20px; color:var(--ink);}
+.instr-section li{font-size:13.6px; line-height:1.75; margin-bottom:6px; color:#2b2f38;}
+
+.legend-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:10px; margin-top:6px;}
+.legend-item{display:flex; align-items:center; gap:10px; font-size:12.8px; padding:8px 10px; background:var(--paper); border-radius:8px;}
+.legend-sq{width:20px; height:20px; border-radius:4px; flex-shrink:0; color:#fff; font-size:9px; font-weight:700; display:flex; align-items:center; justify-content:center;}
+
+.declare-box{background:var(--paper); border:1px solid var(--border); border-radius:10px; padding:18px 20px; margin-top:10px;}
+.declare-row{display:flex; align-items:flex-start; gap:10px; margin-bottom:12px;}
+.declare-row input[type=checkbox]{margin-top:3px; width:16px; height:16px; accent-color:var(--nta-blue);}
+.declare-row label{font-size:13.4px; line-height:1.55; color:var(--ink);}
+.name-row{display:flex; gap:10px; align-items:center; margin-top:14px;}
+.name-row label{font-size:12.8px; font-weight:600; color:var(--navy); white-space:nowrap;}
+.name-row input{flex:1; padding:9px 12px; border:1px solid var(--border-2); border-radius:6px; font-size:13.5px;}
+
+.instr-actions{display:flex; justify-content:space-between; align-items:center; margin-top:26px; gap:12px; flex-wrap:wrap;}
+
+/* ============================= EXAM SCREEN ============================= */
+#screen-exam{background:#EDEDED; height:100vh; display:flex; flex-direction:column; overflow:hidden;}
+.exam-header{
+  background:var(--white); display:flex; justify-content:space-between; align-items:center;
+  padding:9px 22px; border-bottom:2px solid #ddd; flex-shrink:0;
+}
+.exam-header .nta-brand{display:flex; align-items:center; gap:12px;}
+.nta-logo{
+  width:44px; height:44px; border-radius:50%; background:conic-gradient(#1565C0 0 50%, #43A047 50% 100%);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; position:relative;
+}
+.nta-logo::after{content:''; width:30px; height:30px; border-radius:50%; background:#fff; position:absolute;}
+.nta-logo b{position:relative; z-index:1; font-family:var(--serif); font-size:11px; color:var(--nta-navytext);}
+.nta-brand-text .l1{font-size:17px; font-weight:800; color:var(--nta-navytext); letter-spacing:.01em; font-family:var(--sans);}
+.nta-brand-text .l2{font-size:11.5px; color:var(--green); font-style:italic; font-weight:600;}
+.exam-header .cand-block{display:flex; align-items:center; gap:12px;}
+.cand-avatar{width:34px; height:34px; border-radius:50%; background:#e6e6e6; display:flex; align-items:center; justify-content:center; color:#999; font-size:16px;}
+.cand-info{font-size:11.5px; color:#333; line-height:1.6;}
+.cand-info b{color:#000;}
+.timer-box{
+  background:#FCEFD9; border:1px solid var(--amber); border-radius:6px; padding:5px 12px; margin-left:6px;
+  font-family:var(--mono); font-weight:700; color:#B65E00; font-size:13.5px; text-align:center;
+}
+.timer-box .tl{display:block; font-family:var(--sans); font-weight:600; font-size:9.5px; color:#8a5a12; text-transform:uppercase; letter-spacing:.03em;}
+
+.exam-topbar{
+  background:linear-gradient(180deg, var(--nta-orange), #F08A0C);
+  display:flex; align-items:center; justify-content:space-between; padding:8px 20px; flex-shrink:0; flex-wrap:wrap; gap:8px;
+}
+.exam-topbar .left{display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+.exam-topbar .paper-name{color:#fff; font-weight:800; font-size:14px; letter-spacing:.02em;}
+.subject-tabs{display:flex; gap:6px;}
+.subject-tab{
+  background:#0D47A1; color:#fff; border:none; padding:7px 14px; border-radius:4px; font-size:12px; font-weight:700;
+  opacity:0.72;
+}
+.subject-tab.active{opacity:1; background:var(--nta-blue); box-shadow:0 0 0 2px rgba(255,255,255,0.5) inset;}
+
+.exam-main{flex:1; display:flex; overflow:hidden;}
+.qpanel{flex:1; background:#fff; overflow-y:auto; padding:22px 26px; display:flex; flex-direction:column;}
+.qpanel-head{display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:1px solid #e2e2e2;}
+.qpanel-head h3{font-size:15.5px; color:#222;}
+.qmeta-row{display:flex; gap:10px; margin-top:6px;}
+.qmeta-tag{font-size:10.5px; padding:2px 8px; border-radius:10px; background:#f1f1f1; color:#666; font-weight:600;}
+
+.qtext{font-size:15px; line-height:1.75; color:#1a1a1a; margin:20px 0 22px; white-space:pre-wrap;}
+.options-list{display:flex; flex-direction:column; gap:2px;}
+.option-row{
+  display:flex; align-items:flex-start; gap:12px; padding:11px 14px; border-radius:6px; cursor:pointer;
+  border:1px solid transparent;
+}
+.option-row:hover{background:#F5F8FE;}
+.option-row.selected{background:#E8F0FE; border-color:#BBD4FA;}
+.option-row input[type=radio]{margin-top:3px; width:16px; height:16px; accent-color:var(--nta-blue);}
+.option-row .opt-num{font-weight:700; color:#333; flex-shrink:0;}
+.option-row .opt-text{font-size:14.5px; line-height:1.6; color:#1a1a1a;}
+
+.integer-input-wrap{margin-top:8px;}
+.integer-input-wrap label{font-size:12.8px; color:#555; font-weight:600; display:block; margin-bottom:8px;}
+.integer-input-wrap input{
+  width:220px; padding:11px 14px; border:1.5px solid #cfd3da; border-radius:6px; font-size:16px; font-family:var(--mono);
+}
+.integer-input-wrap input:focus{outline:none; border-color:var(--nta-blue);}
+
+.qpanel-spacer{flex:1;}
+
+.action-row{display:flex; gap:10px; padding-top:18px; border-top:1px solid #e2e2e2; flex-wrap:wrap;}
+.act-btn{border:none; padding:10px 16px; border-radius:4px; font-size:12.5px; font-weight:700; color:#fff;}
+.act-save{background:var(--green);}
+.act-mark-save{background:var(--nta-orange);}
+.act-clear{background:#fff; color:#444; border:1.3px solid #c9c9c9;}
+.act-mark-next{background:var(--nta-blue);}
+
+.qpanel-bottombar{display:flex; justify-content:space-between; padding-top:16px; margin-top:auto;}
+.nav-btn{border:1.3px solid #c9c9c9; background:#fff; color:#333; padding:9px 20px; border-radius:4px; font-size:12.5px; font-weight:700;}
+.submit-btn{background:var(--green); color:#fff; border:none; padding:9px 26px; border-radius:4px; font-size:12.5px; font-weight:700;}
+
+.palette{
+  width:300px; background:#F7F7F7; border-left:1px solid #ddd; overflow-y:auto; flex-shrink:0; padding:16px;
+}
+.legend-mini{display:grid; grid-template-columns:1fr 1fr; gap:6px 10px; margin-bottom:16px; font-size:10.8px;}
+.legend-mini .li{display:flex; align-items:center; gap:6px; color:#333;}
+.legend-mini .sq{width:20px; height:18px; border-radius:3px; color:#fff; font-size:9px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.legend-mini .li.wide{grid-column:1/3;}
+
+.subject-section-label{font-size:11px; font-weight:800; color:#555; text-transform:uppercase; letter-spacing:.04em; margin:14px 0 8px;}
+.palette-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:6px;}
+.pal-btn{
+  aspect-ratio:1; border:none; border-radius:4px; font-family:var(--mono); font-size:11.5px; font-weight:700;
+  color:#fff; background:var(--nta-notvisited); position:relative;
+}
+.pal-btn.st-not-answered{background:var(--nta-notanswered);}
+.pal-btn.st-answered{background:var(--nta-answered);}
+.pal-btn.st-marked{background:var(--nta-marked);}
+.pal-btn.st-answered-marked{background:var(--nta-marked);}
+.pal-btn.st-answered-marked::after{
+  content:''; position:absolute; bottom:2px; right:2px; width:6px; height:6px; border-radius:50%; background:var(--nta-answered); border:1px solid #fff;
+}
+.pal-btn.current{outline:2.5px solid #1a1a1a; outline-offset:1px;}
+
+.fs-warning{
+  position:fixed; top:0; left:0; right:0; background:#B00020; color:#fff; text-align:center;
+  padding:9px; font-size:13px; font-weight:600; z-index:999; display:none;
+}
+.fs-warning.show{display:block;}
+
+/* submit modal */
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(10,14,30,0.55); display:none; align-items:center; justify-content:center; z-index:1000; padding:20px;
+}
+.modal-overlay.show{display:flex;}
+.modal-box{background:#fff; border-radius:12px; max-width:460px; width:100%; padding:26px; box-shadow:0 30px 60px rgba(0,0,0,0.3);}
+.modal-box h3{font-size:18px; color:var(--navy); margin-bottom:14px;}
+.modal-stats{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:16px 0;}
+.modal-stat{background:var(--paper); border-radius:8px; padding:12px; text-align:center;}
+.modal-stat .n{font-family:var(--serif); font-size:20px; font-weight:700; color:var(--navy);}
+.modal-stat .l{font-size:10.5px; color:var(--ink-faint); text-transform:uppercase; margin-top:2px;}
+.modal-actions{display:flex; gap:10px; margin-top:18px;}
+
+/* ============================= ANALYSIS ============================= */
+#screen-analysis{background:var(--paper);}
+.an-wrap{max-width:980px; margin:0 auto; padding:36px 24px 90px;}
+.an-topbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:26px; flex-wrap:wrap; gap:12px;}
+.an-topbar .left b{font-family:var(--serif); font-size:22px; color:var(--navy); display:block;}
+.an-topbar .left span{font-size:12.5px; color:var(--ink-faint);}
+.an-actions{display:flex; gap:10px;}
+
+#pdf-report-root{background:transparent;}
+.report-section{
+  background:var(--white); border:1px solid var(--border); border-radius:12px; padding:26px 28px; margin-bottom:20px;
+}
+.report-section h3{font-size:17px; color:var(--navy); margin-bottom:6px;}
+.report-section .sub{font-size:13px; color:var(--ink-soft); margin-bottom:18px; line-height:1.6;}
+
+.overview-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+.ov-card{background:var(--paper); border-radius:9px; padding:16px 18px;}
+.ov-card .l{font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-faint); font-weight:700;}
+.ov-card .v{font-family:var(--serif); font-size:24px; color:var(--navy); font-weight:700; margin-top:4px;}
+
+table.data-tbl{width:100%; border-collapse:collapse; font-size:12.8px;}
+table.data-tbl th{
+  text-align:left; padding:9px 10px; background:var(--paper); color:var(--ink-faint); font-size:10.5px;
+  text-transform:uppercase; letter-spacing:.03em; font-weight:700; border-bottom:1px solid var(--border);
+}
+table.data-tbl td{padding:9px 10px; border-bottom:1px solid var(--border); color:var(--ink);}
+table.data-tbl tr:last-child td{border-bottom:none;}
+.tbl-wrap{overflow-x:auto;}
+.badge{display:inline-block; padding:2px 8px; border-radius:10px; font-size:10.8px; font-weight:700;}
+.badge.correct{background:#E4F6EA; color:var(--green-dark);}
+.badge.incorrect{background:#FBEAEA; color:#A33131;}
+.badge.unattempted{background:#F0F0F0; color:#777;}
+.badge.perfect{background:#FCE4EC; color:#AD1457;}
+.badge.wasted{background:#E3F2FD; color:#1565C0;}
+.badge.overtime{background:#F3E5F5; color:#6A1B9A;}
+.badge.confused{background:#FFF8E1; color:#8A6D00;}
+.badge.dash{background:#F0F0F0; color:#999;}
+
+.charts-grid{display:grid; grid-template-columns:1fr 1fr; gap:26px;}
+.chart-box{}
+.chart-box .ct{font-size:12.5px; font-weight:700; color:var(--navy); margin-bottom:10px; text-align:center;}
+.chart-box canvas{max-height:240px;}
+
+.subject-block{border:1px solid var(--border); border-radius:9px; padding:16px 18px; margin-bottom:12px;}
+.subject-block h4{font-size:13.5px; color:var(--navy); margin-bottom:8px;}
+.mini-list{list-style:none; margin:0; padding:0;}
+.mini-list li{font-size:13px; padding:6px 0; border-bottom:1px dashed var(--border); color:var(--ink);}
+.mini-list li:last-child{border-bottom:none;}
+.mini-list .qtag{font-family:var(--mono); font-weight:700; color:var(--navy); margin-right:8px;}
+
+.movement-item{display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--border); font-size:13px;}
+.movement-item:last-child{border-bottom:none;}
+.movement-dot{width:9px; height:9px; border-radius:50%; background:var(--amber); flex-shrink:0;}
+.movement-item b{color:var(--navy);}
+.movement-item span{color:var(--ink-faint); margin-left:auto; font-family:var(--mono); font-size:12px;}
+
+.no-key-note{
+  background:#FDF3E3; border:1px solid #F3DBA8; color:#8A5A12; padding:12px 16px; border-radius:8px; font-size:13px; margin-bottom:18px;
+}
+
+.pdf-loading{
+  position:fixed; inset:0; background:rgba(16,25,58,0.65); display:none; align-items:center; justify-content:center; z-index:1100; color:#fff; font-size:14px; flex-direction:column; gap:14px;
+}
+.pdf-loading.show{display:flex;}
+.spinner{width:34px; height:34px; border-radius:50%; border:3px solid rgba(255,255,255,0.3); border-top-color:#fff; animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+@media (max-width:880px){
+  .hero{grid-template-columns:1fr;}
+  .overview-grid{grid-template-columns:1fr 1fr;}
+  .charts-grid{grid-template-columns:1fr;}
+  .exam-main{flex-direction:column;}
+  .palette{width:100%; order:2;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================ HOME ============================================================ -->
+<div id="screen-home" class="screen active">
+  <div class="home-wrap">
+    <nav class="home-nav">
+      <div class="brand">
+        <div class="brand-mark">CBT</div>
+        <div>
+          <div class="brand-name">JEE CBT Simulator</div>
+          <div class="brand-tag">Practice the real exam screen</div>
+        </div>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <div>
+        <div class="hero-eyebrow">MOCK TEST ENGINE</div>
+        <h1>Take your practice paper on a screen that <em>behaves</em> like the real thing.</h1>
+        <p class="hero-sub">Upload any question paper, sit it inside a full‑screen NTA‑style interface with the same colour‑coded palette and timer, then get a Quizrr‑style performance report you can download as a PDF.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="scrollToUpload()">Upload a question paper</button>
+          <button class="btn btn-ghost" onclick="loadSamplePaper()">Try the sample paper</button>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="mock-topbar">
+          <span class="mock-title">Practice Test 01</span>
+          <span class="mock-timer">02:59:12</span>
+        </div>
+        <div class="mock-grid" id="hero-mock-grid"></div>
+        <div class="mock-legend">
+          <span><i style="background:#9AA0AF"></i>Not visited</span>
+          <span><i style="background:#E4572E"></i>Not answered</span>
+          <span><i style="background:#43A047"></i>Answered</span>
+          <span><i style="background:#7C4FA0"></i>Marked</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-block" id="upload-section">
+      <div class="section-head">
+        <h2>Load a question paper</h2>
+      </div>
+      <p class="section-desc" style="margin-bottom:20px;">Bring your own paper — Physics Wallah / Prayas style sheets, a plain text list of questions, or a structured JSON file. Review what gets parsed before you start the timer.</p>
+
+      <div class="panel">
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="tab-file" onclick="switchUploadTab('tab-file')">Upload a file</button>
+          <button class="tab-btn" data-tab="tab-paste" onclick="switchUploadTab('tab-paste')">Paste text</button>
+          <button class="tab-btn" data-tab="tab-json" onclick="switchUploadTab('tab-json')">JSON template</button>
+        </div>
+
+        <div class="tab-pane active" id="tab-file">
+          <div class="drop-zone" id="drop-zone">
+            <div style="font-size:28px;">📄</div>
+            <p><strong>Drop a file here</strong> or click to browse</p>
+            <p>Supports <code>.txt</code> and <code>.json</code> reliably. <code>.pdf</code> is parsed on a best‑effort basis — review the results below before starting.</p>
+            <input type="file" id="file-input" accept=".txt,.json,.pdf" style="display:none;">
+          </div>
+          <div id="file-status" class="status-msg"></div>
+        </div>
+
+        <div class="tab-pane" id="tab-paste">
+          <label class="field-label">Paste the paper text</label>
+          <textarea class="paste-area" id="paste-input" placeholder="Q1  xy = c^2, then dy/dx
+(1) x/y
+(2) y/x
+(3) -x/y
+(4) -y/x
+
+Q2  ..."></textarea>
+          <div class="hint">Start questions with <code>Q1</code>, <code>Q2</code>… and options with <code>(1)</code>–<code>(4)</code>. Add a short heading line like <code>Physics</code> / <code>Chemistry</code> / <code>Mathematics</code> before each section to auto‑split subjects.</div>
+          <div style="margin-top:14px;"><button class="btn btn-primary btn-sm" onclick="parsePastedText()">Parse pasted text</button></div>
+          <div id="paste-status" class="status-msg"></div>
+        </div>
+
+        <div class="tab-pane" id="tab-json">
+          <p style="font-size:13.5px; color:var(--ink-soft); line-height:1.6; margin-bottom:12px;">The JSON format is the most reliable — it can carry the correct answer, difficulty, chapter and topic for every question, which powers the full performance report.</p>
+          <button class="btn btn-ghost btn-sm" onclick="downloadTemplate()">Download JSON template</button>
+          <div style="margin-top:16px;">
+            <label class="field-label">Or paste JSON directly</label>
+            <textarea class="paste-area" id="json-input" style="min-height:150px;" placeholder='{"title":"...", "durationMinutes":180, "subjects":[...]}'></textarea>
+            <div style="margin-top:10px;"><button class="btn btn-primary btn-sm" onclick="parseJsonInput()">Load JSON</button></div>
+          </div>
+          <div id="json-status" class="status-msg"></div>
+        </div>
+
+        <div class="format-toggle" style="margin-top:18px;">
+          <button class="btn btn-ghost btn-sm" onclick="loadSamplePaper()">Or just try the sample paper →</button>
+        </div>
+
+        <div id="paper-summary" class="paper-summary" style="display:none;"></div>
+        <div id="answerkey-section" class="answerkey-box"></div>
+
+        <div id="proceed-row" style="margin-top:22px; display:none;">
+          <button class="btn btn-primary" id="proceed-btn" onclick="goToInstructions()">Continue to instructions →</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-note">Runs entirely in this browser tab — nothing is uploaded to a server.</div>
+  </div>
+</div>
+
+<!-- ============================================================ INSTRUCTIONS ============================================================ -->
+<div id="screen-instructions" class="screen">
+  <div class="instr-shell">
+    <div class="instr-head">
+      <div class="kicker">Before you begin</div>
+      <h2 id="instr-title">General Instructions</h2>
+      <div class="meta">
+        <div>Duration<b id="instr-duration">—</b></div>
+        <div>Questions<b id="instr-qcount">—</b></div>
+        <div>Max marks<b id="instr-marks">—</b></div>
+        <div>Sections<b id="instr-sections">—</b></div>
+      </div>
+    </div>
+    <div class="instr-body">
+      <div class="instr-section">
+        <h4>General instructions</h4>
+        <ol>
+          <li>The clock has been set at the server and the countdown at the top of the screen will display the remaining time. When the timer reaches zero, the test will be submitted automatically.</li>
+          <li>The Question Palette on the right shows the status of every question using the colours explained below. Use it to jump directly to any question.</li>
+          <li>Each correct answer awards <b>+4 marks</b>; each incorrect answer deducts <b>−1 mark</b>. Unattempted questions receive 0 marks. (Standard JEE Main scheme — adjust in your own head if your paper says otherwise.)</li>
+          <li>To select an option, click on the option text or its radio button. To change your answer, simply click a different option — no need to clear it first.</li>
+          <li>Clicking <b>Save &amp; Next</b> saves your answer to the current question and moves to the next one. Clicking <b>Clear Response</b> removes your selected answer for the current question.</li>
+          <li>Clicking <b>Mark for Review &amp; Next</b> flags the question for revisiting later. A marked question that also has a saved answer will still be evaluated.</li>
+          <li>Clicking the plain <b>&lt;&lt; Back</b> / <b>Next &gt;&gt;</b> buttons at the bottom moves between questions <i>without</i> saving your current selection — get in the habit of using Save &amp; Next instead.</li>
+          <li>You can navigate between Physics, Chemistry and Mathematics (or whatever sections your paper has) at any time using the tabs at the top.</li>
+          <li>Do not attempt to close this tab or exit full‑screen during the test — the timer keeps running regardless.</li>
+        </ol>
+      </div>
+
+      <div class="instr-section">
+        <h4>Question palette — what the colours mean</h4>
+        <div class="legend-grid">
+          <div class="legend-item"><span class="legend-sq" style="background:#9AA0AF">–</span>You have not visited this question yet.</div>
+          <div class="legend-item"><span class="legend-sq" style="background:#E4572E">–</span>Visited, but no answer saved yet.</div>
+          <div class="legend-item"><span class="legend-sq" style="background:#43A047">✓</span>You have saved an answer.</div>
+          <div class="legend-item"><span class="legend-sq" style="background:#7C4FA0">R</span>Marked for review (no answer saved).</div>
+          <div class="legend-item"><span class="legend-sq" style="background:#7C4FA0">✓</span>Answered <i>and</i> marked for review — still counted.</div>
+        </div>
+      </div>
+
+      <div class="declare-box">
+        <div class="declare-row">
+          <input type="checkbox" id="chk-instructions">
+          <label for="chk-instructions">I have read and understood the instructions above. I know the marking scheme and the palette colours, and I'm ready to begin.</label>
+        </div>
+        <div class="declare-row">
+          <input type="checkbox" id="chk-environment">
+          <label for="chk-environment">I'm in a quiet spot and won't be interrupted for the duration of the test.</label>
+        </div>
+        <div class="name-row">
+          <label for="candidate-name">Candidate name</label>
+          <input type="text" id="candidate-name" value="Prince" placeholder="Your name">
+        </div>
+      </div>
+
+      <div class="instr-actions">
+        <button class="btn btn-ghost" onclick="showScreen('home')">← Back to home</button>
+        <button class="btn btn-green" id="start-test-btn" onclick="startExam()" disabled>Start test — enter full screen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ EXAM ============================================================ -->
+<div id="screen-exam" class="screen">
+  <div class="fs-warning" id="fs-warning">You've left full‑screen mode. Click anywhere to return — the timer is still running.</div>
+
+  <div class="exam-header">
+    <div class="nta-brand">
+      <div class="nta-logo"><b>NTA</b></div>
+      <div class="nta-brand-text">
+        <div class="l1">NATIONAL TESTING AGENCY</div>
+        <div class="l2">Excellence in Assessment</div>
+      </div>
+    </div>
+    <div class="cand-block">
+      <div class="cand-avatar">👤</div>
+      <div class="cand-info">
+        Candidate Name : <b id="hdr-cand-name">—</b><br>
+        Subject Name : <b id="hdr-paper-name">—</b>
+      </div>
+      <div class="timer-box"><span class="tl">Remaining Time</span><span id="timer-display">--:--:--</span></div>
+    </div>
+  </div>
+
+  <div class="exam-topbar">
+    <div class="left">
+      <span class="paper-name" id="topbar-paper-name">JEE MAIN</span>
+      <div class="subject-tabs" id="subject-tabs"></div>
+    </div>
+  </div>
+
+  <div class="exam-main">
+    <div class="qpanel">
+      <div class="qpanel-head">
+        <div>
+          <h3 id="q-heading">Question 1:</h3>
+          <div class="qmeta-row" id="q-meta-row"></div>
+        </div>
+      </div>
+      <div class="qtext" id="q-text"></div>
+      <div id="q-answer-area"></div>
+      <div class="qpanel-spacer"></div>
+
+      <div class="action-row">
+        <button class="act-btn act-save" onclick="actionSaveNext()">Save &amp; Next</button>
+        <button class="act-btn act-mark-save" onclick="actionSaveMark()">Save &amp; Mark for Review</button>
+        <button class="act-btn act-clear" onclick="actionClear()">Clear Response</button>
+        <button class="act-btn act-mark-next" onclick="actionMarkNext()">Mark for Review &amp; Next</button>
+      </div>
+      <div class="qpanel-bottombar">
+        <button class="nav-btn" onclick="actionBack()">&lt;&lt; Back</button>
+        <div style="display:flex; gap:10px;">
+          <button class="nav-btn" onclick="actionNext()">Next &gt;&gt;</button>
+          <button class="submit-btn" onclick="openSubmitModal()">Submit</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="palette">
+      <div class="legend-mini">
+        <div class="li"><span class="sq" style="background:#9AA0AF" id="cnt-notvisited">0</span>Not visited</div>
+        <div class="li"><span class="sq" style="background:#E4572E" id="cnt-notanswered">0</span>Not answered</div>
+        <div class="li"><span class="sq" style="background:#43A047" id="cnt-answered">0</span>Answered</div>
+        <div class="li"><span class="sq" style="background:#7C4FA0" id="cnt-marked">0</span>Marked</div>
+        <div class="li wide"><span class="sq" style="background:#7C4FA0" id="cnt-answeredmarked">0</span>Answered &amp; marked (counted)</div>
+      </div>
+      <div id="palette-body"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="submit-modal">
+  <div class="modal-box">
+    <h3>Submit the test?</h3>
+    <p style="font-size:13.5px; color:var(--ink-soft);">Once submitted you can't change any answers. Here's where you stand:</p>
+    <div class="modal-stats">
+      <div class="modal-stat"><div class="n" id="ms-answered">0</div><div class="l">Answered</div></div>
+      <div class="modal-stat"><div class="n" id="ms-notanswered">0</div><div class="l">Not answered</div></div>
+      <div class="modal-stat"><div class="n" id="ms-marked">0</div><div class="l">Marked for review</div></div>
+      <div class="modal-stat"><div class="n" id="ms-notvisited">0</div><div class="l">Not visited</div></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" style="flex:1;" onclick="closeSubmitModal()">Keep working</button>
+      <button class="btn btn-green" style="flex:1;" onclick="confirmSubmit()">Submit now</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ ANALYSIS ============================================================ -->
+<div id="screen-analysis" class="screen">
+  <div class="an-wrap">
+    <div class="an-topbar">
+      <div class="left">
+        <b>Performance report</b>
+        <span id="an-subtitle">—</span>
+      </div>
+      <div class="an-actions">
+        <button class="btn btn-ghost btn-sm" onclick="resetToHome()">Take another test</button>
+        <button class="btn btn-amber btn-sm" onclick="downloadReportPdf()">⬇ Download as PDF</button>
+      </div>
+    </div>
+    <div id="pdf-report-root"></div>
+  </div>
+</div>
+
+<div class="pdf-loading" id="pdf-loading">
+  <div class="spinner"></div>
+  <div>Building your PDF…</div>
+</div>
+
+<!-- ============================================================ LIBRARIES ============================================================ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<script>
+/* =====================================================================================
+   JEE CBT SIMULATOR — app logic
+   ===================================================================================== */
+
+/* ---------- tiny utils ---------- */
+function esc(s){
+  if(s===undefined || s===null) return '';
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+function $(sel){ return document.querySelector(sel); }
+function $all(sel){ return Array.prototype.slice.call(document.querySelectorAll(sel)); }
+function fmtTime(totalSeconds){
+  totalSeconds = Math.max(0, Math.round(totalSeconds));
+  var h = Math.floor(totalSeconds/3600);
+  var m = Math.floor((totalSeconds%3600)/60);
+  var s = totalSeconds%60;
+  var pad = function(n){ return (n<10?'0':'')+n; };
+  return (h>0 ? pad(h)+':' : '') + pad(m) + ':' + pad(s);
+}
+function fmtMinSec(totalSeconds){
+  totalSeconds = Math.max(0, Math.round(totalSeconds));
+  var m = Math.floor(totalSeconds/60);
+  var s = totalSeconds%60;
+  return m + 'm ' + (s<10?'0':'') + s + 's';
+}
+
+/* ---------- default per-difficulty allotted time (seconds) ---------- */
+var DEFAULT_ALLOTTED = { 'Easy':90, 'Moderate':150, 'Tough':210, 'Difficult':210 };
+function allottedFor(q){
+  if(q.allottedSeconds) return q.allottedSeconds;
+  var d = q.difficulty || 'Moderate';
+  return DEFAULT_ALLOTTED[d] || 150;
+}
+
+/* =====================================================================================
+   PAPER PARSING
+   ===================================================================================== */
+var SECTION_NAME_RE = /^(physics|chemistry|mathematics|maths|math|biology|general|section[\s\-]?[abc123]?)\s*[:\-]?\s*$/i;
+
+function parsePlainText(rawText){
+  var warnings = [];
+  var lines = rawText.replace(/\r/g,'').split('\n');
+  var subjects = []; // {name, questions:[]}
+  var currentSubject = null;
+
+  function ensureSubject(name){
+    if(!currentSubject || currentSubject.name.toLowerCase() !== name.toLowerCase()){
+      currentSubject = { name: name, questions: [] };
+      subjects.push(currentSubject);
+    }
+    return currentSubject;
+  }
+  ensureSubject('General');
+
+  // Join lines, then split on Q markers. This is more robust than a line-scanner
+  // because option text can wrap across lines.
+  var joined = lines.map(function(l){ return l; });
+
+  // First pass: detect section headings and rewrite them as sentinel markers
+  var withMarkers = [];
+  joined.forEach(function(line){
+    var trimmed = line.trim();
+    var m = trimmed.match(SECTION_NAME_RE);
+    if(m && trimmed.length < 30){
+      withMarkers.push('@@SECTION@@:' + trimmed);
+    } else {
+      withMarkers.push(line);
+    }
+  });
+  var fullText = withMarkers.join('\n');
+
+  // Split into chunks at section markers first
+  var sectionChunks = fullText.split(/@@SECTION@@:/);
+  // sectionChunks[0] is content before any explicit heading (goes to 'General')
+
+  sectionChunks.forEach(function(chunk, idx){
+    var subjName = 'General';
+    var body = chunk;
+    if(idx > 0){
+      var firstLineBreak = chunk.indexOf('\n');
+      subjName = (firstLineBreak === -1 ? chunk : chunk.slice(0, firstLineBreak)).trim();
+      body = firstLineBreak === -1 ? '' : chunk.slice(firstLineBreak+1);
+    }
+    if(!body.trim()) return;
+    var subj = ensureSubject(subjName);
+
+    // split body on Q<number> markers (must be start-of-line-ish, allow leading spaces)
+    var qSplit = body.split(/\n?\s*Q\s?(\d{1,3})\b\.?\s*/);
+    // qSplit alternates: [preamble, num, block, num, block, ...]
+    for(var i=1; i<qSplit.length; i+=2){
+      var num = parseInt(qSplit[i], 10);
+      var block = qSplit[i+1] || '';
+      if(!block.trim()) continue;
+
+      // find options (1)...(4)
+      var optRe = /\(([1-4])\)\s*([\s\S]*?)(?=\([1-4]\)|$)/g;
+      var options = [];
+      var stemEnd = block.length;
+      var firstMatch = block.match(/\([1-4]\)/);
+      if(firstMatch) stemEnd = firstMatch.index;
+      var stem = block.slice(0, stemEnd).trim();
+
+      var mo;
+      while((mo = optRe.exec(block)) !== null){
+        var optText = mo[2].replace(/\s+/g,' ').trim();
+        if(optText) options.push(optText);
+      }
+      var type = options.length >= 2 ? 'mcq' : 'integer';
+      if(type === 'integer'){
+        stem = block.replace(/\s+/g,' ').trim();
+        options = [];
+      }
+      if(!stem){
+        warnings.push('Question ' + num + ' looked empty after parsing and was skipped.');
+        continue;
+      }
+      subj.questions.push({
+        number: num,
+        text: stem,
+        type: type,
+        options: options.slice(0,4),
+        correctAnswer: null,
+        difficulty: 'Moderate',
+        chapter: subj.name,
+        topic: 'General'
+      });
+    }
+  });
+
+  subjects = subjects.filter(function(s){ return s.questions.length > 0; });
+  subjects.forEach(function(s){ s.questions.sort(function(a,b){ return a.number-b.number; }); });
+
+  return { subjects: subjects, warnings: warnings };
+}
+
+function parseAnswerKeyText(text){
+  var map = {};
+  var re = /\b(\d{1,3})\s*[\-:\.\)]\s*\(?(-?\d{1,4})\)?/g;
+  var m;
+  while((m = re.exec(text)) !== null){
+    map[parseInt(m[1],10)] = parseInt(m[2],10);
+  }
+  return map;
+}
+
+function applyAnswerKey(paper, keyMap){
+  var applied = 0;
+  paper.subjects.forEach(function(s){
+    s.questions.forEach(function(q){
+      if(keyMap.hasOwnProperty(q.number)){
+        q.correctAnswer = keyMap[q.number];
+        applied++;
+      }
+    });
+  });
+  return applied;
+}
+
+function paperHasFullAnswerKey(paper){
+  var total=0, withKey=0;
+  paper.subjects.forEach(function(s){ s.questions.forEach(function(q){ total++; if(q.correctAnswer!==null && q.correctAnswer!==undefined) withKey++; }); });
+  return total>0 && total===withKey;
+}
+function paperAnswerKeyCoverage(paper){
+  var total=0, withKey=0;
+  paper.subjects.forEach(function(s){ s.questions.forEach(function(q){ total++; if(q.correctAnswer!==null && q.correctAnswer!==undefined) withKey++; }); });
+  return {total:total, withKey:withKey};
+}
+
+/* ---------- JSON parsing / validation ---------- */
+function parsePaperJson(obj){
+  if(!obj || !Array.isArray(obj.subjects)) throw new Error('JSON must have a "subjects" array.');
+  var paper = {
+    title: obj.title || 'Untitled Paper',
+    durationMinutes: obj.durationMinutes || 60,
+    subjects: []
+  };
+  obj.subjects.forEach(function(s){
+    var subj = { name: s.name || 'General', questions: [] };
+    (s.questions||[]).forEach(function(q){
+      subj.questions.push({
+        number: q.number,
+        text: q.text || '',
+        type: q.type === 'integer' ? 'integer' : 'mcq',
+        options: Array.isArray(q.options) ? q.options.slice(0,4) : [],
+        correctAnswer: (q.correctAnswer===undefined) ? null : q.correctAnswer,
+        difficulty: q.difficulty || 'Moderate',
+        chapter: q.chapter || subj.name,
+        topic: q.topic || 'General',
+        allottedSeconds: q.allottedSeconds || null
+      });
+    });
+    paper.subjects.push(subj);
+  });
+  return paper;
+}
+
+function downloadTemplate(){
+  var tpl = {
+    title: "My Practice Paper",
+    durationMinutes: 60,
+    subjects: [
+      {
+        name: "Physics",
+        questions: [
+          {
+            number: 1,
+            text: "A particle moves with constant acceleration. Which graph best represents velocity vs time?",
+            type: "mcq",
+            options: ["A straight horizontal line", "A straight line with positive slope", "A parabola", "A circle"],
+            correctAnswer: 2,
+            difficulty: "Easy",
+            chapter: "Kinematics",
+            topic: "Graphs of Motion"
+          },
+          {
+            number: 2,
+            text: "Find the value of x (integer, 0-999).",
+            type: "integer",
+            correctAnswer: 47,
+            difficulty: "Difficult",
+            chapter: "Kinematics",
+            topic: "Relative Motion",
+            allottedSeconds: 200
+          }
+        ]
+      }
+    ]
+  };
+  var blob = new Blob([JSON.stringify(tpl, null, 2)], {type:'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'paper-template.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+/* =====================================================================================
+   SAMPLE PAPER  (original questions written for this demo — not reproducing any
+   uploaded/copyrighted paper — so the answer key is guaranteed correct)
+   ===================================================================================== */
+function buildSamplePaper(){
+  return {
+    title: "Sample Practice Test — Quick Demo",
+    durationMinutes: 15,
+    subjects: [
+      {
+        name: "Physics",
+        questions: [
+          { number:1, type:'mcq', text:'A body starts from rest and moves with uniform acceleration a. The distance covered in the 4th second is proportional to:', options:['1','4','7','16'], correctAnswer:3, difficulty:'Easy', chapter:'Kinematics', topic:'Uniformly Accelerated Motion' },
+          { number:2, type:'mcq', text:'The SI unit of power is:', options:['Joule','Newton','Watt','Pascal'], correctAnswer:3, difficulty:'Easy', chapter:'Work, Energy & Power', topic:'Units' },
+          { number:3, type:'mcq', text:'Two vectors of equal magnitude A are inclined at 120° to each other. The magnitude of their resultant is:', options:['2A','A','A/2','0'], correctAnswer:2, difficulty:'Moderate', chapter:'Vectors', topic:'Vector Addition' },
+          { number:4, type:'integer', text:'A ball is dropped from a height of 20 m (g = 10 m/s²). Find the time taken (in seconds) to reach the ground.', correctAnswer:2, difficulty:'Moderate', chapter:'Kinematics', topic:'Free Fall', allottedSeconds:150 }
+        ]
+      },
+      {
+        name: "Chemistry",
+        questions: [
+          { number:5, type:'mcq', text:'The SI unit of amount of substance is:', options:['Gram','Kilogram','Mole','Litre'], correctAnswer:3, difficulty:'Easy', chapter:'Basic Concepts', topic:'Units' },
+          { number:6, type:'mcq', text:'Which law states that a chemical compound always contains the same elements in a fixed ratio by mass?', options:['Law of multiple proportions','Law of definite proportions','Law of conservation of mass','Avogadro\u2019s law'], correctAnswer:2, difficulty:'Easy', chapter:'Basic Concepts', topic:'Laws of Chemical Combination' },
+          { number:7, type:'mcq', text:'The number of moles in 44 g of CO2 (molar mass 44 g/mol) is:', options:['0.5','1','2','4'], correctAnswer:2, difficulty:'Moderate', chapter:'Basic Concepts', topic:'Mole Concept' },
+          { number:8, type:'integer', text:'Calculate the molecular mass of water, H2O (H = 1 u, O = 16 u). Enter the value in amu.', correctAnswer:18, difficulty:'Easy', chapter:'Basic Concepts', topic:'Molecular Mass', allottedSeconds:90 }
+        ]
+      },
+      {
+        name: "Mathematics",
+        questions: [
+          { number:9, type:'mcq', text:'If x^2 - 5x + 6 = 0, the roots are:', options:['1, 6','2, 3','-2, -3','3, 4'], correctAnswer:2, difficulty:'Easy', chapter:'Quadratic Equations', topic:'Roots' },
+          { number:10, type:'mcq', text:'The derivative of sin(x) with respect to x is:', options:['-sin(x)','cos(x)','-cos(x)','tan(x)'], correctAnswer:2, difficulty:'Easy', chapter:'Calculus', topic:'Differentiation' },
+          { number:11, type:'mcq', text:'The solution set of (x-2)(x+3) < 0 is:', options:['(-3, 2)','(2, ∞)','(-∞, -3)','(-∞,-3) ∪ (2,∞)'], correctAnswer:1, difficulty:'Moderate', chapter:'Inequalities', topic:'Wavy Curve Method' },
+          { number:12, type:'integer', text:'Evaluate the integral of cos(x) dx from 0 to π/2. Enter the answer (round to nearest integer).', correctAnswer:1, difficulty:'Difficult', chapter:'Calculus', topic:'Definite Integrals', allottedSeconds:180 }
+        ]
+      }
+    ]
+  };
+}
+
+/* =====================================================================================
+   APP STATE
+   ===================================================================================== */
+var app = {
+  paper: null,          // {title, durationMinutes, subjects:[{name, questions:[]}]}
+  parseWarnings: []
+};
+
+var exam = null; // built when starting a test
+
+function showScreen(name){
+  $all('.screen').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('screen-' + name).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+/* =====================================================================================
+   HOME SCREEN — upload wiring
+   ===================================================================================== */
+function scrollToUpload(){
+  document.getElementById('upload-section').scrollIntoView({behavior:'smooth'});
+}
+
+function switchUploadTab(id){
+  $all('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===id); });
+  $all('.tab-pane').forEach(function(p){ p.classList.toggle('active', p.id===id); });
+}
+
+function setStatus(elId, type, html){
+  var el = document.getElementById(elId);
+  el.className = 'status-msg show ' + type;
+  el.innerHTML = html;
+}
+
+function subjectQuestionCount(paper){
+  var n=0; paper.subjects.forEach(function(s){ n+=s.questions.length; }); return n;
+}
+
+function onPaperLoaded(paper, warnings){
+  app.paper = paper;
+  app.parseWarnings = warnings || [];
+  renderPaperSummary();
+}
+
+function renderPaperSummary(){
+  var paper = app.paper;
+  var box = document.getElementById('paper-summary');
+  if(!paper){ box.style.display='none'; return; }
+  var total = subjectQuestionCount(paper);
+  var subjHtml = paper.subjects.map(function(s){ return '<div class="summary-stat"><div class="num">'+s.questions.length+'</div><div class="lbl">'+esc(s.name)+'</div></div>'; }).join('');
+
+  var reviewRows = [];
+  paper.subjects.forEach(function(s, si){
+    s.questions.forEach(function(q, qi){
+      reviewRows.push('<div class="review-row" data-si="'+si+'" data-qi="'+qi+'">'+
+        '<span class="qn">Q'+q.number+'</span>'+
+        '<span class="qt" title="'+esc(q.text)+'">'+esc(q.text.slice(0,80))+'</span>'+
+        '<span class="subj-tag">'+esc(s.name)+' · '+(q.type==='integer'?'Integer':q.options.length+' opts')+'</span>'+
+        '<button class="rm-btn" onclick="removeQuestion('+si+','+qi+')" title="Remove this question">✕</button>'+
+      '</div>');
+    });
+  });
+
+  var warnHtml = app.parseWarnings.length ? ('<div class="status-msg show warn" style="margin:14px 20px 0;">'+app.parseWarnings.slice(0,5).map(esc).join('<br>')+'</div>') : '';
+
+  box.style.display = 'block';
+  box.innerHTML =
+    '<div class="paper-summary-head"><h3>'+esc(paper.title)+'</h3><span>'+total+' questions · '+paper.durationMinutes+' min</span></div>'+
+    '<div class="summary-stats">'+subjHtml+'</div>'+
+    warnHtml+
+    '<div style="padding:12px 20px 4px; font-size:11.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.04em; font-weight:700;">Review parsed questions — remove any that look wrong</div>'+
+    '<div class="review-list">'+ (reviewRows.join('') || '<div style="padding:16px 20px; font-size:13px; color:var(--ink-faint);">No questions parsed.</div>') +'</div>';
+
+  renderAnswerKeySection();
+  var proceedRow = document.getElementById('proceed-row');
+  proceedRow.style.display = total>0 ? 'block' : 'none';
+}
+
+function removeQuestion(si, qi){
+  app.paper.subjects[si].questions.splice(qi,1);
+  if(app.paper.subjects[si].questions.length===0) app.paper.subjects.splice(si,1);
+  renderPaperSummary();
+}
+
+function renderAnswerKeySection(){
+  var el = document.getElementById('answerkey-section');
+  var cov = paperAnswerKeyCoverage(app.paper);
+  if(cov.total===0){ el.classList.remove('show'); return; }
+  el.classList.add('show');
+  if(cov.withKey === cov.total){
+    el.innerHTML = '<div class="status-msg show ok">Answer key found for all '+cov.total+' questions — full scoring &amp; accuracy will be available in your report.</div>';
+    return;
+  }
+  el.innerHTML =
+    '<div class="status-msg show warn">Answer key found for '+cov.withKey+' of '+cov.total+' questions. Add the rest below, or skip — you can still practice, just without full scoring.</div>'+
+    '<label class="field-label" style="margin-top:12px;">Bulk answer key <span style="font-weight:400; color:var(--ink-faint);">— format: <code>1-2, 2-4, 3-1 …</code> (question number - correct option, or the integer value)</span></label>'+
+    '<textarea class="paste-area" id="answerkey-input" style="min-height:100px;" placeholder="1-2, 2-4, 3-1, 4-47 ..."></textarea>'+
+    '<div style="margin-top:10px; display:flex; gap:10px;">'+
+      '<button class="btn btn-primary btn-sm" onclick="applyBulkAnswerKey()">Apply answer key</button>'+
+      '<button class="btn btn-ghost btn-sm" onclick="renderPaperSummary()">Skip for now</button>'+
+    '</div>';
+}
+
+function applyBulkAnswerKey(){
+  var text = document.getElementById('answerkey-input').value;
+  var map = parseAnswerKeyText(text);
+  var applied = applyAnswerKey(app.paper, map);
+  renderPaperSummary();
+  setStatus('file-status','ok','Applied answer key to '+applied+' question(s).');
+}
+
+/* ---------- file upload ---------- */
+var dropZone = document.getElementById('drop-zone');
+var fileInput = document.getElementById('file-input');
+dropZone.addEventListener('click', function(){ fileInput.click(); });
+dropZone.addEventListener('dragover', function(e){ e.preventDefault(); dropZone.classList.add('drag'); });
+dropZone.addEventListener('dragleave', function(){ dropZone.classList.remove('drag'); });
+dropZone.addEventListener('drop', function(e){
+  e.preventDefault(); dropZone.classList.remove('drag');
+  if(e.dataTransfer.files && e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', function(){
+  if(fileInput.files && fileInput.files[0]) handleFile(fileInput.files[0]);
+});
+
+function handleFile(file){
+  var name = file.name.toLowerCase();
+  setStatus('file-status','warn','Reading '+esc(file.name)+'…');
+  if(name.endsWith('.json')){
+    var r1 = new FileReader();
+    r1.onload = function(){
+      try{
+        var obj = JSON.parse(r1.result);
+        var paper = parsePaperJson(obj);
+        onPaperLoaded(paper, []);
+        setStatus('file-status','ok','Loaded "'+esc(paper.title)+'" — '+subjectQuestionCount(paper)+' questions.');
+      }catch(err){
+        setStatus('file-status','err','Could not read that JSON file: '+esc(err.message));
+      }
+    };
+    r1.readAsText(file);
+  } else if(name.endsWith('.txt') || name.endsWith('.md')){
+    var r2 = new FileReader();
+    r2.onload = function(){
+      var result = parsePlainText(r2.result);
+      var paper = { title: file.name.replace(/\.[^.]+$/,''), durationMinutes: 60, subjects: result.subjects };
+      onPaperLoaded(paper, result.warnings);
+      var n = subjectQuestionCount(paper);
+      if(n===0) setStatus('file-status','err','No questions were recognised in that file. Check the Q1/(1)(2)(3)(4) format, or paste text instead.');
+      else setStatus('file-status','ok','Parsed '+n+' question(s) from '+esc(file.name)+'. Please review below.');
+    };
+    r2.readAsText(file);
+  } else if(name.endsWith('.pdf')){
+    handlePdfFile(file);
+  } else {
+    setStatus('file-status','err','Unsupported file type. Please use .txt, .json, or .pdf.');
+  }
+}
+
+function handlePdfFile(file){
+  if(typeof pdfjsLib === 'undefined'){
+    setStatus('file-status','err','PDF parsing library did not load (no network access to the CDN?). Please copy the paper text and use the "Paste text" tab instead.');
+    return;
+  }
+  try{
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }catch(e){}
+
+  var reader = new FileReader();
+  reader.onload = function(){
+    var typedArray = new Uint8Array(reader.result);
+    pdfjsLib.getDocument({data:typedArray}).promise.then(function(pdf){
+      var pagePromises = [];
+      for(var p=1; p<=pdf.numPages; p++){
+        pagePromises.push(pdf.getPage(p).then(extractPageTextTwoColumn));
+      }
+      return Promise.all(pagePromises);
+    }).then(function(pageTexts){
+      var fullText = pageTexts.join('\n\n');
+      var result = parsePlainText(fullText);
+      var paper = { title: file.name.replace(/\.[^.]+$/,''), durationMinutes: 60, subjects: result.subjects };
+      var n = subjectQuestionCount(paper);
+      if(n===0){
+        setStatus('file-status','err','Could not automatically extract questions from this PDF (multi‑column layouts are hard to parse reliably). Please copy the text and use the "Paste text" tab, or use the JSON template.');
+        return;
+      }
+      onPaperLoaded(paper, result.warnings.concat(['Parsed from a PDF — automatic extraction can misplace text on multi-column layouts. Please double‑check every question below.']));
+      setStatus('file-status','warn','Parsed '+n+' question(s) from the PDF on a best‑effort basis — please review carefully below before starting.');
+    }).catch(function(err){
+      setStatus('file-status','err','Could not parse this PDF ('+esc(err.message||'unknown error')+'). Please copy the text and use the "Paste text" tab instead.');
+    });
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function extractPageTextTwoColumn(page){
+  return page.getViewport({scale:1}).width ? page.getTextContent().then(function(content){
+    var viewport = page.getViewport({scale:1});
+    var midX = viewport.width / 2;
+    var left = [], right = [];
+    content.items.forEach(function(item){
+      var x = item.transform[4];
+      var y = item.transform[5];
+      (x < midX ? left : right).push({x:x, y:y, str:item.str});
+    });
+    function linesFromItems(items){
+      items.sort(function(a,b){ return b.y - a.y || a.x - b.x; });
+      var lines = [];
+      var currentY = null, currentLine = [];
+      items.forEach(function(it){
+        if(currentY===null || Math.abs(it.y-currentY) > 4){
+          if(currentLine.length) lines.push(currentLine);
+          currentLine = [it]; currentY = it.y;
+        } else {
+          currentLine.push(it);
+        }
+      });
+      if(currentLine.length) lines.push(currentLine);
+      return lines.map(function(line){
+        line.sort(function(a,b){ return a.x-b.x; });
+        return line.map(function(i){ return i.str; }).join(' ');
+      }).join('\n');
+    }
+    return linesFromItems(left) + '\n' + linesFromItems(right);
+  }) : Promise.resolve('');
+}
+
+/* ---------- paste / json tabs ---------- */
+function parsePastedText(){
+  var text = document.getElementById('paste-input').value;
+  if(!text.trim()){ setStatus('paste-status','err','Paste some text first.'); return; }
+  var result = parsePlainText(text);
+  var paper = { title: 'Pasted Paper', durationMinutes: 60, subjects: result.subjects };
+  var n = subjectQuestionCount(paper);
+  if(n===0){ setStatus('paste-status','err','No questions recognised. Make sure questions start with Q1, Q2… and options with (1)-(4).'); return; }
+  onPaperLoaded(paper, result.warnings);
+  setStatus('paste-status','ok','Parsed '+n+' question(s). Please review below.');
+}
+
+function parseJsonInput(){
+  var text = document.getElementById('json-input').value;
+  if(!text.trim()){ setStatus('json-status','err','Paste JSON first, or download the template.'); return; }
+  try{
+    var obj = JSON.parse(text);
+    var paper = parsePaperJson(obj);
+    onPaperLoaded(paper, []);
+    setStatus('json-status','ok','Loaded "'+esc(paper.title)+'" — '+subjectQuestionCount(paper)+' questions.');
+  }catch(err){
+    setStatus('json-status','err','Invalid JSON: '+esc(err.message));
+  }
+}
+
+function loadSamplePaper(){
+  var paper = buildSamplePaper();
+  onPaperLoaded(paper, []);
+  scrollToUpload();
+  setStatus('file-status','ok','Loaded the sample paper — 12 original questions with a verified answer key, ready to try the full flow.');
+  switchUploadTab('tab-file');
+}
+
+/* =====================================================================================
+   INSTRUCTIONS SCREEN
+   ===================================================================================== */
+function goToInstructions(){
+  if(!app.paper || subjectQuestionCount(app.paper)===0){ return; }
+  var paper = app.paper;
+  document.getElementById('instr-title').textContent = paper.title;
+  document.getElementById('instr-duration').textContent = paper.durationMinutes + ' min';
+  document.getElementById('instr-qcount').textContent = subjectQuestionCount(paper);
+  var cov = paperAnswerKeyCoverage(paper);
+  document.getElementById('instr-marks').textContent = cov.withKey===cov.total ? (cov.total*4)+' (est.)' : 'N/A';
+  document.getElementById('instr-sections').textContent = paper.subjects.map(function(s){return s.name;}).join(', ');
+  showScreen('instructions');
+}
+
+function updateStartButtonState(){
+  var ok = document.getElementById('chk-instructions').checked && document.getElementById('chk-environment').checked;
+  document.getElementById('start-test-btn').disabled = !ok;
+}
+document.getElementById('chk-instructions').addEventListener('change', updateStartButtonState);
+document.getElementById('chk-environment').addEventListener('change', updateStartButtonState);
+
+/* =====================================================================================
+   EXAM ENGINE
+   ===================================================================================== */
+var PALETTE_COLORS = {
+  'not-visited':'not-visited', 'not-answered':'st-not-answered', 'answered':'st-answered',
+  'marked':'st-marked', 'answered-marked':'st-answered-marked'
+};
+
+function buildExamState(paper, candidateName){
+  var order = [];
+  paper.subjects.forEach(function(s, si){
+    s.questions.forEach(function(q, qi){
+      order.push({ id:q.number, si:si, qi:qi });
+    });
+  });
+  var status = {}, answers = {}, timeSpent = {}, visited = {};
+  order.forEach(function(o){ status[o.id]='not-visited'; timeSpent[o.id]=0; visited[o.id]=false; });
+
+  return {
+    paper: paper,
+    candidateName: candidateName,
+    order: order,
+    status: status, answers: answers, timeSpent: timeSpent, visited: visited,
+    answerFinalTs: {}, // qid -> last save timestamp (ms since exam start)
+    currentIndex: 0,
+    currentSubjectIdx: 0,
+    lastVisitedInSubject: {},
+    subjectMovements: [], // {subject, startTs, endTs}
+    currentMovementStart: 0,
+    remainingSeconds: paper.durationMinutes*60,
+    examStartTs: null,
+    timerHandle: null,
+    questionStartTs: null,
+    finished:false
+  };
+}
+
+function currentQuestionObj(){
+  var o = exam.order[exam.currentIndex];
+  return exam.paper.subjects[o.si].questions[o.qi];
+}
+
+function startExam(){
+  var paper = app.paper;
+  var name = document.getElementById('candidate-name').value.trim() || 'Candidate';
+  exam = buildExamState(paper, name);
+  exam.examStartTs = Date.now();
+  exam.currentMovementStart = 0;
+
+  document.getElementById('hdr-cand-name').textContent = name;
+  document.getElementById('hdr-paper-name').textContent = paper.title;
+  document.getElementById('topbar-paper-name').textContent = (paper.subjects.length>1?'JEE MAIN':paper.title.toUpperCase());
+
+  renderSubjectTabs();
+  goToQuestionByIndex(0, true);
+  renderPalette();
+  updateLegendCounts();
+
+  showScreen('exam');
+  requestFullscreenSafe();
+
+  exam.timerHandle = setInterval(tickTimer, 1000);
+  tickTimer();
+
+  document.addEventListener('fullscreenchange', handleFullscreenChange);
+}
+
+function requestFullscreenSafe(){
+  var el = document.documentElement;
+  var req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+  if(req){ try{ req.call(el); }catch(e){} }
+}
+function exitFullscreenSafe(){
+  var ex = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+  if(ex && (document.fullscreenElement || document.webkitFullscreenElement)){ try{ ex.call(document); }catch(e){} }
+}
+function handleFullscreenChange(){
+  var inFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+  var warn = document.getElementById('fs-warning');
+  if(!inFs && exam && !exam.finished){ warn.classList.add('show'); }
+  else { warn.classList.remove('show'); }
+}
+document.getElementById('fs-warning').addEventListener('click', function(){
+  requestFullscreenSafe();
+});
+
+function tickTimer(){
+  exam.remainingSeconds--;
+  document.getElementById('timer-display').textContent = fmtTime(exam.remainingSeconds);
+  if(exam.remainingSeconds <= 0){
+    clearInterval(exam.timerHandle);
+    finalizeAndSubmit(true);
+  }
+}
+
+function renderSubjectTabs(){
+  var wrap = document.getElementById('subject-tabs');
+  wrap.innerHTML = exam.paper.subjects.map(function(s, i){
+    return '<button class="subject-tab'+(i===exam.currentSubjectIdx?' active':'')+'" onclick="switchSubject('+i+')">'+esc(s.name.toUpperCase())+'</button>';
+  }).join('');
+}
+
+function switchSubject(si){
+  if(si === exam.currentSubjectIdx) return;
+  recordSubjectMovementSegment();
+  exam.currentSubjectIdx = si;
+  renderSubjectTabs();
+  var targetId = exam.lastVisitedInSubject[si];
+  var idx = 0;
+  if(targetId){
+    idx = exam.order.findIndex(function(o){ return o.id===targetId; });
+  } else {
+    idx = exam.order.findIndex(function(o){ return o.si===si; });
+  }
+  if(idx<0) idx=0;
+  goToQuestionByIndex(idx, false);
+}
+
+function recordSubjectMovementSegment(){
+  var elapsed = (Date.now() - exam.examStartTs)/1000;
+  var subjName = exam.paper.subjects[exam.currentSubjectIdx].name;
+  exam.subjectMovements.push({ subject: subjName, durationSeconds: elapsed - exam.currentMovementStart });
+  exam.currentMovementStart = elapsed;
+}
+
+function goToQuestionByIndex(idx, isFirst){
+  var now = Date.now();
+  if(!isFirst && exam.questionStartTs !== null){
+    var prevId = exam.order[exam.currentIndex].id;
+    exam.timeSpent[prevId] += (now - exam.questionStartTs)/1000;
+  }
+  exam.currentIndex = idx;
+  var o = exam.order[idx];
+  exam.currentSubjectIdx = o.si;
+  exam.lastVisitedInSubject[o.si] = o.id;
+  exam.questionStartTs = now;
+
+  if(!exam.visited[o.id]){
+    exam.visited[o.id] = true;
+    if(exam.status[o.id] === 'not-visited') exam.status[o.id] = 'not-answered';
+  }
+  renderSubjectTabs();
+  renderCurrentQuestion();
+  renderPalette();
+  updateLegendCounts();
+}
+
+function renderCurrentQuestion(){
+  var o = exam.order[exam.currentIndex];
+  var q = currentQuestionObj();
+  document.getElementById('q-heading').textContent = 'Question ' + q.number + ':';
+  document.getElementById('q-meta-row').innerHTML =
+    '<span class="qmeta-tag">'+esc(exam.paper.subjects[o.si].name)+'</span>'+
+    (q.chapter ? '<span class="qmeta-tag">'+esc(q.chapter)+'</span>' : '') ;
+  document.getElementById('q-text').textContent = q.text;
+
+  var answerArea = document.getElementById('q-answer-area');
+  var saved = exam.answers[q.number];
+  if(q.type === 'mcq'){
+    answerArea.innerHTML = '<div class="options-list">' + q.options.map(function(opt, i){
+      var n = i+1;
+      var sel = (saved === n);
+      return '<label class="option-row'+(sel?' selected':'')+'" data-optnum="'+n+'">'+
+        '<input type="radio" name="opt" value="'+n+'" '+(sel?'checked':'')+' onchange="selectOption('+n+')">'+
+        '<span class="opt-num">('+n+')</span><span class="opt-text">'+esc(opt)+'</span>'+
+      '</label>';
+    }).join('') + '</div>';
+  } else {
+    answerArea.innerHTML = '<div class="integer-input-wrap">'+
+      '<label>Enter your numerical answer</label>'+
+      '<input type="number" id="integer-answer" value="'+(saved!==undefined && saved!==null? saved : '')+'" oninput="selectIntegerAnswer(this.value)" placeholder="e.g. 47">'+
+    '</div>';
+  }
+}
+
+function selectOption(n){
+  var q = currentQuestionObj();
+  exam.answers[q.number] = n;
+  $all('.option-row').forEach(function(row){
+    row.classList.toggle('selected', parseInt(row.dataset.optnum,10)===n);
+  });
+}
+function selectIntegerAnswer(val){
+  var q = currentQuestionObj();
+  if(val === '' ){ delete exam.answers[q.number]; return; }
+  exam.answers[q.number] = parseInt(val,10);
+}
+
+function renderPalette(){
+  var body = document.getElementById('palette-body');
+  var html = '';
+  exam.paper.subjects.forEach(function(s, si){
+    html += '<div class="subject-section-label">'+esc(s.name)+'</div><div class="palette-grid">';
+    s.questions.forEach(function(q){
+      var idx = exam.order.findIndex(function(o){ return o.id===q.number; });
+      var st = exam.status[q.number];
+      var cls = PALETTE_COLORS[st] || '';
+      var isCurrent = idx === exam.currentIndex;
+      html += '<button class="pal-btn '+cls+(isCurrent?' current':'')+'" onclick="jumpTo('+idx+')">'+q.number+'</button>';
+    });
+    html += '</div>';
+  });
+  body.innerHTML = html;
+}
+
+function jumpTo(idx){
+  goToQuestionByIndex(idx, false);
+}
+
+function updateLegendCounts(){
+  var counts = {'not-visited':0,'not-answered':0,'answered':0,'marked':0,'answered-marked':0};
+  exam.order.forEach(function(o){ counts[exam.status[o.id]]++; });
+  document.getElementById('cnt-notvisited').textContent = counts['not-visited'];
+  document.getElementById('cnt-notanswered').textContent = counts['not-answered'];
+  document.getElementById('cnt-answered').textContent = counts['answered'];
+  document.getElementById('cnt-marked').textContent = counts['marked'];
+  document.getElementById('cnt-answeredmarked').textContent = counts['answered-marked'];
+}
+
+function markAnswerSavedTs(qid){
+  exam.answerFinalTs[qid] = (Date.now() - exam.examStartTs)/1000;
+}
+
+function goToNextInOrder(){
+  var next = exam.currentIndex + 1;
+  if(next < exam.order.length){ goToQuestionByIndex(next, false); }
+}
+
+function actionSaveNext(){
+  var q = currentQuestionObj();
+  var hasAns = exam.answers[q.number] !== undefined && exam.answers[q.number] !== null && exam.answers[q.number] !== '';
+  var wasMarked = exam.status[q.number] === 'marked' || exam.status[q.number] === 'answered-marked';
+  if(hasAns){ exam.status[q.number] = wasMarked ? 'answered-marked' : 'answered'; markAnswerSavedTs(q.number); }
+  else { exam.status[q.number] = wasMarked ? 'marked' : 'not-answered'; }
+  renderPalette(); updateLegendCounts();
+  goToNextInOrder();
+}
+function actionSaveMark(){
+  var q = currentQuestionObj();
+  var hasAns = exam.answers[q.number] !== undefined && exam.answers[q.number] !== null && exam.answers[q.number] !== '';
+  if(hasAns){ exam.status[q.number] = 'answered-marked'; markAnswerSavedTs(q.number); }
+  else { exam.status[q.number] = 'marked'; }
+  renderPalette(); updateLegendCounts();
+  goToNextInOrder();
+}
+function actionMarkNext(){ actionSaveMark(); }
+function actionClear(){
+  var q = currentQuestionObj();
+  delete exam.answers[q.number];
+  var wasMarked = exam.status[q.number] === 'answered-marked' || exam.status[q.number] === 'marked';
+  exam.status[q.number] = wasMarked ? 'marked' : 'not-answered';
+  renderCurrentQuestion(); renderPalette(); updateLegendCounts();
+}
+function actionBack(){
+  if(exam.currentIndex>0) goToQuestionByIndex(exam.currentIndex-1, false);
+}
+function actionNext(){
+  goToNextInOrder();
+}
+
+/* ---------- submit ---------- */
+function openSubmitModal(){
+  var counts = {'not-visited':0,'not-answered':0,'answered':0,'marked':0,'answered-marked':0};
+  exam.order.forEach(function(o){ counts[exam.status[o.id]]++; });
+  document.getElementById('ms-answered').textContent = counts['answered']+counts['answered-marked'];
+  document.getElementById('ms-notanswered').textContent = counts['not-answered'];
+  document.getElementById('ms-marked').textContent = counts['marked']+counts['answered-marked'];
+  document.getElementById('ms-notvisited').textContent = counts['not-visited'];
+  document.getElementById('submit-modal').classList.add('show');
+}
+function closeSubmitModal(){ document.getElementById('submit-modal').classList.remove('show'); }
+function confirmSubmit(){
+  closeSubmitModal();
+  finalizeAndSubmit(false);
+}
+
+function finalizeAndSubmit(auto){
+  if(exam.finished) return;
+  exam.finished = true;
+  if(exam.timerHandle) clearInterval(exam.timerHandle);
+  // flush time for current question
+  var now = Date.now();
+  var curId = exam.order[exam.currentIndex].id;
+  exam.timeSpent[curId] += (now - exam.questionStartTs)/1000;
+  recordSubjectMovementSegment();
+  document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  document.getElementById('fs-warning').classList.remove('show');
+  exitFullscreenSafe();
+
+  var report = computeAnalysis();
+  renderAnalysisReport(report, auto);
+  showScreen('analysis');
+}
+
+/* =====================================================================================
+   ANALYSIS ENGINE
+   ===================================================================================== */
+function classifyAttempt(attempted, correct, spent, allotted){
+  if(attempted){
+    if(correct) return spent <= allotted ? 'perfect' : 'dash';
+    return spent > allotted ? 'overtime' : 'wasted';
+  }
+  return spent > allotted ? 'confused' : 'dash';
+}
+
+function computeAnalysis(){
+  var paper = exam.paper;
+  var hasFullKey = paperHasFullAnswerKey(paper);
+  var cov = paperAnswerKeyCoverage(paper);
+  var totalDurationSeconds = paper.durationMinutes*60;
+
+  var subjectsOut = [];
+  var overall = { correct:0, incorrect:0, unattempted:0, notVisited:0, score:0, maxScore:0,
+                   timeSpent:0, total:0, attempts:{perfect:0,wasted:0,overtime:0,confused:0},
+                   difficulty:{Easy:{c:0,i:0,u:0},Moderate:{c:0,i:0,u:0},Tough:{c:0,i:0,u:0}},
+                   rows:[] };
+
+  paper.subjects.forEach(function(s){
+    var subj = { name:s.name, correct:0, incorrect:0, unattempted:0, notVisited:0, score:0, maxScore:0,
+                 timeSpent:0, total:s.questions.length, attempts:{perfect:0,wasted:0,overtime:0,confused:0},
+                 difficulty:{Easy:{c:0,i:0,u:0},Moderate:{c:0,i:0,u:0},Tough:{c:0,i:0,u:0}},
+                 painful:[], missedConcepts:[], rows:[] };
+
+    s.questions.forEach(function(q){
+      var st = exam.status[q.number];
+      var visited = exam.visited[q.number];
+      var attempted = exam.answers.hasOwnProperty(q.number) && exam.answers[q.number]!==null && exam.answers[q.number]!=='';
+      var spent = exam.timeSpent[q.number] || 0;
+      var allotted = allottedFor(q);
+      var hasKey = q.correctAnswer !== null && q.correctAnswer !== undefined;
+      var correct = hasKey && attempted && (Number(exam.answers[q.number]) === Number(q.correctAnswer));
+
+      subj.timeSpent += spent;
+      if(!visited) subj.notVisited++;
+
+      if(hasKey){
+        if(attempted && correct){ subj.correct++; subj.score += 4; }
+        else if(attempted && !correct){ subj.incorrect++; subj.score -= 1; }
+        else { subj.unattempted++; }
+        subj.maxScore += 4;
+        var diffKey = (q.difficulty==='Difficult') ? 'Tough' : (q.difficulty || 'Moderate');
+        if(!subj.difficulty[diffKey]) subj.difficulty[diffKey] = {c:0,i:0,u:0};
+        if(attempted && correct) subj.difficulty[diffKey].c++;
+        else if(attempted && !correct) subj.difficulty[diffKey].i++;
+        else subj.difficulty[diffKey].u++;
+      } else {
+        if(!attempted) subj.unattempted++;
+      }
+
+      var cls = hasKey ? classifyAttempt(attempted, correct, spent, allotted) : 'dash';
+      if(subj.attempts[cls]!==undefined) subj.attempts[cls]++;
+
+      if(hasKey && attempted && !correct){
+        subj.missedConcepts.push(q.topic || q.chapter || 'General');
+      }
+      if(cls==='overtime' || cls==='wasted'){
+        subj.painful.push({ number:q.number, spent:spent, cls:cls });
+      }
+
+      subj.rows.push({
+        number:q.number, chapter:q.chapter||s.name, topic:q.topic||'General', difficulty:q.difficulty||'Moderate',
+        allotted:allotted, spent:spent, attempted:attempted, hasKey:hasKey, correct:correct, cls:cls
+      });
+      overall.rows.push(subj.rows[subj.rows.length-1]);
+    });
+
+    subj.painful.sort(function(a,b){ return b.spent-a.spent; });
+    subj.painful = subj.painful.slice(0,3);
+    subj.missedConcepts = Array.from(new Set(subj.missedConcepts));
+    subj.accuracy = (subj.correct+subj.incorrect)>0 ? Math.round(subj.correct/(subj.correct+subj.incorrect)*100) : 0;
+    subj.attemptPct = subj.total>0 ? Math.round((subj.correct+subj.incorrect)/subj.total*100) : 0;
+
+    overall.correct += subj.correct; overall.incorrect += subj.incorrect;
+    overall.unattempted += subj.unattempted; overall.notVisited += subj.notVisited;
+    overall.score += subj.score; overall.maxScore += subj.maxScore; overall.timeSpent += subj.timeSpent;
+    overall.total += subj.total;
+    ['perfect','wasted','overtime','confused'].forEach(function(k){ overall.attempts[k]+=subj.attempts[k]; });
+    Object.keys(subj.difficulty).forEach(function(k){
+      if(!overall.difficulty[k]) overall.difficulty[k]={c:0,i:0,u:0};
+      overall.difficulty[k].c += subj.difficulty[k].c;
+      overall.difficulty[k].i += subj.difficulty[k].i;
+      overall.difficulty[k].u += subj.difficulty[k].u;
+    });
+
+    subjectsOut.push(subj);
+  });
+
+  overall.accuracy = (overall.correct+overall.incorrect)>0 ? Math.round(overall.correct/(overall.correct+overall.incorrect)*100) : 0;
+  overall.attemptPct = overall.total>0 ? Math.round((overall.correct+overall.incorrect)/overall.total*100) : 0;
+
+  // attempts-over-time buckets
+  var nBuckets = Math.max(2, Math.min(6, Math.round(paper.durationMinutes/30) || 2));
+  var bucketLen = totalDurationSeconds / nBuckets;
+  var buckets = [];
+  for(var b=0;b<nBuckets;b++) buckets.push({label:'', correct:0, incorrect:0});
+  overall.rows.forEach(function(r){
+    if(!r.attempted) return;
+    var ts = exam.answerFinalTs[r.number];
+    if(ts===undefined) ts = totalDurationSeconds - exam.remainingSeconds;
+    var idx = Math.min(nBuckets-1, Math.floor(ts / bucketLen));
+    if(idx<0) idx=0;
+    if(r.hasKey && r.correct) buckets[idx].correct++;
+    else if(r.hasKey && !r.correct) buckets[idx].incorrect++;
+  });
+  buckets.forEach(function(bk, i){
+    var startMin = Math.round(i*bucketLen/60), endMin = Math.round((i+1)*bucketLen/60);
+    bk.label = startMin+'-'+endMin+' min';
+  });
+
+  var timeTakenSeconds = totalDurationSeconds - Math.max(0, exam.remainingSeconds);
+
+  return {
+    hasFullKey: hasFullKey, coverage: cov,
+    overall: overall, subjects: subjectsOut, buckets: buckets,
+    timeTakenSeconds: timeTakenSeconds, durationMinutes: paper.durationMinutes,
+    subjectMovements: exam.subjectMovements, candidateName: exam.candidateName, paperTitle: exam.paper.title
+  };
+}
+
+/* ---------- rendering the report ---------- */
+var chartInstances = [];
+function destroyCharts(){ chartInstances.forEach(function(c){ c.destroy(); }); chartInstances = []; }
+
+function badgeFor(cls){
+  var map = { perfect:'Perfect', wasted:'Wasted', overtime:'Overtime', confused:'Confused', dash:'—' };
+  return '<span class="badge '+cls+'">'+map[cls]+'</span>';
+}
+function answerBadge(r){
+  if(!r.hasKey) return '<span class="badge dash">No key</span>';
+  if(!r.attempted) return '<span class="badge unattempted">Unattempted</span>';
+  return r.correct ? '<span class="badge correct">Correct</span>' : '<span class="badge incorrect">Incorrect</span>';
+}
+
+function renderAnalysisReport(report, wasAuto){
+  destroyCharts();
+  document.getElementById('an-subtitle').textContent = report.paperTitle + ' · ' + report.candidateName + (wasAuto ? ' · auto-submitted (time up)' : '');
+  var root = document.getElementById('pdf-report-root');
+  var o = report.overall;
+
+  var sections = [];
+
+  // ---- Overview ----
+  var scoreDisplay = report.hasFullKey ? (o.score+' / '+o.maxScore) : (report.coverage.withKey+'/'+report.coverage.total+' scored');
+  sections.push(
+    '<div class="report-section" id="sec-overview">'+
+      '<h3>Overview</h3>'+
+      '<div class="sub">Attempted by <b>'+esc(report.candidateName)+'</b>. '+(report.hasFullKey?'':'<br><span style="color:#8A5A12;">Partial or no answer key was provided — score and accuracy reflect only the '+report.coverage.withKey+' question(s) with a known answer.</span>')+'</div>'+
+      '<div class="overview-grid">'+
+        '<div class="ov-card"><div class="l">Score</div><div class="v">'+esc(scoreDisplay)+'</div></div>'+
+        '<div class="ov-card"><div class="l">Accuracy</div><div class="v">'+o.accuracy+'%</div></div>'+
+        '<div class="ov-card"><div class="l">Qs attempted</div><div class="v">'+(o.correct+o.incorrect)+'/'+o.total+'</div></div>'+
+        '<div class="ov-card"><div class="l">Time taken</div><div class="v">'+fmtMinSec(report.timeTakenSeconds)+'</div></div>'+
+      '</div>'+
+    '</div>'
+  );
+
+  // ---- Subject-wise table ----
+  var subjRows = '<tr><td><b>Overall</b></td><td>'+(report.hasFullKey?o.score+'/'+o.maxScore:'—')+'</td><td>'+o.correct+'/'+o.total+'</td><td>'+o.incorrect+'/'+o.total+'</td><td>'+o.unattempted+'/'+o.total+'</td><td>'+o.notVisited+'/'+o.total+'</td></tr>';
+  report.subjects.forEach(function(s){
+    subjRows += '<tr><td>'+esc(s.name)+'</td><td>'+(report.hasFullKey?s.score+'/'+s.maxScore:'—')+'</td><td>'+s.correct+'/'+s.total+'</td><td>'+s.incorrect+'/'+s.total+'</td><td>'+s.unattempted+'/'+s.total+'</td><td>'+s.notVisited+'/'+s.total+'</td></tr>';
+  });
+  sections.push(
+    '<div class="report-section" id="sec-analysis">'+
+      '<h3>Analysis</h3>'+
+      '<div class="sub">A snapshot of attempts that were correct, incorrect, unattempted, and not visited at all — per subject.</div>'+
+      '<div class="tbl-wrap"><table class="data-tbl"><thead><tr><th>Subject</th><th>Score</th><th>Correct</th><th>Incorrect</th><th>Unattempted</th><th>Not visited</th></tr></thead><tbody>'+subjRows+'</tbody></table></div>'+
+    '</div>'
+  );
+
+  // ---- Time & accuracy ----
+  var taRows = '<tr><td><b>Overall</b></td><td>'+fmtMinSec(o.timeSpent)+'</td><td>'+o.attemptPct+'%</td><td>'+o.accuracy+'%</td></tr>';
+  report.subjects.forEach(function(s){
+    taRows += '<tr><td>'+esc(s.name)+'</td><td>'+fmtMinSec(s.timeSpent)+'</td><td>'+s.attemptPct+'%</td><td>'+s.accuracy+'%</td></tr>';
+  });
+  sections.push(
+    '<div class="report-section" id="sec-time">'+
+      '<h3>Time and accuracy</h3>'+
+      '<div class="sub">Time is the most important resource in any competitive exam — here\'s how it was spent per subject, and how it paid off.</div>'+
+      '<div class="tbl-wrap"><table class="data-tbl"><thead><tr><th>Subject</th><th>Time spent</th><th>Attempt %</th><th>Accuracy %</th></tr></thead><tbody>'+taRows+'</tbody></table></div>'+
+    '</div>'
+  );
+
+  // ---- Attempts pie + difficulty bar ----
+  sections.push(
+    '<div class="report-section" id="sec-charts">'+
+      '<h3>Graphical view</h3>'+
+      '<div class="sub">Perfect = correct within the allotted time. Wasted = incorrect, answered too fast. Overtime = incorrect and slow. Confused = left unanswered after spending too long.</div>'+
+      '<div class="charts-grid">'+
+        '<div class="chart-box"><div class="ct">Attempt quality (overall)</div><canvas id="chart-attempts"></canvas></div>'+
+        '<div class="chart-box"><div class="ct">Correct / incorrect / unanswered</div><canvas id="chart-correctness"></canvas></div>'+
+      '</div>'+
+      '<div class="charts-grid" style="margin-top:28px;">'+
+        '<div class="chart-box" style="grid-column:1/3;"><div class="ct">Difficulty analysis (overall)</div><canvas id="chart-difficulty"></canvas></div>'+
+      '</div>'+
+    '</div>'
+  );
+
+  // ---- Attempts over time ----
+  var bucketRows = report.buckets.map(function(bk){
+    return '<tr><td>'+bk.label+'</td><td>'+bk.correct+'</td><td>'+bk.incorrect+'</td><td>'+(bk.correct+bk.incorrect)+'</td></tr>';
+  }).join('');
+  sections.push(
+    '<div class="report-section" id="sec-overtime">'+
+      '<h3>Attempts over the '+report.durationMinutes+' minutes</h3>'+
+      '<div class="sub">When during the test you were answering correctly vs incorrectly.</div>'+
+      '<div class="tbl-wrap"><table class="data-tbl"><thead><tr><th>Interval</th><th>Correct</th><th>Incorrect</th><th>Total</th></tr></thead><tbody>'+bucketRows+'</tbody></table></div>'+
+      '<div style="margin-top:18px;"><canvas id="chart-overtime" height="90"></canvas></div>'+
+    '</div>'
+  );
+
+  // ---- Painful questions ----
+  var painHtml = report.subjects.map(function(s){
+    if(!s.painful.length) return '';
+    return '<div class="subject-block"><h4>'+esc(s.name)+'</h4><ul class="mini-list">'+
+      s.painful.map(function(p){ return '<li><span class="qtag">Q'+p.number+'</span>'+fmtMinSec(p.spent)+' spent — '+badgeFor(p.cls)+'</li>'; }).join('')+
+    '</ul></div>';
+  }).join('');
+  sections.push(
+    '<div class="report-section" id="sec-painful">'+
+      '<h3>Painful questions</h3>'+
+      '<div class="sub">Where the most time was burned on incorrect or overtime attempts, by subject.</div>'+
+      (painHtml || '<div style="font-size:13px; color:var(--ink-faint);">No particularly painful questions — nice and steady.</div>')+
+    '</div>'
+  );
+
+  // ---- Subject movement ----
+  var moveHtml = report.subjectMovements.map(function(m, i){
+    return '<div class="movement-item"><span class="movement-dot"></span><div>'+(i===0?'Started with ':'Switched to ')+'<b>'+esc(m.subject)+'</b></div><span>'+fmtMinSec(m.durationSeconds)+'</span></div>';
+  }).join('');
+  sections.push(
+    '<div class="report-section" id="sec-movement">'+
+      '<h3>Subject movement</h3>'+
+      '<div class="sub">How you traversed each subject, and how long you stayed each time.</div>'+
+      (moveHtml || '<div style="font-size:13px; color:var(--ink-faint);">No subject switches recorded.</div>')+
+    '</div>'
+  );
+
+  // ---- Missed concepts ----
+  var missedHtml = report.subjects.map(function(s){
+    if(!s.missedConcepts.length) return '';
+    return '<div class="subject-block"><h4>'+esc(s.name)+'</h4><ul class="mini-list">'+
+      s.missedConcepts.map(function(c,i){ return '<li>'+(i+1)+'. '+esc(c)+'</li>'; }).join('')+
+    '</ul></div>';
+  }).join('');
+  sections.push(
+    '<div class="report-section" id="sec-missed">'+
+      '<h3>Missed concepts</h3>'+
+      '<div class="sub">Topics behind every incorrect answer — worth a revision pass.</div>'+
+      (missedHtml || '<div style="font-size:13px; color:var(--ink-faint);">No incorrect answers — nothing to flag.</div>')+
+    '</div>'
+  );
+
+  // ---- Complete analysis table ----
+  var completeRows = o.rows.map(function(r){
+    return '<tr><td>'+r.number+'</td><td>'+esc(r.chapter)+'</td><td>'+esc(r.topic)+'</td><td>'+esc(r.difficulty)+'</td>'+
+      '<td>'+Math.round(r.allotted)+'s</td><td>'+Math.round(r.spent)+'s</td><td>'+(r.attempted?'Yes':'No')+'</td>'+
+      '<td>'+answerBadge(r)+'</td><td>'+badgeFor(r.cls)+'</td></tr>';
+  }).join('');
+  sections.push(
+    '<div class="report-section" id="sec-complete">'+
+      '<h3>Complete analysis</h3>'+
+      '<div class="sub">Every question, in order.</div>'+
+      '<div class="tbl-wrap"><table class="data-tbl"><thead><tr><th>Q</th><th>Chapter</th><th>Topic</th><th>Difficulty</th><th>Allotted</th><th>Spent</th><th>Attempted</th><th>Answer</th><th>Overview</th></tr></thead><tbody>'+completeRows+'</tbody></table></div>'+
+    '</div>'
+  );
+
+  root.innerHTML = sections.join('');
+
+  // charts
+  var okColor='#43A047', badColor='#D64545', grayColor='#B9BEC9', purpleColor='#7C4DBE', blueColor='#1565C0', pinkColor='#AD1457';
+  chartInstances.push(new Chart(document.getElementById('chart-attempts'), {
+    type:'pie',
+    data:{ labels:['Perfect','Wasted','Overtime','Confused'],
+      datasets:[{ data:[o.attempts.perfect,o.attempts.wasted,o.attempts.overtime,o.attempts.confused], backgroundColor:[pinkColor,blueColor,purpleColor,'#E8A33D'] }] },
+    options:{ plugins:{legend:{position:'bottom', labels:{boxWidth:11,font:{size:11}}}} }
+  }));
+  chartInstances.push(new Chart(document.getElementById('chart-correctness'), {
+    type:'pie',
+    data:{ labels:['Correct','Incorrect','Unattempted'],
+      datasets:[{ data:[o.correct,o.incorrect,o.unattempted], backgroundColor:[okColor,badColor,grayColor] }] },
+    options:{ plugins:{legend:{position:'bottom', labels:{boxWidth:11,font:{size:11}}}} }
+  }));
+  var diffLabels = ['Easy','Moderate','Tough'];
+  chartInstances.push(new Chart(document.getElementById('chart-difficulty'), {
+    type:'bar',
+    data:{ labels:diffLabels,
+      datasets:[
+        {label:'Correct', backgroundColor:okColor, data:diffLabels.map(function(k){return (o.difficulty[k]||{c:0}).c;})},
+        {label:'Incorrect', backgroundColor:badColor, data:diffLabels.map(function(k){return (o.difficulty[k]||{i:0}).i;})},
+        {label:'Unanswered', backgroundColor:grayColor, data:diffLabels.map(function(k){return (o.difficulty[k]||{u:0}).u;})}
+      ]},
+    options:{ scales:{ y:{beginAtZero:true, ticks:{precision:0}} }, plugins:{legend:{position:'bottom', labels:{boxWidth:11,font:{size:11}}}} }
+  }));
+  chartInstances.push(new Chart(document.getElementById('chart-overtime'), {
+    type:'line',
+    data:{ labels:report.buckets.map(function(b){return b.label;}),
+      datasets:[
+        {label:'Correct', data:report.buckets.map(function(b){return b.correct;}), borderColor:okColor, backgroundColor:okColor, tension:0.3},
+        {label:'Incorrect', data:report.buckets.map(function(b){return b.incorrect;}), borderColor:badColor, backgroundColor:badColor, tension:0.3},
+        {label:'Total', data:report.buckets.map(function(b){return b.correct+b.incorrect;}), borderColor:'#1565C0', backgroundColor:'#1565C0', tension:0.3}
+      ]},
+    options:{ scales:{ y:{beginAtZero:true, ticks:{precision:0}} }, plugins:{legend:{position:'bottom', labels:{boxWidth:11,font:{size:11}}}} }
+  }));
+}
+
+/* =====================================================================================
+   PDF EXPORT
+   ===================================================================================== */
+function downloadReportPdf(){
+  var loading = document.getElementById('pdf-loading');
+  loading.classList.add('show');
+  setTimeout(function(){
+    try{
+      var jsPDFCtor = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : window.jsPDF;
+      var pdf = new jsPDFCtor({ unit:'mm', format:'a4' });
+      var sections = $all('#pdf-report-root .report-section');
+      var chain = Promise.resolve();
+      var first = true;
+      sections.forEach(function(sec){
+        chain = chain.then(function(){
+          return html2canvas(sec, { scale:2, backgroundColor:'#ffffff', useCORS:true }).then(function(canvas){
+            addCanvasPaginated(pdf, canvas, !first);
+            first = false;
+          });
+        });
+      });
+      chain.then(function(){
+        pdf.save('performance-report.pdf');
+        loading.classList.remove('show');
+      }).catch(function(err){
+        loading.classList.remove('show');
+        alert('Could not generate the PDF: ' + err.message);
+      });
+    }catch(err){
+      loading.classList.remove('show');
+      alert('Could not generate the PDF: ' + err.message);
+    }
+  }, 50);
+}
+
+function addCanvasPaginated(pdf, canvas, addPageFirst){
+  var pageW = pdf.internal.pageSize.getWidth();
+  var pageH = pdf.internal.pageSize.getHeight();
+  var margin = 10;
+  var usableW = pageW - margin*2;
+  var usableH = pageH - margin*2;
+  var scale = usableW / canvas.width; // mm per px
+  var pxPerPage = Math.floor(usableH / scale);
+  var renderedY = 0;
+  var firstSlice = true;
+  while(renderedY < canvas.height){
+    var sliceH = Math.min(pxPerPage, canvas.height - renderedY);
+    var sliceCanvas = document.createElement('canvas');
+    sliceCanvas.width = canvas.width;
+    sliceCanvas.height = sliceH;
+    var ctx = sliceCanvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0,0,sliceCanvas.width,sliceCanvas.height);
+    ctx.drawImage(canvas, 0, renderedY, canvas.width, sliceH, 0, 0, canvas.width, sliceH);
+    var imgData = sliceCanvas.toDataURL('image/jpeg', 0.92);
+    if(!(firstSlice && !addPageFirst)) pdf.addPage();
+    pdf.addImage(imgData, 'JPEG', margin, margin, usableW, sliceH*scale);
+    renderedY += sliceH;
+    firstSlice = false;
+  }
+}
+
+/* =====================================================================================
+   RESET
+   ===================================================================================== */
+function resetToHome(){
+  exam = null;
+  document.getElementById('paste-input').value = '';
+  document.getElementById('json-input').value = '';
+  document.getElementById('file-status').classList.remove('show');
+  document.getElementById('chk-instructions').checked = false;
+  document.getElementById('chk-environment').checked = false;
+  showScreen('home');
+}
+
+/* =====================================================================================
+   HERO MOCK GRID (decorative)
+   ===================================================================================== */
+(function(){
+  var colors = ['#9AA0AF','#E4572E','#43A047','#7C4FA0'];
+  var grid = document.getElementById('hero-mock-grid');
+  var html = '';
+  for(var i=1;i<=24;i++){
+    var c = colors[(i*7)%colors.length];
+    html += '<div class="mock-cell" style="background:'+c+'">'+i+'</div>';
+  }
+  grid.innerHTML = html;
+})();
+</script>
+</body>
+</html>
