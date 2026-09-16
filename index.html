@@ -27,6 +27,8 @@
   --border:#E3E0D6;
   --border-2:#DAD6C8;
   --white:#FFFFFF;
+  --surface:#FFFFFF;
+  --heading:#10193A;
 
   --nta-orange:#F7941D;
   --nta-blue:#1565C0;
@@ -53,7 +55,8 @@ html.dark{
   --ink-faint:#82869A;
   --border:#2A2E3D;
   --border-2:#383D50;
-  --white:#191C27;
+  --surface:#1B1E29;
+  --heading:#EDEEF3;
 }
 html.dark body{background:var(--paper);}
 html.dark .hero-visual{box-shadow:0 30px 60px -25px rgba(0,0,0,0.7);}
@@ -103,6 +106,30 @@ html.dark .badge.dash{background:#232838; color:#8b8f9e;}
   font-size:12.5px; font-weight:700; box-shadow:0 10px 24px rgba(10,14,30,0.28);
 }
 html.dark .theme-toggle-btn{background:var(--amber); color:#171A24;}
+html.dark .btn-ghost:hover{background:rgba(255,255,255,0.06);}
+html.dark .instr-section li{color:#D3D6E0;}
+html.dark .instr-section li b{color:#EDEEF2;}
+html.dark .sub{color:var(--ink-soft);}
+html.dark .report-section .sub{color:var(--ink-soft);}
+html.dark table.data-tbl td{color:var(--ink);}
+html.dark table.data-tbl th{background:var(--paper-2); color:var(--ink-faint);}
+html.dark .hero-sub{color:var(--ink-soft);}
+html.dark .section-desc{color:var(--ink-soft);}
+html.dark .footer-note{color:var(--ink-faint);}
+html.dark .ov-card .l{color:var(--ink-faint);}
+html.dark .summary-stat .lbl{color:var(--ink-faint);}
+html.dark .an-topbar .left span{color:var(--ink-faint);}
+html.dark .review-row .qt{color:var(--ink);}
+html.dark .review-row .subj-tag{background:var(--paper-2); color:var(--ink-soft);}
+html.dark .hint{color:var(--ink-faint);}
+html.dark .brand-tag{color:var(--ink-faint);}
+html.dark .declare-box{background:var(--paper-2); border-color:var(--border);}
+html.dark .declare-row label{color:var(--ink);}
+html.dark .cand-avatar{background:#2A2E3D; color:#9195a3;}
+html.dark .status-msg.warn{background:#332A0B; color:#E8C86A; border-color:#4a3d15;}
+html.dark .status-msg.err{background:#3A1616; color:#F29C9C; border-color:#4a2222;}
+html.dark .status-msg.ok{background:#123322; color:#5FD98F; border-color:#1a4a32;}
+html.dark .no-key-note{background:#332A0B; color:#E8C86A; border-color:#4a3d15;}
 
 *,*::before,*::after{box-sizing:border-box;}
 html,body{margin:0;padding:0;}
@@ -151,7 +178,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
   display:flex; align-items:center; justify-content:center;
   color:var(--amber); font-family:var(--serif); font-weight:700; font-size:17px;
 }
-.brand-name{font-family:var(--serif); font-weight:600; font-size:19px; color:var(--navy);}
+.brand-name{font-family:var(--serif); font-weight:600; font-size:19px; color:var(--heading);}
 .brand-tag{font-size:12px; color:var(--ink-faint); letter-spacing:0.02em;}
 
 .hero{
@@ -164,7 +191,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
   margin-bottom:14px; letter-spacing:0.01em;
 }
 .hero h1{
-  font-size:44px; line-height:1.1; color:var(--navy); max-width:620px;
+  font-size:44px; line-height:1.1; color:var(--heading); max-width:620px;
 }
 .hero h1 em{font-style:italic; color:var(--amber-dark);}
 .hero-sub{
@@ -182,8 +209,8 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
 .btn-primary:hover{background:var(--navy-2);}
 .btn-amber{background:var(--amber); color:var(--navy);}
 .btn-amber:hover{background:var(--amber-dark); color:var(--white);}
-.btn-ghost{background:transparent; color:var(--navy); border:1.5px solid var(--border-2);}
-.btn-ghost:hover{border-color:var(--navy); background:rgba(16,25,58,0.04);}
+.btn-ghost{background:transparent; color:var(--heading); border:1.5px solid var(--border-2);}
+.btn-ghost:hover{border-color:var(--heading); background:rgba(16,25,58,0.04);}
 .btn-green{background:var(--green); color:var(--white);}
 .btn-green:hover{background:var(--green-dark);}
 .btn-danger-outline{background:transparent; border:1.5px solid var(--red); color:var(--red);}
@@ -211,11 +238,11 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
 /* section shell */
 .section-block{padding:44px 0; border-top:1px solid var(--border);}
 .section-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:22px; gap:16px; flex-wrap:wrap;}
-.section-head h2{font-size:24px; color:var(--navy);}
+.section-head h2{font-size:24px; color:var(--heading);}
 .section-desc{color:var(--ink-soft); font-size:14.5px; max-width:520px;}
 
 .panel{
-  background:var(--white); border:1px solid var(--border); border-radius:12px; padding:26px;
+  background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:26px;
 }
 
 .tabs{display:flex; gap:6px; border-bottom:1px solid var(--border); margin-bottom:20px;}
@@ -223,7 +250,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
   background:none; border:none; padding:10px 4px; margin-right:22px; font-size:14px; font-weight:600;
   color:var(--ink-faint); border-bottom:2px solid transparent; margin-bottom:-1px;
 }
-.tab-btn.active{color:var(--navy); border-bottom-color:var(--amber);}
+.tab-btn.active{color:var(--heading); border-bottom-color:var(--amber);}
 .tab-pane{display:none;}
 .tab-pane.active{display:block;}
 
@@ -233,7 +260,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-
 }
 .drop-zone.drag{border-color:var(--amber); background:#FBF3E4;}
 .drop-zone p{color:var(--ink-soft); font-size:13.5px; margin-top:8px;}
-.drop-zone strong{color:var(--navy);}
+.drop-zone strong{color:var(--heading);}
 
 textarea.paste-area{
   width:100%; min-height:220px; border:1px solid var(--border-2); border-radius:8px;
@@ -242,13 +269,13 @@ textarea.paste-area{
 }
 textarea.paste-area:focus{outline:none; border-color:var(--nta-blue);}
 
-.field-label{font-size:12.5px; font-weight:600; color:var(--navy); margin-bottom:6px; display:block;}
+.field-label{font-size:12.5px; font-weight:600; color:var(--heading); margin-bottom:6px; display:block;}
 .hint{font-size:12px; color:var(--ink-faint); margin-top:6px; line-height:1.5;}
 .hint code{background:var(--paper-2); padding:1px 5px; border-radius:4px; font-family:var(--mono); font-size:11px;}
 
 .format-toggle{display:flex; gap:8px; margin:14px 0;}
 .chip{
-  border:1px solid var(--border-2); background:var(--white); border-radius:20px; padding:6px 13px;
+  border:1px solid var(--border-2); background:var(--surface); border-radius:20px; padding:6px 13px;
   font-size:12.5px; color:var(--ink-soft); font-weight:600;
 }
 .chip.on{background:var(--navy); color:var(--white); border-color:var(--navy);}
@@ -271,8 +298,8 @@ textarea.paste-area:focus{outline:none; border-color:var(--nta-blue);}
 .paper-summary-head h3{font-size:16px; color:var(--white);}
 .paper-summary-head span{font-size:12px; color:rgba(255,255,255,0.65);}
 .summary-stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1px; background:var(--border);}
-.summary-stat{background:var(--white); padding:16px 20px;}
-.summary-stat .num{font-family:var(--serif); font-size:22px; color:var(--navy); font-weight:600;}
+.summary-stat{background:var(--surface); padding:16px 20px;}
+.summary-stat .num{font-family:var(--serif); font-size:22px; color:var(--heading); font-weight:600;}
 .summary-stat .lbl{font-size:11.5px; color:var(--ink-faint); margin-top:2px; text-transform:uppercase; letter-spacing:.04em;}
 
 .review-list{max-height:280px; overflow-y:auto; border-top:1px solid var(--border);}
@@ -303,9 +330,9 @@ textarea.paste-area:focus{outline:none; border-color:var(--nta-blue);}
 .instr-head .meta div{font-size:12px; color:rgba(255,255,255,0.6);}
 .instr-head .meta div b{display:block; font-size:16px; color:var(--white); font-family:var(--serif); margin-top:2px;}
 
-.instr-body{background:var(--white); border:1px solid var(--border); border-top:none; border-radius:0 0 12px 12px; padding:30px;}
+.instr-body{background:var(--surface); border:1px solid var(--border); border-top:none; border-radius:0 0 12px 12px; padding:30px;}
 .instr-section{margin-bottom:26px;}
-.instr-section h4{font-size:14.5px; color:var(--navy); margin-bottom:10px;}
+.instr-section h4{font-size:14.5px; color:var(--heading); margin-bottom:10px;}
 .instr-section ol, .instr-section ul{margin:0; padding-left:20px; color:var(--ink);}
 .instr-section li{font-size:13.6px; line-height:1.75; margin-bottom:6px; color:#2b2f38;}
 
@@ -318,7 +345,7 @@ textarea.paste-area:focus{outline:none; border-color:var(--nta-blue);}
 .declare-row input[type=checkbox]{margin-top:3px; width:16px; height:16px; accent-color:var(--nta-blue);}
 .declare-row label{font-size:13.4px; line-height:1.55; color:var(--ink);}
 .name-row{display:flex; gap:10px; align-items:center; margin-top:14px;}
-.name-row label{font-size:12.8px; font-weight:600; color:var(--navy); white-space:nowrap;}
+.name-row label{font-size:12.8px; font-weight:600; color:var(--heading); white-space:nowrap;}
 .name-row input{flex:1; padding:9px 12px; border:1px solid var(--border-2); border-radius:6px; font-size:13.5px;}
 
 .instr-actions{display:flex; justify-content:space-between; align-items:center; margin-top:26px; gap:12px; flex-wrap:wrap;}
@@ -387,6 +414,16 @@ textarea.paste-area:focus{outline:none; border-color:var(--nta-blue);}
   width:220px; padding:11px 14px; border:1.5px solid #cfd3da; border-radius:6px; font-size:16px; font-family:var(--mono);
 }
 .integer-input-wrap input:focus{outline:none; border-color:var(--nta-blue);}
+.onscreen-keypad{display:grid; grid-template-columns:repeat(3,64px); gap:9px; margin-top:16px;}
+.keypad-btn{
+  height:52px; border-radius:8px; border:1.5px solid #d6d9e0; background:#fff; color:#222;
+  font-size:18px; font-weight:700; font-family:var(--mono);
+}
+.keypad-btn:active{background:#eef2f8;}
+.keypad-btn.keypad-fn{font-family:var(--sans); font-size:12.5px; color:#555;}
+html.dark .keypad-btn{background:#20242F; color:#ECEDF2; border-color:#3a3f52;}
+html.dark .keypad-btn:active{background:#2A3040;}
+html.dark .keypad-btn.keypad-fn{color:#c7cad4;}
 
 .qpanel-spacer{flex:1;}
 
@@ -404,6 +441,22 @@ textarea.paste-area:focus{outline:none; border-color:var(--nta-blue);}
 .palette{
   width:300px; background:#F7F7F7; border-left:1px solid #ddd; overflow-y:auto; flex-shrink:0; padding:16px;
 }
+.global-progress{
+  border:1px solid #e0e0e0; border-radius:8px; overflow:hidden; margin-bottom:14px; background:#fff;
+}
+.gp-row{display:flex;}
+.gp-stat{flex:1; text-align:center; padding:10px 6px; border-right:1px solid #e0e0e0;}
+.gp-stat:last-child{border-right:none;}
+.gp-num{display:block; font-family:var(--serif); font-size:20px; font-weight:700; color:#222;}
+.gp-lbl{display:block; font-size:9.5px; color:#777; text-transform:uppercase; letter-spacing:.03em; margin-top:2px;}
+.gp-stat.gp-attempted .gp-num{color:var(--nta-answered);}
+.gp-stat.gp-notattempted .gp-num{color:var(--nta-notanswered);}
+.gp-total{text-align:center; font-size:10.5px; color:#888; padding:5px 0; border-top:1px solid #e0e0e0;}
+html.dark .global-progress{background:#171A24; border-color:#2A2E3D;}
+html.dark .gp-stat{border-right-color:#2A2E3D;}
+html.dark .gp-total{border-top-color:#2A2E3D; color:#82869A;}
+html.dark .gp-num{color:#ECEDF2;}
+html.dark .gp-lbl{color:#9195a3;}
 .legend-mini{display:grid; grid-template-columns:1fr 1fr; gap:6px 10px; margin-bottom:16px; font-size:10.8px;}
 .legend-mini .li{display:flex; align-items:center; gap:6px; color:#333;}
 .legend-mini .sq{width:20px; height:18px; border-radius:3px; color:#fff; font-size:9px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
@@ -436,10 +489,10 @@ textarea.paste-area:focus{outline:none; border-color:var(--nta-blue);}
 }
 .modal-overlay.show{display:flex;}
 .modal-box{background:#fff; border-radius:12px; max-width:460px; width:100%; padding:26px; box-shadow:0 30px 60px rgba(0,0,0,0.3);}
-.modal-box h3{font-size:18px; color:var(--navy); margin-bottom:14px;}
+.modal-box h3{font-size:18px; color:var(--heading); margin-bottom:14px;}
 .modal-stats{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:16px 0;}
 .modal-stat{background:var(--paper); border-radius:8px; padding:12px; text-align:center;}
-.modal-stat .n{font-family:var(--serif); font-size:20px; font-weight:700; color:var(--navy);}
+.modal-stat .n{font-family:var(--serif); font-size:20px; font-weight:700; color:var(--heading);}
 .modal-stat .l{font-size:10.5px; color:var(--ink-faint); text-transform:uppercase; margin-top:2px;}
 .modal-actions{display:flex; gap:10px; margin-top:18px;}
 
@@ -447,21 +500,21 @@ textarea.paste-area:focus{outline:none; border-color:var(--nta-blue);}
 #screen-analysis{background:var(--paper);}
 .an-wrap{max-width:980px; margin:0 auto; padding:36px 24px 90px;}
 .an-topbar{display:flex; justify-content:space-between; align-items:center; margin-bottom:26px; flex-wrap:wrap; gap:12px;}
-.an-topbar .left b{font-family:var(--serif); font-size:22px; color:var(--navy); display:block;}
+.an-topbar .left b{font-family:var(--serif); font-size:22px; color:var(--heading); display:block;}
 .an-topbar .left span{font-size:12.5px; color:var(--ink-faint);}
 .an-actions{display:flex; gap:10px;}
 
 #pdf-report-root{background:transparent;}
 .report-section{
-  background:var(--white); border:1px solid var(--border); border-radius:12px; padding:26px 28px; margin-bottom:20px;
+  background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:26px 28px; margin-bottom:20px;
 }
-.report-section h3{font-size:17px; color:var(--navy); margin-bottom:6px;}
+.report-section h3{font-size:17px; color:var(--heading); margin-bottom:6px;}
 .report-section .sub{font-size:13px; color:var(--ink-soft); margin-bottom:18px; line-height:1.6;}
 
 .overview-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
 .ov-card{background:var(--paper); border-radius:9px; padding:16px 18px;}
 .ov-card .l{font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-faint); font-weight:700;}
-.ov-card .v{font-family:var(--serif); font-size:24px; color:var(--navy); font-weight:700; margin-top:4px;}
+.ov-card .v{font-family:var(--serif); font-size:24px; color:var(--heading); font-weight:700; margin-top:4px;}
 
 table.data-tbl{width:100%; border-collapse:collapse; font-size:12.8px;}
 table.data-tbl th{
@@ -483,20 +536,20 @@ table.data-tbl tr:last-child td{border-bottom:none;}
 
 .charts-grid{display:grid; grid-template-columns:1fr 1fr; gap:26px;}
 .chart-box{}
-.chart-box .ct{font-size:12.5px; font-weight:700; color:var(--navy); margin-bottom:10px; text-align:center;}
+.chart-box .ct{font-size:12.5px; font-weight:700; color:var(--heading); margin-bottom:10px; text-align:center;}
 .chart-box canvas{max-height:240px;}
 
 .subject-block{border:1px solid var(--border); border-radius:9px; padding:16px 18px; margin-bottom:12px;}
-.subject-block h4{font-size:13.5px; color:var(--navy); margin-bottom:8px;}
+.subject-block h4{font-size:13.5px; color:var(--heading); margin-bottom:8px;}
 .mini-list{list-style:none; margin:0; padding:0;}
 .mini-list li{font-size:13px; padding:6px 0; border-bottom:1px dashed var(--border); color:var(--ink);}
 .mini-list li:last-child{border-bottom:none;}
-.mini-list .qtag{font-family:var(--mono); font-weight:700; color:var(--navy); margin-right:8px;}
+.mini-list .qtag{font-family:var(--mono); font-weight:700; color:var(--heading); margin-right:8px;}
 
 .movement-item{display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--border); font-size:13px;}
 .movement-item:last-child{border-bottom:none;}
 .movement-dot{width:9px; height:9px; border-radius:50%; background:var(--amber); flex-shrink:0;}
-.movement-item b{color:var(--navy);}
+.movement-item b{color:var(--heading);}
 .movement-item span{color:var(--ink-faint); margin-left:auto; font-family:var(--mono); font-size:12px;}
 
 .no-key-note{
@@ -565,12 +618,11 @@ table.data-tbl tr:last-child td{border-bottom:none;}
       <div class="section-head">
         <h2>Load a question paper</h2>
       </div>
-      <p class="section-desc" style="margin-bottom:20px;">Bring your own paper — Physics Wallah / Prayas style sheets, a plain text list of questions, or a structured JSON file. Review what gets parsed before you start the timer.</p>
+      <p class="section-desc" style="margin-bottom:20px;">Bring your own paper — Physics Wallah / Prayas style sheets, or a structured JSON file. Review what gets parsed before you start the timer.</p>
 
       <div class="panel">
         <div class="tabs">
           <button class="tab-btn active" data-tab="tab-file" onclick="switchUploadTab('tab-file')">Upload a file</button>
-          <button class="tab-btn" data-tab="tab-paste" onclick="switchUploadTab('tab-paste')">Paste text</button>
           <button class="tab-btn" data-tab="tab-json" onclick="switchUploadTab('tab-json')">JSON template</button>
         </div>
 
@@ -582,20 +634,6 @@ table.data-tbl tr:last-child td{border-bottom:none;}
             <input type="file" id="file-input" accept=".txt,.json,.pdf" style="display:none;">
           </div>
           <div id="file-status" class="status-msg"></div>
-        </div>
-
-        <div class="tab-pane" id="tab-paste">
-          <label class="field-label">Paste the paper text</label>
-          <textarea class="paste-area" id="paste-input" placeholder="Q1  xy = c^2, then dy/dx
-(1) x/y
-(2) y/x
-(3) -x/y
-(4) -y/x
-
-Q2  ..."></textarea>
-          <div class="hint">Start questions with <code>Q1</code>, <code>Q2</code>… and options with <code>(1)</code>–<code>(4)</code>. Add a short heading line like <code>Physics</code> / <code>Chemistry</code> / <code>Mathematics</code> before each section to auto‑split subjects.</div>
-          <div style="margin-top:14px;"><button class="btn btn-primary btn-sm" onclick="parsePastedText()">Parse pasted text</button></div>
-          <div id="paste-status" class="status-msg"></div>
         </div>
 
         <div class="tab-pane" id="tab-json">
@@ -746,6 +784,7 @@ Q2  ..."></textarea>
     </div>
 
     <div class="palette">
+      <div class="global-progress" id="global-progress"></div>
       <div class="legend-mini">
         <div class="li"><span class="sq" style="background:#9AA0AF" id="cnt-notvisited">0</span>Not visited</div>
         <div class="li"><span class="sq" style="background:#E4572E" id="cnt-notanswered">0</span>Not answered</div>
@@ -1319,18 +1358,7 @@ function extractPageTextTwoColumn(page){
   }) : Promise.resolve('');
 }
 
-/* ---------- paste / json tabs ---------- */
-function parsePastedText(){
-  var text = document.getElementById('paste-input').value;
-  if(!text.trim()){ setStatus('paste-status','err','Paste some text first.'); return; }
-  var result = parsePlainText(text);
-  var paper = { title: 'Pasted Paper', durationMinutes: 60, subjects: result.subjects };
-  var n = subjectQuestionCount(paper);
-  if(n===0){ setStatus('paste-status','err','No questions recognised. Make sure questions start with Q1, Q2… and options with (1)-(4).'); return; }
-  onPaperLoaded(paper, result.warnings);
-  setStatus('paste-status','ok','Parsed '+n+' question(s). Please review below.');
-}
-
+/* ---------- json tab ---------- */
 function parseJsonInput(){
   var text = document.getElementById('json-input').value;
   if(!text.trim()){ setStatus('json-status','err','Paste JSON first, or download the template.'); return; }
@@ -1569,8 +1597,35 @@ function renderCurrentQuestion(){
     answerArea.innerHTML = '<div class="integer-input-wrap">'+
       '<label>Enter your numerical answer (Section B \u2014 no options, type the value)</label>'+
       '<input type="number" id="integer-answer" value="'+(saved!==undefined && saved!==null? saved : '')+'" oninput="selectIntegerAnswer(this.value)" placeholder="e.g. 47">'+
+      '<div class="onscreen-keypad">'+
+        [1,2,3,4,5,6,7,8,9].map(function(d){ return '<button type="button" class="keypad-btn" onclick="keypadPress(\''+d+'\')">'+d+'</button>'; }).join('')+
+        '<button type="button" class="keypad-btn keypad-fn" onclick="keypadClear()">Clear</button>'+
+        '<button type="button" class="keypad-btn" onclick="keypadPress(\'0\')">0</button>'+
+        '<button type="button" class="keypad-btn keypad-fn" onclick="keypadBackspace()">\u232B</button>'+
+      '</div>'+
     '</div>';
   }
+}
+
+function keypadPress(d){
+  var input = document.getElementById('integer-answer');
+  if(!input) return;
+  var newVal = (input.value || '') + d;
+  input.value = newVal;
+  selectIntegerAnswer(newVal);
+}
+function keypadBackspace(){
+  var input = document.getElementById('integer-answer');
+  if(!input) return;
+  var newVal = (input.value || '').slice(0, -1);
+  input.value = newVal;
+  selectIntegerAnswer(newVal);
+}
+function keypadClear(){
+  var input = document.getElementById('integer-answer');
+  if(!input) return;
+  input.value = '';
+  selectIntegerAnswer('');
 }
 
 function selectOption(n){
@@ -1618,6 +1673,25 @@ function updateLegendCounts(){
   document.getElementById('cnt-answered').textContent = counts['answered'];
   document.getElementById('cnt-marked').textContent = counts['marked'];
   document.getElementById('cnt-answeredmarked').textContent = counts['answered-marked'];
+  updateGlobalProgress();
+}
+
+/* Whole-paper attempted / not-attempted count, shown above the palette
+   regardless of which section is currently active. */
+function updateGlobalProgress(){
+  var total = exam.order.length;
+  var attempted = 0;
+  exam.order.forEach(function(o){
+    var st = exam.status[o.id];
+    if(st==='answered' || st==='answered-marked') attempted++;
+  });
+  var notAttempted = total - attempted;
+  document.getElementById('global-progress').innerHTML =
+    '<div class="gp-row">'+
+      '<div class="gp-stat gp-attempted"><span class="gp-num">'+attempted+'</span><span class="gp-lbl">Attempted</span></div>'+
+      '<div class="gp-stat gp-notattempted"><span class="gp-num">'+notAttempted+'</span><span class="gp-lbl">Not attempted</span></div>'+
+    '</div>'+
+    '<div class="gp-total">out of '+total+' questions</div>';
 }
 
 function markAnswerSavedTs(qid){
@@ -1764,7 +1838,8 @@ function computeAnalysis(){
 
       subj.rows.push({
         number:q.number, chapter:q.chapter||s.name, topic:q.topic||'General', difficulty:q.difficulty||'Moderate',
-        allotted:allotted, spent:spent, attempted:attempted, hasKey:hasKey, correct:correct, cls:cls
+        allotted:allotted, spent:spent, attempted:attempted, hasKey:hasKey, correct:correct, cls:cls,
+        userAnswer: exam.answers[q.number], correctAnswerRaw: q.correctAnswer, q: q
       });
       overall.rows.push(subj.rows[subj.rows.length-1]);
     });
@@ -1834,6 +1909,18 @@ function answerBadge(r){
   if(!r.hasKey) return '<span class="badge dash">No key</span>';
   if(!r.attempted) return '<span class="badge unattempted">Unattempted</span>';
   return r.correct ? '<span class="badge correct">Correct</span>' : '<span class="badge incorrect">Incorrect</span>';
+}
+/* Renders a saved answer value in a readable form -- "(2) option text" for
+   MCQs, or the plain number for Section B / integer-type questions. */
+function formatAnswerValue(q, val){
+  if(val===undefined || val===null || val===''){ return '<span style="color:var(--ink-faint);">\u2014</span>'; }
+  if(q.type === 'mcq'){
+    var idx = Number(val) - 1;
+    var text = (q.options && q.options[idx]) ? q.options[idx] : '';
+    var shortText = text.length > 42 ? text.slice(0,42) + '\u2026' : text;
+    return '<b>('+esc(val)+')</b>' + (shortText ? ' '+esc(shortText) : '');
+  }
+  return '<b>'+esc(val)+'</b>';
 }
 
 function renderAnalysisReport(report, wasAuto){
@@ -1959,13 +2046,15 @@ function renderAnalysisReport(report, wasAuto){
   var completeRows = o.rows.map(function(r){
     return '<tr><td>'+r.number+'</td><td>'+esc(r.chapter)+'</td><td>'+esc(r.topic)+'</td><td>'+esc(r.difficulty)+'</td>'+
       '<td>'+Math.round(r.allotted)+'s</td><td>'+Math.round(r.spent)+'s</td><td>'+(r.attempted?'Yes':'No')+'</td>'+
+      '<td>'+formatAnswerValue(r.q, r.userAnswer)+'</td>'+
+      '<td>'+(r.hasKey ? formatAnswerValue(r.q, r.correctAnswerRaw) : '<span style="color:var(--ink-faint);">No key</span>')+'</td>'+
       '<td>'+answerBadge(r)+'</td><td>'+badgeFor(r.cls)+'</td></tr>';
   }).join('');
   sections.push(
     '<div class="report-section" id="sec-complete">'+
       '<h3>Complete analysis</h3>'+
       '<div class="sub">Every question, in order.</div>'+
-      '<div class="tbl-wrap"><table class="data-tbl"><thead><tr><th>Q</th><th>Chapter</th><th>Topic</th><th>Difficulty</th><th>Allotted</th><th>Spent</th><th>Attempted</th><th>Answer</th><th>Overview</th></tr></thead><tbody>'+completeRows+'</tbody></table></div>'+
+      '<div class="tbl-wrap"><table class="data-tbl"><thead><tr><th>Q</th><th>Chapter</th><th>Topic</th><th>Difficulty</th><th>Allotted</th><th>Spent</th><th>Attempted</th><th>Your Answer</th><th>Correct Answer</th><th>Result</th><th>Overview</th></tr></thead><tbody>'+completeRows+'</tbody></table></div>'+
     '</div>'
   );
 
@@ -2078,7 +2167,6 @@ function addCanvasPaginated(pdf, canvas, addPageFirst){
    ===================================================================================== */
 function resetToHome(){
   exam = null;
-  document.getElementById('paste-input').value = '';
   document.getElementById('json-input').value = '';
   document.getElementById('file-status').classList.remove('show');
   document.getElementById('chk-instructions').checked = false;
