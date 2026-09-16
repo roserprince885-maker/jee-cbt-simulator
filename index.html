@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>JEE CBT Simulator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -87,7 +87,6 @@ html.dark .modal-box h3{color:#ECEDF2;}
 html.dark .modal-stat{background:#20242F;}
 html.dark .review-row:nth-child(even){background:#171A24;}
 html.dark .review-row{border-bottom-color:#2A2E3D;}
-html.dark .qmeta-row{}
 html.dark textarea.paste-area{background:#171A24; color:#ECEDF2; border-color:#383D50;}
 html.dark .drop-zone{background:#171A24;}
 html.dark .chip{background:#191C27;}
@@ -99,6 +98,7 @@ html.dark .badge.wasted{background:#132A40; color:#7FB8ED;}
 html.dark .badge.overtime{background:#2B1A38; color:#C79CE6;}
 html.dark .badge.confused{background:#332A0B; color:#E8C86A;}
 html.dark .badge.dash{background:#232838; color:#8b8f9e;}
+html.dark .palette-drawer-close{background:#20242F; color:#ECEDF2; border-color:#3a3f52;}
 
 .theme-toggle-btn{
   position:fixed; bottom:18px; right:18px; z-index:900;
@@ -351,7 +351,7 @@ textarea.paste-area:focus{outline:none; border-color:var(--nta-blue);}
 .instr-actions{display:flex; justify-content:space-between; align-items:center; margin-top:26px; gap:12px; flex-wrap:wrap;}
 
 /* ============================= EXAM SCREEN ============================= */
-#screen-exam{background:#EDEDED; height:100vh; flex-direction:column; overflow:hidden;}
+#screen-exam{background:#EDEDED; height:100vh; height:100dvh; flex-direction:column; overflow:hidden;}
 #screen-exam.active{display:flex;}
 .exam-header{
   background:var(--white); display:flex; justify-content:space-between; align-items:center;
@@ -389,14 +389,54 @@ textarea.paste-area:focus{outline:none; border-color:var(--nta-blue);}
 }
 .subject-tab.active{opacity:1; background:var(--nta-blue); box-shadow:0 0 0 2px rgba(255,255,255,0.5) inset;}
 
-.exam-main{flex:1; display:flex; overflow:hidden;}
+.palette-toggle-btn{
+  display:none;
+  align-items:center;
+  gap:6px;
+  background:var(--navy);
+  color:#fff;
+  border:none;
+  padding:6px 12px;
+  border-radius:4px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.palette-drawer-header{
+  display:none;
+  justify-content:space-between;
+  align-items:center;
+  padding-bottom:10px;
+  margin-bottom:12px;
+  border-bottom:1px solid #ddd;
+}
+.palette-drawer-title{font-size:13px; font-weight:700; color:var(--heading);}
+.palette-drawer-close{
+  border:1px solid #c9c9c9;
+  background:#fff;
+  color:#333;
+  border-radius:4px;
+  padding:4px 8px;
+  font-size:12px;
+  font-weight:700;
+}
+.palette-backdrop{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.5);
+  z-index:49;
+}
+.palette-backdrop.show{display:block;}
+
+.exam-main{flex:1; display:flex; overflow:hidden; position:relative;}
 .qpanel{flex:1; background:#fff; overflow-y:auto; padding:22px 26px; display:flex; flex-direction:column;}
 .qpanel-head{display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:1px solid #e2e2e2;}
 .qpanel-head h3{font-size:15.5px; color:#222;}
-.qmeta-row{display:flex; gap:10px; margin-top:6px;}
+.qmeta-row{display:flex; gap:10px; margin-top:6px; flex-wrap:wrap;}
 .qmeta-tag{font-size:10.5px; padding:2px 8px; border-radius:10px; background:#f1f1f1; color:#666; font-weight:600;}
 
-.qtext{font-size:15px; line-height:1.75; color:#1a1a1a; margin:20px 0 22px; white-space:pre-wrap;}
+.qtext{font-size:15px; line-height:1.75; color:#1a1a1a; margin:20px 0 22px; white-space:pre-wrap; word-break:break-word;}
 .options-list{display:flex; flex-direction:column; gap:2px;}
 .option-row{
   display:flex; align-items:flex-start; gap:12px; padding:11px 14px; border-radius:6px; cursor:pointer;
@@ -406,7 +446,7 @@ textarea.paste-area:focus{outline:none; border-color:var(--nta-blue);}
 .option-row.selected{background:#E8F0FE; border-color:#BBD4FA;}
 .option-row input[type=radio]{margin-top:3px; width:16px; height:16px; accent-color:var(--nta-blue);}
 .option-row .opt-num{font-weight:700; color:#333; flex-shrink:0;}
-.option-row .opt-text{font-size:14.5px; line-height:1.6; color:#1a1a1a;}
+.option-row .opt-text{font-size:14.5px; line-height:1.6; color:#1a1a1a; word-break:break-word;}
 
 .integer-input-wrap{margin-top:8px;}
 .integer-input-wrap label{font-size:12.8px; color:#555; font-weight:600; display:block; margin-bottom:8px;}
@@ -563,12 +603,199 @@ table.data-tbl tr:last-child td{border-bottom:none;}
 .spinner{width:34px; height:34px; border-radius:50%; border:3px solid rgba(255,255,255,0.3); border-top-color:#fff; animation:spin 0.8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-@media (max-width:880px){
-  .hero{grid-template-columns:1fr;}
-  .overview-grid{grid-template-columns:1fr 1fr;}
-  .charts-grid{grid-template-columns:1fr;}
-  .exam-main{flex-direction:column;}
-  .palette{width:100%; order:2;}
+/* ============================= MOBILE SPECIFIC RESPONSIVE ============================= */
+@media (max-width: 768px) {
+  /* Global reset */
+  body {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Home Screen */
+  .home-wrap { padding: 0 16px 60px; }
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 24px 0 20px;
+  }
+  .hero h1 { font-size: 28px; line-height: 1.2; }
+  .hero-sub { font-size: 14.5px; }
+  .hero-visual { display: none; }
+  .panel { padding: 18px 14px; }
+  .tabs { overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+  .tab-btn { margin-right: 14px; padding: 8px 2px; }
+  .summary-stats { grid-template-columns: repeat(2, 1fr); }
+
+  /* Instructions Screen */
+  .instr-shell { padding: 16px 12px 60px; }
+  .instr-head { padding: 18px 16px; }
+  .instr-head h2 { font-size: 20px; }
+  .instr-head .meta { gap: 12px; }
+  .instr-head .meta div b { font-size: 14px; }
+  .instr-body { padding: 20px 14px; }
+  .instr-actions { flex-direction: column-reverse; align-items: stretch; }
+  .instr-actions .btn { width: 100%; justify-content: center; }
+
+  /* Exam Screen - Header & Topbar */
+  #screen-exam {
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+  .exam-header {
+    padding: 6px 10px;
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+  .nta-logo { width: 32px; height: 32px; }
+  .nta-logo::after { width: 22px; height: 22px; }
+  .nta-logo b { font-size: 8px; }
+  .nta-brand-text .l1 { font-size: 11.5px; line-height: 1.1; }
+  .nta-brand-text .l2 { font-size: 8.5px; }
+  .cand-avatar { display: none; }
+  .cand-info { font-size: 9.5px; line-height: 1.25; }
+  .timer-box {
+    margin-left: auto;
+    padding: 4px 7px;
+    font-size: 11.5px;
+    flex-shrink: 0;
+  }
+  .timer-box .tl { font-size: 8px; }
+
+  .exam-topbar {
+    padding: 6px 10px;
+    flex-wrap: nowrap;
+    overflow: visible;
+  }
+  .exam-topbar .left {
+    flex: 1;
+    overflow: hidden;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+  .exam-topbar .paper-name {
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .subject-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+  }
+  .subject-tab {
+    padding: 5px 9px;
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+  .palette-toggle-btn {
+    display: inline-flex;
+  }
+
+  /* Exam Main Content */
+  .exam-main {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+  }
+  .qpanel {
+    padding: 12px 14px 16px;
+    width: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .qpanel-head h3 { font-size: 14.5px; }
+  .qtext {
+    font-size: 13.5px;
+    line-height: 1.6;
+    margin: 12px 0 16px;
+  }
+  .option-row {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  .option-row .opt-text { font-size: 13px; }
+
+  /* Numerical keypad on mobile */
+  .integer-input-wrap input {
+    width: 100%;
+    max-width: 220px;
+  }
+  .onscreen-keypad {
+    grid-template-columns: repeat(3, 56px);
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .keypad-btn {
+    height: 42px;
+    font-size: 16px;
+  }
+
+  /* Action Buttons: 2x2 grid for easy touch reach */
+  .action-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding-top: 12px;
+  }
+  .act-btn {
+    padding: 9px 4px;
+    font-size: 11px;
+    text-align: center;
+    border-radius: 4px;
+  }
+  .qpanel-bottombar {
+    padding-top: 12px;
+  }
+  .nav-btn, .submit-btn {
+    padding: 8px 14px;
+    font-size: 11.5px;
+  }
+
+  /* Palette as an off-canvas drawer */
+  .palette-drawer-header {
+    display: flex;
+  }
+  .palette {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 84%;
+    max-width: 320px;
+    height: 100%;
+    z-index: 50;
+    box-shadow: -6px 0 20px rgba(0,0,0,0.3);
+    transform: translateX(100%);
+    transition: transform 0.25s ease-in-out;
+    padding: 14px;
+  }
+  .palette.mobile-open {
+    transform: translateX(0);
+  }
+  .palette-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+  }
+  .pal-btn {
+    font-size: 11px;
+  }
+
+  /* Analysis Report */
+  .an-wrap { padding: 18px 12px 70px; }
+  .an-topbar .left b { font-size: 18px; }
+  .an-actions { width: 100%; }
+  .an-actions .btn { flex: 1; justify-content: center; }
+  .overview-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .ov-card { padding: 12px 14px; }
+  .ov-card .v { font-size: 18px; }
+  .charts-grid { grid-template-columns: 1fr; gap: 16px; }
+  .chart-box canvas { max-height: 200px; }
+  .theme-toggle-btn {
+    bottom: 12px;
+    right: 12px;
+    padding: 8px 14px;
+    font-size: 11.5px;
+  }
 }
 </style>
 </head>
@@ -682,14 +909,13 @@ table.data-tbl tr:last-child td{border-bottom:none;}
         <h4>General instructions</h4>
         <ol>
           <li>The clock has been set at the server and the countdown at the top of the screen will display the remaining time. When the timer reaches zero, the test will be submitted automatically.</li>
-          <li>The Question Palette on the right shows the status of every question using the colours explained below. Use it to jump directly to any question.</li>
-          <li>Each correct answer awards <b>+4 marks</b>; each incorrect answer deducts <b>−1 mark</b>. Unattempted questions receive 0 marks. (Standard JEE Main scheme — adjust in your own head if your paper says otherwise.)</li>
-          <li>To select an option, click on the option text or its radio button. To change your answer, simply click a different option — no need to clear it first.</li>
-          <li>Clicking <b>Save &amp; Next</b> saves your answer to the current question and moves to the next one. Clicking <b>Clear Response</b> removes your selected answer for the current question.</li>
+          <li>The Question Palette shows the status of every question using the colours explained below. Use it to jump directly to any question. On phones, tap the <b>📋 Palette</b> button at the top right to open and close it.</li>
+          <li>Each correct answer awards <b>+4 marks</b>; each incorrect answer deducts <b>−1 mark</b>. Unattempted questions receive 0 marks.</li>
+          <li>To select an option, click on the option text or its radio button. To change your answer, simply click a different option.</li>
+          <li>Clicking <b>Save &amp; Next</b> saves your answer to the current question and moves to the next one. Clicking <b>Clear Response</b> removes your selected answer.</li>
           <li>Clicking <b>Mark for Review &amp; Next</b> flags the question for revisiting later. A marked question that also has a saved answer will still be evaluated.</li>
-          <li>Clicking the plain <b>&lt;&lt; Back</b> / <b>Next &gt;&gt;</b> buttons at the bottom moves between questions <i>without</i> saving your current selection — get in the habit of using Save &amp; Next instead.</li>
-          <li>You can navigate between Physics, Chemistry and Mathematics (or whatever sections your paper has) at any time using the tabs at the top.</li>
-          <li>Do not attempt to close this tab or exit full‑screen during the test — the timer keeps running regardless.</li>
+          <li>Clicking the plain <b>&lt;&lt; Back</b> / <b>Next &gt;&gt;</b> buttons at the bottom moves between questions <i>without</i> saving your current selection.</li>
+          <li>You can navigate between subjects at any time using the tabs at the top.</li>
         </ol>
       </div>
 
@@ -754,6 +980,9 @@ table.data-tbl tr:last-child td{border-bottom:none;}
       <span class="paper-name" id="topbar-paper-name">JEE MAIN</span>
       <div class="subject-tabs" id="subject-tabs"></div>
     </div>
+    <button class="palette-toggle-btn" id="palette-toggle-btn" onclick="toggleMobilePalette()">
+      📋 Palette
+    </button>
   </div>
 
   <div class="exam-main">
@@ -770,9 +999,9 @@ table.data-tbl tr:last-child td{border-bottom:none;}
 
       <div class="action-row">
         <button class="act-btn act-save" onclick="actionSaveNext()">Save &amp; Next</button>
-        <button class="act-btn act-mark-save" onclick="actionSaveMark()">Save &amp; Mark for Review</button>
-        <button class="act-btn act-clear" onclick="actionClear()">Clear Response</button>
-        <button class="act-btn act-mark-next" onclick="actionMarkNext()">Mark for Review &amp; Next</button>
+        <button class="act-btn act-mark-save" onclick="actionSaveMark()">Save &amp; Mark</button>
+        <button class="act-btn act-clear" onclick="actionClear()">Clear</button>
+        <button class="act-btn act-mark-next" onclick="actionMarkNext()">Mark &amp; Next</button>
       </div>
       <div class="qpanel-bottombar">
         <button class="nav-btn" onclick="actionBack()">&lt;&lt; Back</button>
@@ -783,7 +1012,14 @@ table.data-tbl tr:last-child td{border-bottom:none;}
       </div>
     </div>
 
-    <div class="palette">
+    <!-- Backdrop for mobile drawer -->
+    <div class="palette-backdrop" id="palette-backdrop" onclick="toggleMobilePalette()"></div>
+
+    <div class="palette" id="exam-palette">
+      <div class="palette-drawer-header">
+        <span class="palette-drawer-title">Question Palette</span>
+        <button class="palette-drawer-close" onclick="toggleMobilePalette()">✕ Close</button>
+      </div>
       <div class="global-progress" id="global-progress"></div>
       <div class="legend-mini">
         <div class="li"><span class="sq" style="background:#9AA0AF" id="cnt-notvisited">0</span>Not visited</div>
@@ -824,7 +1060,7 @@ table.data-tbl tr:last-child td{border-bottom:none;}
       </div>
       <div class="an-actions">
         <button class="btn btn-ghost btn-sm" onclick="resetToHome()">Take another test</button>
-        <button class="btn btn-amber btn-sm" onclick="downloadReportPdf()">⬇ Download as PDF</button>
+        <button class="btn btn-amber btn-sm" onclick="downloadReportPdf()">⬇ Download PDF</button>
       </div>
     </div>
     <div id="pdf-report-root"></div>
@@ -880,6 +1116,15 @@ function toggleTheme(){
   }
 }
 
+/* ---------- mobile drawer toggle ---------- */
+function toggleMobilePalette(){
+  var pal = document.getElementById('exam-palette');
+  var bdrop = document.getElementById('palette-backdrop');
+  if(!pal) return;
+  var isOpen = pal.classList.toggle('mobile-open');
+  if(bdrop) bdrop.classList.toggle('show', isOpen);
+}
+
 /* ---------- default per-difficulty allotted time (seconds) ---------- */
 var DEFAULT_ALLOTTED = { 'Easy':90, 'Moderate':150, 'Tough':210, 'Difficult':210 };
 function allottedFor(q){
@@ -896,7 +1141,7 @@ var SECTION_NAME_RE = /^(physics|chemistry|mathematics|maths|math|biology|genera
 function parsePlainText(rawText){
   var warnings = [];
   var lines = rawText.replace(/\r/g,'').split('\n');
-  var subjects = []; // {name, questions:[]}
+  var subjects = [];
   var currentSubject = null;
 
   function ensureSubject(name){
@@ -908,11 +1153,8 @@ function parsePlainText(rawText){
   }
   ensureSubject('General');
 
-  // Join lines, then split on Q markers. This is more robust than a line-scanner
-  // because option text can wrap across lines.
   var joined = lines.map(function(l){ return l; });
 
-  // First pass: detect section headings and rewrite them as sentinel markers
   var withMarkers = [];
   joined.forEach(function(line){
     var trimmed = line.trim();
@@ -924,10 +1166,7 @@ function parsePlainText(rawText){
     }
   });
   var fullText = withMarkers.join('\n');
-
-  // Split into chunks at section markers first
   var sectionChunks = fullText.split(/@@SECTION@@:/);
-  // sectionChunks[0] is content before any explicit heading (goes to 'General')
 
   sectionChunks.forEach(function(chunk, idx){
     var subjName = 'General';
@@ -940,15 +1179,12 @@ function parsePlainText(rawText){
     if(!body.trim()) return;
     var subj = ensureSubject(subjName);
 
-    // split body on Q<number> markers (must be start-of-line-ish, allow leading spaces)
     var qSplit = body.split(/\n?\s*Q\s?(\d{1,3})\b\.?\s*/);
-    // qSplit alternates: [preamble, num, block, num, block, ...]
     for(var i=1; i<qSplit.length; i+=2){
       var num = parseInt(qSplit[i], 10);
       var block = qSplit[i+1] || '';
       if(!block.trim()) continue;
 
-      // find options (1)...(4)
       var optRe = /\(([1-4])\)\s*([\s\S]*?)(?=\([1-4]\)|$)/g;
       var options = [];
       var stemEnd = block.length;
@@ -1092,8 +1328,7 @@ function downloadTemplate(){
 }
 
 /* =====================================================================================
-   SAMPLE PAPER  (original questions written for this demo — not reproducing any
-   uploaded/copyrighted paper — so the answer key is guaranteed correct)
+   SAMPLE PAPER
    ===================================================================================== */
 function buildSamplePaper(){
   return {
@@ -1113,7 +1348,7 @@ function buildSamplePaper(){
         name: "Chemistry",
         questions: [
           { number:5, type:'mcq', text:'The SI unit of amount of substance is:', options:['Gram','Kilogram','Mole','Litre'], correctAnswer:3, difficulty:'Easy', chapter:'Basic Concepts', topic:'Units' },
-          { number:6, type:'mcq', text:'Which law states that a chemical compound always contains the same elements in a fixed ratio by mass?', options:['Law of multiple proportions','Law of definite proportions','Law of conservation of mass','Avogadro\u2019s law'], correctAnswer:2, difficulty:'Easy', chapter:'Basic Concepts', topic:'Laws of Chemical Combination' },
+          { number:6, type:'mcq', text:'Which law states that a chemical compound always contains the same elements in a fixed ratio by mass?', options:['Law of multiple proportions','Law of definite proportions','Law of conservation of mass','Avogadro’s law'], correctAnswer:2, difficulty:'Easy', chapter:'Basic Concepts', topic:'Laws of Chemical Combination' },
           { number:7, type:'mcq', text:'The number of moles in 44 g of CO2 (molar mass 44 g/mol) is:', options:['0.5','1','2','4'], correctAnswer:2, difficulty:'Moderate', chapter:'Basic Concepts', topic:'Mole Concept' },
           { number:8, type:'integer', text:'Calculate the molecular mass of water, H2O (H = 1 u, O = 16 u). Enter the value in amu.', correctAnswer:18, difficulty:'Easy', chapter:'Basic Concepts', topic:'Molecular Mass', allottedSeconds:90 }
         ]
@@ -1135,11 +1370,11 @@ function buildSamplePaper(){
    APP STATE
    ===================================================================================== */
 var app = {
-  paper: null,          // {title, durationMinutes, subjects:[{name, questions:[]}]}
+  paper: null,
   parseWarnings: []
 };
 
-var exam = null; // built when starting a test
+var exam = null;
 
 function showScreen(name){
   $all('.screen').forEach(function(s){ s.classList.remove('active'); });
@@ -1148,7 +1383,7 @@ function showScreen(name){
 }
 
 /* =====================================================================================
-   HOME SCREEN — upload wiring
+   HOME SCREEN
    ===================================================================================== */
 function scrollToUpload(){
   document.getElementById('upload-section').scrollIntoView({behavior:'smooth'});
@@ -1292,7 +1527,7 @@ function handleFile(file){
 
 function handlePdfFile(file){
   if(typeof pdfjsLib === 'undefined'){
-    setStatus('file-status','err','PDF parsing library did not load (no network access to the CDN?). Please copy the paper text and use the "Paste text" tab instead.');
+    setStatus('file-status','err','PDF parsing library did not load. Please copy the paper text and use the "Paste text" tab instead.');
     return;
   }
   try{
@@ -1314,7 +1549,7 @@ function handlePdfFile(file){
       var paper = { title: file.name.replace(/\.[^.]+$/,''), durationMinutes: 60, subjects: result.subjects };
       var n = subjectQuestionCount(paper);
       if(n===0){
-        setStatus('file-status','err','Could not automatically extract questions from this PDF (multi‑column layouts are hard to parse reliably). Please copy the text and use the "Paste text" tab, or use the JSON template.');
+        setStatus('file-status','err','Could not automatically extract questions from this PDF. Please copy the text and use the "Paste text" tab, or use the JSON template.');
         return;
       }
       onPaperLoaded(paper, result.warnings.concat(['Parsed from a PDF — automatic extraction can misplace text on multi-column layouts. Please double‑check every question below.']));
@@ -1419,9 +1654,6 @@ function subjectAbbrev(name){
   return (name||'General').toUpperCase();
 }
 
-/* Split every subject into Section A (MCQ) and Section B (Integer type),
-   mirroring the real JEE Main paper structure. Sections with zero questions
-   of that type are skipped. */
 function buildSections(paper){
   var sections = [];
   paper.subjects.forEach(function(s, si){
@@ -1429,10 +1661,10 @@ function buildSections(paper){
     var intQs = s.questions.filter(function(q){ return q.type === 'integer'; });
     var abbr = subjectAbbrev(s.name);
     if(mcqQs.length){
-      sections.push({ si:si, subjectName:s.name, sectionType:'A', label:s.name+' \u2014 Section A (MCQ)', shortLabel:abbr+' A', questions:mcqQs });
+      sections.push({ si:si, subjectName:s.name, sectionType:'A', label:s.name+' — Section A (MCQ)', shortLabel:abbr+' A', questions:mcqQs });
     }
     if(intQs.length){
-      sections.push({ si:si, subjectName:s.name, sectionType:'B', label:s.name+' \u2014 Section B (Numerical)', shortLabel:abbr+' B', questions:intQs });
+      sections.push({ si:si, subjectName:s.name, sectionType:'B', label:s.name+' — Section B (Numerical)', shortLabel:abbr+' B', questions:intQs });
     }
   });
   return sections;
@@ -1455,11 +1687,11 @@ function buildExamState(paper, candidateName){
     sections: sections,
     order: order,
     status: status, answers: answers, timeSpent: timeSpent, visited: visited,
-    answerFinalTs: {}, // qid -> last save timestamp (ms since exam start)
+    answerFinalTs: {},
     currentIndex: 0,
     currentSectionIdx: 0,
     lastVisitedInSection: {},
-    subjectMovements: [], // {subject, durationSeconds} -- one entry per section visited, in order
+    subjectMovements: [],
     currentMovementStart: 0,
     remainingSeconds: paper.durationMinutes*60,
     examStartTs: null,
@@ -1505,6 +1737,7 @@ function exitFullscreenSafe(){
   if(ex && (document.fullscreenElement || document.webkitFullscreenElement)){ try{ ex.call(document); }catch(e){} }
 }
 function handleFullscreenChange(){
+  if(window.innerWidth <= 768) return; // Ignore on mobile touch devices
   var inFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
   var warn = document.getElementById('fs-warning');
   if(!inFs && exam && !exam.finished){ warn.classList.add('show'); }
@@ -1578,7 +1811,7 @@ function renderCurrentQuestion(){
   var sec = exam.sections[o.secIdx];
   document.getElementById('q-heading').textContent = 'Question ' + q.number + ':';
   document.getElementById('q-meta-row').innerHTML =
-    '<span class="qmeta-tag">'+esc(sec.subjectName)+' \u00b7 Section '+esc(sec.sectionType)+'</span>'+
+    '<span class="qmeta-tag">'+esc(sec.subjectName)+' · Section '+esc(sec.sectionType)+'</span>'+
     (q.chapter ? '<span class="qmeta-tag">'+esc(q.chapter)+'</span>' : '') ;
   document.getElementById('q-text').textContent = q.text;
 
@@ -1595,13 +1828,13 @@ function renderCurrentQuestion(){
     }).join('') + '</div>';
   } else {
     answerArea.innerHTML = '<div class="integer-input-wrap">'+
-      '<label>Enter your numerical answer (Section B \u2014 no options, type the value)</label>'+
+      '<label>Enter numerical answer (Section B):</label>'+
       '<input type="number" id="integer-answer" value="'+(saved!==undefined && saved!==null? saved : '')+'" oninput="selectIntegerAnswer(this.value)" placeholder="e.g. 47">'+
       '<div class="onscreen-keypad">'+
         [1,2,3,4,5,6,7,8,9].map(function(d){ return '<button type="button" class="keypad-btn" onclick="keypadPress(\''+d+'\')">'+d+'</button>'; }).join('')+
         '<button type="button" class="keypad-btn keypad-fn" onclick="keypadClear()">Clear</button>'+
         '<button type="button" class="keypad-btn" onclick="keypadPress(\'0\')">0</button>'+
-        '<button type="button" class="keypad-btn keypad-fn" onclick="keypadBackspace()">\u232B</button>'+
+        '<button type="button" class="keypad-btn keypad-fn" onclick="keypadBackspace()">⌫</button>'+
       '</div>'+
     '</div>';
   }
@@ -1641,8 +1874,6 @@ function selectIntegerAnswer(val){
   exam.answers[q.number] = parseInt(val,10);
 }
 
-/* Palette shows ONLY the currently active section's questions -- not the
-   whole paper -- so it always matches what's in the tab bar above it. */
 function renderPalette(){
   var body = document.getElementById('palette-body');
   var sec = exam.sections[exam.currentSectionIdx];
@@ -1660,10 +1891,15 @@ function renderPalette(){
 
 function jumpTo(idx){
   goToQuestionByIndex(idx, false);
+  // auto-close mobile palette drawer on selection
+  var pal = document.getElementById('exam-palette');
+  var bdrop = document.getElementById('palette-backdrop');
+  if(pal && pal.classList.contains('mobile-open')){
+    pal.classList.remove('mobile-open');
+    if(bdrop) bdrop.classList.remove('show');
+  }
 }
 
-/* Legend counts are also scoped to the current section, so the numbers
-   always match the squares visible in the palette below them. */
 function updateLegendCounts(){
   var counts = {'not-visited':0,'not-answered':0,'answered':0,'marked':0,'answered-marked':0};
   var sec = exam.sections[exam.currentSectionIdx];
@@ -1676,8 +1912,6 @@ function updateLegendCounts(){
   updateGlobalProgress();
 }
 
-/* Whole-paper attempted / not-attempted count, shown above the palette
-   regardless of which section is currently active. */
 function updateGlobalProgress(){
   var total = exam.order.length;
   var attempted = 0;
@@ -1755,7 +1989,6 @@ function finalizeAndSubmit(auto){
   if(exam.finished) return;
   exam.finished = true;
   if(exam.timerHandle) clearInterval(exam.timerHandle);
-  // flush time for current question
   var now = Date.now();
   var curId = exam.order[exam.currentIndex].id;
   exam.timeSpent[curId] += (now - exam.questionStartTs)/1000;
@@ -1790,9 +2023,9 @@ function computeAnalysis(){
 
   var subjectsOut = [];
   var overall = { correct:0, incorrect:0, unattempted:0, notVisited:0, score:0, maxScore:0,
-                   timeSpent:0, total:0, attempts:{perfect:0,wasted:0,overtime:0,confused:0},
-                   difficulty:{Easy:{c:0,i:0,u:0},Moderate:{c:0,i:0,u:0},Tough:{c:0,i:0,u:0}},
-                   rows:[] };
+                  timeSpent:0, total:0, attempts:{perfect:0,wasted:0,overtime:0,confused:0},
+                  difficulty:{Easy:{c:0,i:0,u:0},Moderate:{c:0,i:0,u:0},Tough:{c:0,i:0,u:0}},
+                  rows:[] };
 
   paper.subjects.forEach(function(s){
     var subj = { name:s.name, correct:0, incorrect:0, unattempted:0, notVisited:0, score:0, maxScore:0,
@@ -1868,7 +2101,6 @@ function computeAnalysis(){
   overall.accuracy = (overall.correct+overall.incorrect)>0 ? Math.round(overall.correct/(overall.correct+overall.incorrect)*100) : 0;
   overall.attemptPct = overall.total>0 ? Math.round((overall.correct+overall.incorrect)/overall.total*100) : 0;
 
-  // attempts-over-time buckets
   var nBuckets = Math.max(2, Math.min(6, Math.round(paper.durationMinutes/30) || 2));
   var bucketLen = totalDurationSeconds / nBuckets;
   var buckets = [];
@@ -1910,8 +2142,6 @@ function answerBadge(r){
   if(!r.attempted) return '<span class="badge unattempted">Unattempted</span>';
   return r.correct ? '<span class="badge correct">Correct</span>' : '<span class="badge incorrect">Incorrect</span>';
 }
-/* Renders a saved answer value in a readable form -- "(2) option text" for
-   MCQs, or the plain number for Section B / integer-type questions. */
 function formatAnswerValue(q, val){
   if(val===undefined || val===null || val===''){ return '<span style="color:var(--ink-faint);">\u2014</span>'; }
   if(q.type === 'mcq'){
@@ -1925,18 +2155,18 @@ function formatAnswerValue(q, val){
 
 function renderAnalysisReport(report, wasAuto){
   destroyCharts();
-  document.getElementById('an-subtitle').textContent = report.paperTitle + ' · ' + report.candidateName + (wasAuto ? ' · auto-submitted (time up)' : '');
+  document.getElementById('an-subtitle').textContent = report.paperTitle + ' · ' + report.candidateName + (wasAuto ? ' · auto-submitted' : '');
   var root = document.getElementById('pdf-report-root');
   var o = report.overall;
 
   var sections = [];
 
-  // ---- Overview ----
+  // Overview
   var scoreDisplay = report.hasFullKey ? (o.score+' / '+o.maxScore) : (report.coverage.withKey+'/'+report.coverage.total+' scored');
   sections.push(
     '<div class="report-section" id="sec-overview">'+
       '<h3>Overview</h3>'+
-      '<div class="sub">Attempted by <b>'+esc(report.candidateName)+'</b>. '+(report.hasFullKey?'':'<br><span style="color:#8A5A12;">Partial or no answer key was provided — score and accuracy reflect only the '+report.coverage.withKey+' question(s) with a known answer.</span>')+'</div>'+
+      '<div class="sub">Attempted by <b>'+esc(report.candidateName)+'</b>. '+(report.hasFullKey?'':'<br><span style="color:#8A5A12;">Partial or no answer key provided — score reflects '+report.coverage.withKey+' known question(s).</span>')+'</div>'+
       '<div class="overview-grid">'+
         '<div class="ov-card"><div class="l">Score</div><div class="v">'+esc(scoreDisplay)+'</div></div>'+
         '<div class="ov-card"><div class="l">Accuracy</div><div class="v">'+o.accuracy+'%</div></div>'+
@@ -1946,7 +2176,7 @@ function renderAnalysisReport(report, wasAuto){
     '</div>'
   );
 
-  // ---- Subject-wise table ----
+  // Subject-wise table
   var subjRows = '<tr><td><b>Overall</b></td><td>'+(report.hasFullKey?o.score+'/'+o.maxScore:'—')+'</td><td>'+o.correct+'/'+o.total+'</td><td>'+o.incorrect+'/'+o.total+'</td><td>'+o.unattempted+'/'+o.total+'</td><td>'+o.notVisited+'/'+o.total+'</td></tr>';
   report.subjects.forEach(function(s){
     subjRows += '<tr><td>'+esc(s.name)+'</td><td>'+(report.hasFullKey?s.score+'/'+s.maxScore:'—')+'</td><td>'+s.correct+'/'+s.total+'</td><td>'+s.incorrect+'/'+s.total+'</td><td>'+s.unattempted+'/'+s.total+'</td><td>'+s.notVisited+'/'+s.total+'</td></tr>';
@@ -1954,12 +2184,12 @@ function renderAnalysisReport(report, wasAuto){
   sections.push(
     '<div class="report-section" id="sec-analysis">'+
       '<h3>Analysis</h3>'+
-      '<div class="sub">A snapshot of attempts that were correct, incorrect, unattempted, and not visited at all — per subject.</div>'+
+      '<div class="sub">Snapshot of correct, incorrect, unattempted, and unvisited questions.</div>'+
       '<div class="tbl-wrap"><table class="data-tbl"><thead><tr><th>Subject</th><th>Score</th><th>Correct</th><th>Incorrect</th><th>Unattempted</th><th>Not visited</th></tr></thead><tbody>'+subjRows+'</tbody></table></div>'+
     '</div>'
   );
 
-  // ---- Time & accuracy ----
+  // Time & accuracy
   var taRows = '<tr><td><b>Overall</b></td><td>'+fmtMinSec(o.timeSpent)+'</td><td>'+o.attemptPct+'%</td><td>'+o.accuracy+'%</td></tr>';
   report.subjects.forEach(function(s){
     taRows += '<tr><td>'+esc(s.name)+'</td><td>'+fmtMinSec(s.timeSpent)+'</td><td>'+s.attemptPct+'%</td><td>'+s.accuracy+'%</td></tr>';
@@ -1967,40 +2197,40 @@ function renderAnalysisReport(report, wasAuto){
   sections.push(
     '<div class="report-section" id="sec-time">'+
       '<h3>Time and accuracy</h3>'+
-      '<div class="sub">Time is the most important resource in any competitive exam — here\'s how it was spent per subject, and how it paid off.</div>'+
+      '<div class="sub">How time was divided and how it converted to results.</div>'+
       '<div class="tbl-wrap"><table class="data-tbl"><thead><tr><th>Subject</th><th>Time spent</th><th>Attempt %</th><th>Accuracy %</th></tr></thead><tbody>'+taRows+'</tbody></table></div>'+
     '</div>'
   );
 
-  // ---- Attempts pie + difficulty bar ----
+  // Graphical view
   sections.push(
     '<div class="report-section" id="sec-charts">'+
       '<h3>Graphical view</h3>'+
-      '<div class="sub">Perfect = correct within the allotted time. Wasted = incorrect, answered too fast. Overtime = incorrect and slow. Confused = left unanswered after spending too long.</div>'+
+      '<div class="sub">Quality of attempts and breakdown by question difficulty.</div>'+
       '<div class="charts-grid">'+
         '<div class="chart-box"><div class="ct">Attempt quality (overall)</div><canvas id="chart-attempts"></canvas></div>'+
         '<div class="chart-box"><div class="ct">Correct / incorrect / unanswered</div><canvas id="chart-correctness"></canvas></div>'+
       '</div>'+
-      '<div class="charts-grid" style="margin-top:28px;">'+
-        '<div class="chart-box" style="grid-column:1/3;"><div class="ct">Difficulty analysis (overall)</div><canvas id="chart-difficulty"></canvas></div>'+
+      '<div class="charts-grid" style="margin-top:20px;">'+
+        '<div class="chart-box" style="grid-column:1/-1;"><div class="ct">Difficulty analysis (overall)</div><canvas id="chart-difficulty"></canvas></div>'+
       '</div>'+
     '</div>'
   );
 
-  // ---- Attempts over time ----
+  // Attempts over time
   var bucketRows = report.buckets.map(function(bk){
     return '<tr><td>'+bk.label+'</td><td>'+bk.correct+'</td><td>'+bk.incorrect+'</td><td>'+(bk.correct+bk.incorrect)+'</td></tr>';
   }).join('');
   sections.push(
     '<div class="report-section" id="sec-overtime">'+
       '<h3>Attempts over the '+report.durationMinutes+' minutes</h3>'+
-      '<div class="sub">When during the test you were answering correctly vs incorrectly.</div>'+
+      '<div class="sub">When during the test questions were answered.</div>'+
       '<div class="tbl-wrap"><table class="data-tbl"><thead><tr><th>Interval</th><th>Correct</th><th>Incorrect</th><th>Total</th></tr></thead><tbody>'+bucketRows+'</tbody></table></div>'+
-      '<div style="margin-top:18px;"><canvas id="chart-overtime" height="90"></canvas></div>'+
+      '<div style="margin-top:18px;"><canvas id="chart-overtime" height="100"></canvas></div>'+
     '</div>'
   );
 
-  // ---- Painful questions ----
+  // Painful questions
   var painHtml = report.subjects.map(function(s){
     if(!s.painful.length) return '';
     return '<div class="subject-block"><h4>'+esc(s.name)+'</h4><ul class="mini-list">'+
@@ -2010,24 +2240,24 @@ function renderAnalysisReport(report, wasAuto){
   sections.push(
     '<div class="report-section" id="sec-painful">'+
       '<h3>Painful questions</h3>'+
-      '<div class="sub">Where the most time was burned on incorrect or overtime attempts, by subject.</div>'+
-      (painHtml || '<div style="font-size:13px; color:var(--ink-faint);">No particularly painful questions — nice and steady.</div>')+
+      '<div class="sub">Where significant time was burned without securing marks.</div>'+
+      (painHtml || '<div style="font-size:13px; color:var(--ink-faint);">No particularly painful questions.</div>')+
     '</div>'
   );
 
-  // ---- Subject movement ----
+  // Subject movement
   var moveHtml = report.subjectMovements.map(function(m, i){
     return '<div class="movement-item"><span class="movement-dot"></span><div>'+(i===0?'Started with ':'Switched to ')+'<b>'+esc(m.subject)+'</b></div><span>'+fmtMinSec(m.durationSeconds)+'</span></div>';
   }).join('');
   sections.push(
     '<div class="report-section" id="sec-movement">'+
       '<h3>Subject movement</h3>'+
-      '<div class="sub">How you traversed each subject, and how long you stayed each time.</div>'+
+      '<div class="sub">Timeline of switches across sections.</div>'+
       (moveHtml || '<div style="font-size:13px; color:var(--ink-faint);">No subject switches recorded.</div>')+
     '</div>'
   );
 
-  // ---- Missed concepts ----
+  // Missed concepts
   var missedHtml = report.subjects.map(function(s){
     if(!s.missedConcepts.length) return '';
     return '<div class="subject-block"><h4>'+esc(s.name)+'</h4><ul class="mini-list">'+
@@ -2037,12 +2267,12 @@ function renderAnalysisReport(report, wasAuto){
   sections.push(
     '<div class="report-section" id="sec-missed">'+
       '<h3>Missed concepts</h3>'+
-      '<div class="sub">Topics behind every incorrect answer — worth a revision pass.</div>'+
-      (missedHtml || '<div style="font-size:13px; color:var(--ink-faint);">No incorrect answers — nothing to flag.</div>')+
+      '<div class="sub">Topics behind incorrect answers for quick revision.</div>'+
+      (missedHtml || '<div style="font-size:13px; color:var(--ink-faint);">No incorrect answers — nothing flagged!</div>')+
     '</div>'
   );
 
-  // ---- Complete analysis table ----
+  // Complete analysis table
   var completeRows = o.rows.map(function(r){
     return '<tr><td>'+r.number+'</td><td>'+esc(r.chapter)+'</td><td>'+esc(r.topic)+'</td><td>'+esc(r.difficulty)+'</td>'+
       '<td>'+Math.round(r.allotted)+'s</td><td>'+Math.round(r.spent)+'s</td><td>'+(r.attempted?'Yes':'No')+'</td>'+
@@ -2053,14 +2283,14 @@ function renderAnalysisReport(report, wasAuto){
   sections.push(
     '<div class="report-section" id="sec-complete">'+
       '<h3>Complete analysis</h3>'+
-      '<div class="sub">Every question, in order.</div>'+
+      '<div class="sub">Every single question audited in order.</div>'+
       '<div class="tbl-wrap"><table class="data-tbl"><thead><tr><th>Q</th><th>Chapter</th><th>Topic</th><th>Difficulty</th><th>Allotted</th><th>Spent</th><th>Attempted</th><th>Your Answer</th><th>Correct Answer</th><th>Result</th><th>Overview</th></tr></thead><tbody>'+completeRows+'</tbody></table></div>'+
     '</div>'
   );
 
   root.innerHTML = sections.join('');
 
-  // charts
+  // chart instances
   var isDark = document.documentElement.classList.contains('dark');
   Chart.defaults.color = isDark ? '#D7DAE3' : '#33363f';
   Chart.defaults.borderColor = isDark ? '#2A2E3D' : '#e3e0d6';
@@ -2141,7 +2371,7 @@ function addCanvasPaginated(pdf, canvas, addPageFirst){
   var margin = 10;
   var usableW = pageW - margin*2;
   var usableH = pageH - margin*2;
-  var scale = usableW / canvas.width; // mm per px
+  var scale = usableW / canvas.width;
   var pxPerPage = Math.floor(usableH / scale);
   var renderedY = 0;
   var firstSlice = true;
