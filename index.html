@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JEE CBT Simulator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -87,6 +87,7 @@ html.dark .modal-box h3{color:#ECEDF2;}
 html.dark .modal-stat{background:#20242F;}
 html.dark .review-row:nth-child(even){background:#171A24;}
 html.dark .review-row{border-bottom-color:#2A2E3D;}
+html.dark .qmeta-row{}
 html.dark textarea.paste-area{background:#171A24; color:#ECEDF2; border-color:#383D50;}
 html.dark .drop-zone{background:#171A24;}
 html.dark .chip{background:#191C27;}
@@ -98,7 +99,6 @@ html.dark .badge.wasted{background:#132A40; color:#7FB8ED;}
 html.dark .badge.overtime{background:#2B1A38; color:#C79CE6;}
 html.dark .badge.confused{background:#332A0B; color:#E8C86A;}
 html.dark .badge.dash{background:#232838; color:#8b8f9e;}
-html.dark .palette-drawer-close{background:#20242F; color:#ECEDF2; border-color:#3a3f52;}
 
 .theme-toggle-btn{
   position:fixed; bottom:18px; right:18px; z-index:900;
@@ -351,7 +351,7 @@ textarea.paste-area:focus{outline:none; border-color:var(--nta-blue);}
 .instr-actions{display:flex; justify-content:space-between; align-items:center; margin-top:26px; gap:12px; flex-wrap:wrap;}
 
 /* ============================= EXAM SCREEN ============================= */
-#screen-exam{background:#EDEDED; height:100vh; height:100dvh; flex-direction:column; overflow:hidden;}
+#screen-exam{background:#EDEDED; height:100vh; flex-direction:column; overflow:hidden;}
 #screen-exam.active{display:flex;}
 .exam-header{
   background:var(--white); display:flex; justify-content:space-between; align-items:center;
@@ -389,54 +389,14 @@ textarea.paste-area:focus{outline:none; border-color:var(--nta-blue);}
 }
 .subject-tab.active{opacity:1; background:var(--nta-blue); box-shadow:0 0 0 2px rgba(255,255,255,0.5) inset;}
 
-.palette-toggle-btn{
-  display:none;
-  align-items:center;
-  gap:6px;
-  background:var(--navy);
-  color:#fff;
-  border:none;
-  padding:6px 12px;
-  border-radius:4px;
-  font-size:12px;
-  font-weight:700;
-}
-
-.palette-drawer-header{
-  display:none;
-  justify-content:space-between;
-  align-items:center;
-  padding-bottom:10px;
-  margin-bottom:12px;
-  border-bottom:1px solid #ddd;
-}
-.palette-drawer-title{font-size:13px; font-weight:700; color:var(--heading);}
-.palette-drawer-close{
-  border:1px solid #c9c9c9;
-  background:#fff;
-  color:#333;
-  border-radius:4px;
-  padding:4px 8px;
-  font-size:12px;
-  font-weight:700;
-}
-.palette-backdrop{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.5);
-  z-index:49;
-}
-.palette-backdrop.show{display:block;}
-
-.exam-main{flex:1; display:flex; overflow:hidden; position:relative;}
+.exam-main{flex:1; display:flex; overflow:hidden;}
 .qpanel{flex:1; background:#fff; overflow-y:auto; padding:22px 26px; display:flex; flex-direction:column;}
 .qpanel-head{display:flex; justify-content:space-between; align-items:center; padding-bottom:14px; border-bottom:1px solid #e2e2e2;}
 .qpanel-head h3{font-size:15.5px; color:#222;}
-.qmeta-row{display:flex; gap:10px; margin-top:6px; flex-wrap:wrap;}
+.qmeta-row{display:flex; gap:10px; margin-top:6px;}
 .qmeta-tag{font-size:10.5px; padding:2px 8px; border-radius:10px; background:#f1f1f1; color:#666; font-weight:600;}
 
-.qtext{font-size:15px; line-height:1.75; color:#1a1a1a; margin:20px 0 22px; white-space:pre-wrap; word-break:break-word;}
+.qtext{font-size:15px; line-height:1.75; color:#1a1a1a; margin:20px 0 22px; white-space:pre-wrap;}
 .options-list{display:flex; flex-direction:column; gap:2px;}
 .option-row{
   display:flex; align-items:flex-start; gap:12px; padding:11px 14px; border-radius:6px; cursor:pointer;
@@ -446,7 +406,7 @@ textarea.paste-area:focus{outline:none; border-color:var(--nta-blue);}
 .option-row.selected{background:#E8F0FE; border-color:#BBD4FA;}
 .option-row input[type=radio]{margin-top:3px; width:16px; height:16px; accent-color:var(--nta-blue);}
 .option-row .opt-num{font-weight:700; color:#333; flex-shrink:0;}
-.option-row .opt-text{font-size:14.5px; line-height:1.6; color:#1a1a1a; word-break:break-word;}
+.option-row .opt-text{font-size:14.5px; line-height:1.6; color:#1a1a1a;}
 
 .integer-input-wrap{margin-top:8px;}
 .integer-input-wrap label{font-size:12.8px; color:#555; font-weight:600; display:block; margin-bottom:8px;}
@@ -536,6 +496,63 @@ html.dark .gp-lbl{color:#9195a3;}
 .modal-stat .l{font-size:10.5px; color:var(--ink-faint); text-transform:uppercase; margin-top:2px;}
 .modal-actions{display:flex; gap:10px; margin-top:18px;}
 
+/* ============================= CROP REVIEW & IMAGES ============================= */
+.crop-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:10px; margin-bottom:8px;}
+.crop-thumb-card{
+  border:1px solid var(--border-2); border-radius:8px; padding:6px; background:var(--paper); cursor:pointer; text-align:center;
+  transition:border-color .12s ease;
+}
+.crop-thumb-card:hover{border-color:var(--nta-blue);}
+.crop-thumb-img{width:100%; height:70px; object-fit:cover; border-radius:5px; background:#fff; border:1px solid var(--border);}
+.crop-thumb-noimg{width:100%; height:70px; border-radius:5px; background:#fff; border:1px dashed var(--border-2); display:flex; align-items:center; justify-content:center; font-size:10.5px; color:var(--ink-faint);}
+html.dark .crop-thumb-noimg{background:#20242F; color:#82869A;}
+.crop-thumb-label{font-size:11px; font-weight:700; color:var(--navy); margin-top:5px;}
+.crop-thumb-flag{font-size:9.5px; color:var(--amber-dark); font-weight:700;}
+html.dark .crop-thumb-card{background:var(--paper-2);}
+html.dark .crop-thumb-label{color:var(--heading);}
+
+.crop-adjuster-box{max-width:560px; max-height:92vh; overflow-y:auto;}
+.crop-adjuster-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;}
+.crop-adjuster-head h3{font-size:16px; color:var(--heading);}
+.crop-target-tabs{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;}
+.crop-target-tab{border:1.3px solid var(--border-2); background:var(--surface); color:var(--ink-soft); border-radius:16px; padding:5px 12px; font-size:11.5px; font-weight:700;}
+.crop-target-tab.active{background:var(--nta-blue); border-color:var(--nta-blue); color:#fff;}
+.crop-page-wrap{border:1px solid var(--border); border-radius:8px; overflow:hidden; background:#e8e8e8; max-height:300px; overflow-y:auto;}
+.crop-page-inner{position:relative; display:inline-block; width:100%;}
+.crop-page-inner img{display:block; width:100%; height:auto;}
+.crop-box-overlay{
+  position:absolute; border:2px solid #ff3d3d; background:rgba(255,61,61,0.15); pointer-events:none;
+}
+.crop-sliders{margin-top:12px;}
+.crop-slider-row{display:grid; grid-template-columns:52px 1fr; align-items:center; gap:10px; margin-bottom:6px;}
+.crop-slider-row label{font-size:11.5px; font-weight:700; color:var(--ink-soft);}
+.crop-slider-row input[type=range]{width:100%;}
+.crop-adjuster-footer{display:flex; justify-content:space-between; align-items:flex-end; gap:14px; margin-top:12px; flex-wrap:wrap;}
+.crop-preview-wrap{}
+.crop-preview-thumb{display:block; margin-top:6px; max-width:140px; max-height:90px; border:1px solid var(--border); border-radius:6px; background:#fff;}
+.crop-adjuster-actions{display:flex; flex-direction:column; gap:10px; align-items:flex-end;}
+.crop-optimg-toggle{font-size:12px; color:var(--ink-soft); display:flex; align-items:center; gap:6px;}
+
+.image-lightbox{
+  position:fixed; inset:0; background:rgba(5,7,14,0.88); display:none; align-items:center; justify-content:center; z-index:1200; padding:30px;
+}
+.image-lightbox.show{display:flex;}
+.image-lightbox img{max-width:92vw; max-height:88vh; object-fit:contain; border-radius:6px; box-shadow:0 20px 60px rgba(0,0,0,0.5); cursor:default;}
+.lightbox-close{
+  position:fixed; top:18px; right:22px; background:rgba(255,255,255,0.12); color:#fff; border:none; border-radius:50%;
+  width:38px; height:38px; font-size:16px; cursor:pointer;
+}
+.lightbox-close:hover{background:rgba(255,255,255,0.22);}
+
+.q-image-wrap{margin:6px 0 18px;}
+.q-image{max-width:100%; border:1px solid #ddd; border-radius:8px; cursor:zoom-in; display:block;}
+.q-image-hint{font-size:11px; color:#888; margin-top:5px;}
+html.dark .q-image{border-color:#3a3f52;}
+html.dark .q-image-hint{color:#82869A;}
+.opt-image-wrap{margin-top:4px;}
+.opt-image{max-width:220px; max-height:140px; border:1px solid #ddd; border-radius:6px; cursor:zoom-in; display:block;}
+html.dark .opt-image{border-color:#3a3f52;}
+
 /* ============================= ANALYSIS ============================= */
 #screen-analysis{background:var(--paper);}
 .an-wrap{max-width:980px; margin:0 auto; padding:36px 24px 90px;}
@@ -603,199 +620,12 @@ table.data-tbl tr:last-child td{border-bottom:none;}
 .spinner{width:34px; height:34px; border-radius:50%; border:3px solid rgba(255,255,255,0.3); border-top-color:#fff; animation:spin 0.8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-/* ============================= MOBILE SPECIFIC RESPONSIVE ============================= */
-@media (max-width: 768px) {
-  /* Global reset */
-  body {
-    -webkit-text-size-adjust: 100%;
-  }
-
-  /* Home Screen */
-  .home-wrap { padding: 0 16px 60px; }
-  .hero {
-    grid-template-columns: 1fr;
-    gap: 28px;
-    padding: 24px 0 20px;
-  }
-  .hero h1 { font-size: 28px; line-height: 1.2; }
-  .hero-sub { font-size: 14.5px; }
-  .hero-visual { display: none; }
-  .panel { padding: 18px 14px; }
-  .tabs { overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
-  .tab-btn { margin-right: 14px; padding: 8px 2px; }
-  .summary-stats { grid-template-columns: repeat(2, 1fr); }
-
-  /* Instructions Screen */
-  .instr-shell { padding: 16px 12px 60px; }
-  .instr-head { padding: 18px 16px; }
-  .instr-head h2 { font-size: 20px; }
-  .instr-head .meta { gap: 12px; }
-  .instr-head .meta div b { font-size: 14px; }
-  .instr-body { padding: 20px 14px; }
-  .instr-actions { flex-direction: column-reverse; align-items: stretch; }
-  .instr-actions .btn { width: 100%; justify-content: center; }
-
-  /* Exam Screen - Header & Topbar */
-  #screen-exam {
-    height: 100vh;
-    height: 100dvh;
-    overflow: hidden;
-  }
-  .exam-header {
-    padding: 6px 10px;
-    flex-wrap: nowrap;
-    gap: 8px;
-  }
-  .nta-logo { width: 32px; height: 32px; }
-  .nta-logo::after { width: 22px; height: 22px; }
-  .nta-logo b { font-size: 8px; }
-  .nta-brand-text .l1 { font-size: 11.5px; line-height: 1.1; }
-  .nta-brand-text .l2 { font-size: 8.5px; }
-  .cand-avatar { display: none; }
-  .cand-info { font-size: 9.5px; line-height: 1.25; }
-  .timer-box {
-    margin-left: auto;
-    padding: 4px 7px;
-    font-size: 11.5px;
-    flex-shrink: 0;
-  }
-  .timer-box .tl { font-size: 8px; }
-
-  .exam-topbar {
-    padding: 6px 10px;
-    flex-wrap: nowrap;
-    overflow: visible;
-  }
-  .exam-topbar .left {
-    flex: 1;
-    overflow: hidden;
-    gap: 8px;
-    flex-wrap: nowrap;
-  }
-  .exam-topbar .paper-name {
-    font-size: 12px;
-    white-space: nowrap;
-  }
-  .subject-tabs {
-    overflow-x: auto;
-    white-space: nowrap;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 2px;
-  }
-  .subject-tab {
-    padding: 5px 9px;
-    font-size: 11px;
-    flex-shrink: 0;
-  }
-  .palette-toggle-btn {
-    display: inline-flex;
-  }
-
-  /* Exam Main Content */
-  .exam-main {
-    position: relative;
-    flex: 1;
-    overflow: hidden;
-  }
-  .qpanel {
-    padding: 12px 14px 16px;
-    width: 100%;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .qpanel-head h3 { font-size: 14.5px; }
-  .qtext {
-    font-size: 13.5px;
-    line-height: 1.6;
-    margin: 12px 0 16px;
-  }
-  .option-row {
-    padding: 8px 10px;
-    gap: 8px;
-  }
-  .option-row .opt-text { font-size: 13px; }
-
-  /* Numerical keypad on mobile */
-  .integer-input-wrap input {
-    width: 100%;
-    max-width: 220px;
-  }
-  .onscreen-keypad {
-    grid-template-columns: repeat(3, 56px);
-    gap: 6px;
-    margin-top: 10px;
-  }
-  .keypad-btn {
-    height: 42px;
-    font-size: 16px;
-  }
-
-  /* Action Buttons: 2x2 grid for easy touch reach */
-  .action-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    padding-top: 12px;
-  }
-  .act-btn {
-    padding: 9px 4px;
-    font-size: 11px;
-    text-align: center;
-    border-radius: 4px;
-  }
-  .qpanel-bottombar {
-    padding-top: 12px;
-  }
-  .nav-btn, .submit-btn {
-    padding: 8px 14px;
-    font-size: 11.5px;
-  }
-
-  /* Palette as an off-canvas drawer */
-  .palette-drawer-header {
-    display: flex;
-  }
-  .palette {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 84%;
-    max-width: 320px;
-    height: 100%;
-    z-index: 50;
-    box-shadow: -6px 0 20px rgba(0,0,0,0.3);
-    transform: translateX(100%);
-    transition: transform 0.25s ease-in-out;
-    padding: 14px;
-  }
-  .palette.mobile-open {
-    transform: translateX(0);
-  }
-  .palette-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 5px;
-  }
-  .pal-btn {
-    font-size: 11px;
-  }
-
-  /* Analysis Report */
-  .an-wrap { padding: 18px 12px 70px; }
-  .an-topbar .left b { font-size: 18px; }
-  .an-actions { width: 100%; }
-  .an-actions .btn { flex: 1; justify-content: center; }
-  .overview-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-  .ov-card { padding: 12px 14px; }
-  .ov-card .v { font-size: 18px; }
-  .charts-grid { grid-template-columns: 1fr; gap: 16px; }
-  .chart-box canvas { max-height: 200px; }
-  .theme-toggle-btn {
-    bottom: 12px;
-    right: 12px;
-    padding: 8px 14px;
-    font-size: 11.5px;
-  }
+@media (max-width:880px){
+  .hero{grid-template-columns:1fr;}
+  .overview-grid{grid-template-columns:1fr 1fr;}
+  .charts-grid{grid-template-columns:1fr;}
+  .exam-main{flex-direction:column;}
+  .palette{width:100%; order:2;}
 }
 </style>
 </head>
@@ -881,14 +711,84 @@ table.data-tbl tr:last-child td{border-bottom:none;}
         <div id="paper-summary" class="paper-summary" style="display:none;"></div>
         <div id="answerkey-section" class="answerkey-box"></div>
 
-        <div id="proceed-row" style="margin-top:22px; display:none;">
-          <button class="btn btn-primary" id="proceed-btn" onclick="goToInstructions()">Continue to instructions →</button>
+        <div id="proceed-row" style="margin-top:22px; display:none; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-primary" id="proceed-btn" onclick="proceedFromHome()">Continue →</button>
+          <button class="btn btn-ghost" id="export-json-btn" onclick="exportPaperAsJson()">Export this paper as JSON</button>
         </div>
       </div>
     </section>
 
     <div class="footer-note">Runs entirely in this browser tab — nothing is uploaded to a server.</div>
   </div>
+</div>
+
+<!-- ============================================================ CROP REVIEW ============================================================ -->
+<div id="screen-crop-review" class="screen">
+  <div class="instr-shell">
+    <div class="instr-head">
+      <div class="kicker">Optional step — only for PDF uploads</div>
+      <h2>Review question images</h2>
+      <div class="meta">
+        <div>Auto‑cropped<b id="cr-count-auto">—</b></div>
+        <div>Total questions<b id="cr-count-total">—</b></div>
+      </div>
+    </div>
+    <div class="instr-body">
+      <p style="font-size:13.5px; color:var(--ink-soft); line-height:1.6; margin-bottom:18px;">
+        Each question below got an automatic snapshot from the PDF page. Text-only questions usually need no changes.
+        Anything with a diagram, graph, or messy equation is worth a quick check — click a thumbnail to drag the crop
+        box, or to add separate images for the four options (useful when the options themselves are pictures, like a
+        graph‑choice question).
+      </p>
+      <div class="crop-grid" id="crop-grid"></div>
+      <div class="instr-actions">
+        <button class="btn btn-ghost" onclick="showScreen('home')">← Back to home</button>
+        <button class="btn btn-green" onclick="goToInstructions()">Continue to instructions →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Crop adjuster modal -->
+<div class="modal-overlay" id="crop-adjuster-modal">
+  <div class="modal-box crop-adjuster-box">
+    <div class="crop-adjuster-head">
+      <h3 id="ca-title">Question 1</h3>
+      <button class="btn btn-ghost btn-sm" onclick="closeCropAdjuster()">Done</button>
+    </div>
+    <div class="crop-target-tabs" id="ca-target-tabs"></div>
+    <div class="crop-page-wrap">
+      <div class="crop-page-inner" id="ca-page-inner">
+        <img id="ca-page-img" src="" alt="Full page">
+        <div class="crop-box-overlay" id="ca-box-overlay"></div>
+      </div>
+    </div>
+    <div class="crop-sliders">
+      <div class="crop-slider-row"><label>Top</label><input type="range" id="ca-slider-top" min="0" max="100" step="0.5" oninput="onCropSliderChange()"></div>
+      <div class="crop-slider-row"><label>Bottom</label><input type="range" id="ca-slider-bottom" min="0" max="100" step="0.5" oninput="onCropSliderChange()"></div>
+      <div class="crop-slider-row"><label>Left</label><input type="range" id="ca-slider-left" min="0" max="100" step="0.5" oninput="onCropSliderChange()"></div>
+      <div class="crop-slider-row"><label>Right</label><input type="range" id="ca-slider-right" min="0" max="100" step="0.5" oninput="onCropSliderChange()"></div>
+    </div>
+    <div class="crop-adjuster-footer">
+      <div class="crop-preview-wrap">
+        <span class="field-label">Preview</span>
+        <img id="ca-preview-img" class="crop-preview-thumb" src="" alt="Crop preview">
+      </div>
+      <div class="crop-adjuster-actions">
+        <label class="crop-optimg-toggle"><input type="checkbox" id="ca-optimg-toggle" onchange="toggleOptionImages(this.checked)"> This question's options are images too</label>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-ghost btn-sm" onclick="resetCropToAuto()">Reset to auto‑guess</button>
+          <button class="btn btn-danger-outline btn-sm" onclick="clearCropImage()">Clear image (text only)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Image zoom lightbox, used on the exam screen and everywhere else -->
+<div class="image-lightbox" id="image-lightbox" onclick="closeImageZoom()">
+  <img id="lightbox-img" src="" alt="Zoomed view" onclick="event.stopPropagation()">
+  <button class="lightbox-close" onclick="closeImageZoom()">✕</button>
 </div>
 
 <!-- ============================================================ INSTRUCTIONS ============================================================ -->
@@ -909,13 +809,14 @@ table.data-tbl tr:last-child td{border-bottom:none;}
         <h4>General instructions</h4>
         <ol>
           <li>The clock has been set at the server and the countdown at the top of the screen will display the remaining time. When the timer reaches zero, the test will be submitted automatically.</li>
-          <li>The Question Palette shows the status of every question using the colours explained below. Use it to jump directly to any question. On phones, tap the <b>📋 Palette</b> button at the top right to open and close it.</li>
-          <li>Each correct answer awards <b>+4 marks</b>; each incorrect answer deducts <b>−1 mark</b>. Unattempted questions receive 0 marks.</li>
-          <li>To select an option, click on the option text or its radio button. To change your answer, simply click a different option.</li>
-          <li>Clicking <b>Save &amp; Next</b> saves your answer to the current question and moves to the next one. Clicking <b>Clear Response</b> removes your selected answer.</li>
+          <li>The Question Palette on the right shows the status of every question using the colours explained below. Use it to jump directly to any question.</li>
+          <li>Each correct answer awards <b>+4 marks</b>; each incorrect answer deducts <b>−1 mark</b>. Unattempted questions receive 0 marks. (Standard JEE Main scheme — adjust in your own head if your paper says otherwise.)</li>
+          <li>To select an option, click on the option text or its radio button. To change your answer, simply click a different option — no need to clear it first.</li>
+          <li>Clicking <b>Save &amp; Next</b> saves your answer to the current question and moves to the next one. Clicking <b>Clear Response</b> removes your selected answer for the current question.</li>
           <li>Clicking <b>Mark for Review &amp; Next</b> flags the question for revisiting later. A marked question that also has a saved answer will still be evaluated.</li>
-          <li>Clicking the plain <b>&lt;&lt; Back</b> / <b>Next &gt;&gt;</b> buttons at the bottom moves between questions <i>without</i> saving your current selection.</li>
-          <li>You can navigate between subjects at any time using the tabs at the top.</li>
+          <li>Clicking the plain <b>&lt;&lt; Back</b> / <b>Next &gt;&gt;</b> buttons at the bottom moves between questions <i>without</i> saving your current selection — get in the habit of using Save &amp; Next instead.</li>
+          <li>You can navigate between Physics, Chemistry and Mathematics (or whatever sections your paper has) at any time using the tabs at the top.</li>
+          <li>Do not attempt to close this tab or exit full‑screen during the test — the timer keeps running regardless.</li>
         </ol>
       </div>
 
@@ -980,9 +881,6 @@ table.data-tbl tr:last-child td{border-bottom:none;}
       <span class="paper-name" id="topbar-paper-name">JEE MAIN</span>
       <div class="subject-tabs" id="subject-tabs"></div>
     </div>
-    <button class="palette-toggle-btn" id="palette-toggle-btn" onclick="toggleMobilePalette()">
-      📋 Palette
-    </button>
   </div>
 
   <div class="exam-main">
@@ -993,15 +891,16 @@ table.data-tbl tr:last-child td{border-bottom:none;}
           <div class="qmeta-row" id="q-meta-row"></div>
         </div>
       </div>
+      <div id="q-image-area"></div>
       <div class="qtext" id="q-text"></div>
       <div id="q-answer-area"></div>
       <div class="qpanel-spacer"></div>
 
       <div class="action-row">
         <button class="act-btn act-save" onclick="actionSaveNext()">Save &amp; Next</button>
-        <button class="act-btn act-mark-save" onclick="actionSaveMark()">Save &amp; Mark</button>
-        <button class="act-btn act-clear" onclick="actionClear()">Clear</button>
-        <button class="act-btn act-mark-next" onclick="actionMarkNext()">Mark &amp; Next</button>
+        <button class="act-btn act-mark-save" onclick="actionSaveMark()">Save &amp; Mark for Review</button>
+        <button class="act-btn act-clear" onclick="actionClear()">Clear Response</button>
+        <button class="act-btn act-mark-next" onclick="actionMarkNext()">Mark for Review &amp; Next</button>
       </div>
       <div class="qpanel-bottombar">
         <button class="nav-btn" onclick="actionBack()">&lt;&lt; Back</button>
@@ -1012,14 +911,7 @@ table.data-tbl tr:last-child td{border-bottom:none;}
       </div>
     </div>
 
-    <!-- Backdrop for mobile drawer -->
-    <div class="palette-backdrop" id="palette-backdrop" onclick="toggleMobilePalette()"></div>
-
-    <div class="palette" id="exam-palette">
-      <div class="palette-drawer-header">
-        <span class="palette-drawer-title">Question Palette</span>
-        <button class="palette-drawer-close" onclick="toggleMobilePalette()">✕ Close</button>
-      </div>
+    <div class="palette">
       <div class="global-progress" id="global-progress"></div>
       <div class="legend-mini">
         <div class="li"><span class="sq" style="background:#9AA0AF" id="cnt-notvisited">0</span>Not visited</div>
@@ -1060,7 +952,7 @@ table.data-tbl tr:last-child td{border-bottom:none;}
       </div>
       <div class="an-actions">
         <button class="btn btn-ghost btn-sm" onclick="resetToHome()">Take another test</button>
-        <button class="btn btn-amber btn-sm" onclick="downloadReportPdf()">⬇ Download PDF</button>
+        <button class="btn btn-amber btn-sm" onclick="downloadReportPdf()">⬇ Download as PDF</button>
       </div>
     </div>
     <div id="pdf-report-root"></div>
@@ -1116,15 +1008,6 @@ function toggleTheme(){
   }
 }
 
-/* ---------- mobile drawer toggle ---------- */
-function toggleMobilePalette(){
-  var pal = document.getElementById('exam-palette');
-  var bdrop = document.getElementById('palette-backdrop');
-  if(!pal) return;
-  var isOpen = pal.classList.toggle('mobile-open');
-  if(bdrop) bdrop.classList.toggle('show', isOpen);
-}
-
 /* ---------- default per-difficulty allotted time (seconds) ---------- */
 var DEFAULT_ALLOTTED = { 'Easy':90, 'Moderate':150, 'Tough':210, 'Difficult':210 };
 function allottedFor(q){
@@ -1141,7 +1024,7 @@ var SECTION_NAME_RE = /^(physics|chemistry|mathematics|maths|math|biology|genera
 function parsePlainText(rawText){
   var warnings = [];
   var lines = rawText.replace(/\r/g,'').split('\n');
-  var subjects = [];
+  var subjects = []; // {name, questions:[]}
   var currentSubject = null;
 
   function ensureSubject(name){
@@ -1153,8 +1036,11 @@ function parsePlainText(rawText){
   }
   ensureSubject('General');
 
+  // Join lines, then split on Q markers. This is more robust than a line-scanner
+  // because option text can wrap across lines.
   var joined = lines.map(function(l){ return l; });
 
+  // First pass: detect section headings and rewrite them as sentinel markers
   var withMarkers = [];
   joined.forEach(function(line){
     var trimmed = line.trim();
@@ -1166,7 +1052,10 @@ function parsePlainText(rawText){
     }
   });
   var fullText = withMarkers.join('\n');
+
+  // Split into chunks at section markers first
   var sectionChunks = fullText.split(/@@SECTION@@:/);
+  // sectionChunks[0] is content before any explicit heading (goes to 'General')
 
   sectionChunks.forEach(function(chunk, idx){
     var subjName = 'General';
@@ -1179,12 +1068,15 @@ function parsePlainText(rawText){
     if(!body.trim()) return;
     var subj = ensureSubject(subjName);
 
+    // split body on Q<number> markers (must be start-of-line-ish, allow leading spaces)
     var qSplit = body.split(/\n?\s*Q\s?(\d{1,3})\b\.?\s*/);
+    // qSplit alternates: [preamble, num, block, num, block, ...]
     for(var i=1; i<qSplit.length; i+=2){
       var num = parseInt(qSplit[i], 10);
       var block = qSplit[i+1] || '';
       if(!block.trim()) continue;
 
+      // find options (1)...(4)
       var optRe = /\(([1-4])\)\s*([\s\S]*?)(?=\([1-4]\)|$)/g;
       var options = [];
       var stemEnd = block.length;
@@ -1279,7 +1171,9 @@ function parsePaperJson(obj){
         difficulty: q.difficulty || 'Moderate',
         chapter: q.chapter || subj.name,
         topic: q.topic || 'General',
-        allottedSeconds: q.allottedSeconds || null
+        allottedSeconds: q.allottedSeconds || null,
+        image: q.image || null,
+        optionImages: Array.isArray(q.optionImages) ? q.optionImages.slice(0,4) : null
       });
     });
     paper.subjects.push(subj);
@@ -1328,7 +1222,8 @@ function downloadTemplate(){
 }
 
 /* =====================================================================================
-   SAMPLE PAPER
+   SAMPLE PAPER  (original questions written for this demo — not reproducing any
+   uploaded/copyrighted paper — so the answer key is guaranteed correct)
    ===================================================================================== */
 function buildSamplePaper(){
   return {
@@ -1348,7 +1243,7 @@ function buildSamplePaper(){
         name: "Chemistry",
         questions: [
           { number:5, type:'mcq', text:'The SI unit of amount of substance is:', options:['Gram','Kilogram','Mole','Litre'], correctAnswer:3, difficulty:'Easy', chapter:'Basic Concepts', topic:'Units' },
-          { number:6, type:'mcq', text:'Which law states that a chemical compound always contains the same elements in a fixed ratio by mass?', options:['Law of multiple proportions','Law of definite proportions','Law of conservation of mass','Avogadro’s law'], correctAnswer:2, difficulty:'Easy', chapter:'Basic Concepts', topic:'Laws of Chemical Combination' },
+          { number:6, type:'mcq', text:'Which law states that a chemical compound always contains the same elements in a fixed ratio by mass?', options:['Law of multiple proportions','Law of definite proportions','Law of conservation of mass','Avogadro\u2019s law'], correctAnswer:2, difficulty:'Easy', chapter:'Basic Concepts', topic:'Laws of Chemical Combination' },
           { number:7, type:'mcq', text:'The number of moles in 44 g of CO2 (molar mass 44 g/mol) is:', options:['0.5','1','2','4'], correctAnswer:2, difficulty:'Moderate', chapter:'Basic Concepts', topic:'Mole Concept' },
           { number:8, type:'integer', text:'Calculate the molecular mass of water, H2O (H = 1 u, O = 16 u). Enter the value in amu.', correctAnswer:18, difficulty:'Easy', chapter:'Basic Concepts', topic:'Molecular Mass', allottedSeconds:90 }
         ]
@@ -1370,11 +1265,11 @@ function buildSamplePaper(){
    APP STATE
    ===================================================================================== */
 var app = {
-  paper: null,
+  paper: null,          // {title, durationMinutes, subjects:[{name, questions:[]}]}
   parseWarnings: []
 };
 
-var exam = null;
+var exam = null; // built when starting a test
 
 function showScreen(name){
   $all('.screen').forEach(function(s){ s.classList.remove('active'); });
@@ -1383,7 +1278,7 @@ function showScreen(name){
 }
 
 /* =====================================================================================
-   HOME SCREEN
+   HOME SCREEN — upload wiring
    ===================================================================================== */
 function scrollToUpload(){
   document.getElementById('upload-section').scrollIntoView({behavior:'smooth'});
@@ -1441,7 +1336,7 @@ function renderPaperSummary(){
 
   renderAnswerKeySection();
   var proceedRow = document.getElementById('proceed-row');
-  proceedRow.style.display = total>0 ? 'block' : 'none';
+  proceedRow.style.display = total>0 ? 'flex' : 'none';
 }
 
 function removeQuestion(si, qi){
@@ -1500,6 +1395,7 @@ function handleFile(file){
       try{
         var obj = JSON.parse(r1.result);
         var paper = parsePaperJson(obj);
+        resetPdfImageState();
         onPaperLoaded(paper, []);
         setStatus('file-status','ok','Loaded "'+esc(paper.title)+'" — '+subjectQuestionCount(paper)+' questions.');
       }catch(err){
@@ -1510,11 +1406,12 @@ function handleFile(file){
   } else if(name.endsWith('.txt') || name.endsWith('.md')){
     var r2 = new FileReader();
     r2.onload = function(){
+      resetPdfImageState();
       var result = parsePlainText(r2.result);
       var paper = { title: file.name.replace(/\.[^.]+$/,''), durationMinutes: 60, subjects: result.subjects };
       onPaperLoaded(paper, result.warnings);
       var n = subjectQuestionCount(paper);
-      if(n===0) setStatus('file-status','err','No questions were recognised in that file. Check the Q1/(1)(2)(3)(4) format, or paste text instead.');
+      if(n===0) setStatus('file-status','err','No questions were recognised in that file. Check the Q1/(1)(2)(3)(4) format.');
       else setStatus('file-status','ok','Parsed '+n+' question(s) from '+esc(file.name)+'. Please review below.');
     };
     r2.readAsText(file);
@@ -1525,14 +1422,26 @@ function handleFile(file){
   }
 }
 
+/* Rendered PDF pages (as canvases) and detected "Qn" marker positions,
+   kept in memory only for the current PDF so questions can be re-cropped
+   in the review screen. Cleared whenever a non-PDF paper is loaded. */
+var pdfPageCanvases = [];
+var pdfQuestionMarkers = [];
+
+function resetPdfImageState(){
+  pdfPageCanvases = [];
+  pdfQuestionMarkers = [];
+}
+
 function handlePdfFile(file){
   if(typeof pdfjsLib === 'undefined'){
-    setStatus('file-status','err','PDF parsing library did not load. Please copy the paper text and use the "Paste text" tab instead.');
+    setStatus('file-status','err','PDF parsing library did not load (no network access to the CDN?). Please use the JSON template tab instead.');
     return;
   }
   try{
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   }catch(e){}
+  resetPdfImageState();
 
   var reader = new FileReader();
   reader.onload = function(){
@@ -1540,57 +1449,355 @@ function handlePdfFile(file){
     pdfjsLib.getDocument({data:typedArray}).promise.then(function(pdf){
       var pagePromises = [];
       for(var p=1; p<=pdf.numPages; p++){
-        pagePromises.push(pdf.getPage(p).then(extractPageTextTwoColumn));
+        pagePromises.push(processPdfPage(pdf, p));
       }
       return Promise.all(pagePromises);
-    }).then(function(pageTexts){
-      var fullText = pageTexts.join('\n\n');
+    }).then(function(pageResults){
+      var fullText = pageResults.map(function(r){ return r.text; }).join('\n\n');
+      pdfQuestionMarkers = [];
+      pageResults.forEach(function(r){ pdfQuestionMarkers = pdfQuestionMarkers.concat(r.markers); });
       var result = parsePlainText(fullText);
       var paper = { title: file.name.replace(/\.[^.]+$/,''), durationMinutes: 60, subjects: result.subjects };
       var n = subjectQuestionCount(paper);
       if(n===0){
-        setStatus('file-status','err','Could not automatically extract questions from this PDF. Please copy the text and use the "Paste text" tab, or use the JSON template.');
+        setStatus('file-status','err','Could not automatically extract questions from this PDF (multi‑column layouts are hard to parse reliably). Please use the JSON template tab instead.');
+        resetPdfImageState();
         return;
       }
-      onPaperLoaded(paper, result.warnings.concat(['Parsed from a PDF — automatic extraction can misplace text on multi-column layouts. Please double‑check every question below.']));
+      attachAutoCropsToQuestions(paper);
+      onPaperLoaded(paper, result.warnings.concat(['Parsed from a PDF — automatic extraction can misplace text on multi-column layouts. A snapshot image was also captured for each question; use "Review question images" to fix any that look wrong.']));
       setStatus('file-status','warn','Parsed '+n+' question(s) from the PDF on a best‑effort basis — please review carefully below before starting.');
     }).catch(function(err){
-      setStatus('file-status','err','Could not parse this PDF ('+esc(err.message||'unknown error')+'). Please copy the text and use the "Paste text" tab instead.');
+      setStatus('file-status','err','Could not parse this PDF ('+esc(err.message||'unknown error')+'). Please use the JSON template tab instead.');
+      resetPdfImageState();
     });
   };
   reader.readAsArrayBuffer(file);
 }
 
-function extractPageTextTwoColumn(page){
-  return page.getViewport({scale:1}).width ? page.getTextContent().then(function(content){
-    var viewport = page.getViewport({scale:1});
-    var midX = viewport.width / 2;
-    var left = [], right = [];
-    content.items.forEach(function(item){
-      var x = item.transform[4];
-      var y = item.transform[5];
-      (x < midX ? left : right).push({x:x, y:y, str:item.str});
-    });
-    function linesFromItems(items){
-      items.sort(function(a,b){ return b.y - a.y || a.x - b.x; });
-      var lines = [];
-      var currentY = null, currentLine = [];
-      items.forEach(function(it){
-        if(currentY===null || Math.abs(it.y-currentY) > 4){
-          if(currentLine.length) lines.push(currentLine);
-          currentLine = [it]; currentY = it.y;
-        } else {
-          currentLine.push(it);
-        }
-      });
-      if(currentLine.length) lines.push(currentLine);
-      return lines.map(function(line){
-        line.sort(function(a,b){ return a.x-b.x; });
-        return line.map(function(i){ return i.str; }).join(' ');
-      }).join('\n');
+/* Renders one PDF page to a full-resolution canvas (kept for cropping)
+   and returns its linearised two-column text plus the pixel position of
+   every "Qn" marker found on the page, in PAGE-PERCENT coordinates so
+   they're independent of the render scale used. */
+var PDF_RENDER_SCALE = 2.0;
+function processPdfPage(pdf, pageNum){
+  return pdf.getPage(pageNum).then(function(page){
+    var viewport = page.getViewport({scale: PDF_RENDER_SCALE});
+    var canvas = document.createElement('canvas');
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    var ctx = canvas.getContext('2d');
+    var renderPromise;
+    try{
+      renderPromise = page.render({canvasContext: ctx, viewport: viewport}).promise;
+    }catch(e){
+      renderPromise = Promise.reject(e);
     }
-    return linesFromItems(left) + '\n' + linesFromItems(right);
-  }) : Promise.resolve('');
+    return renderPromise.catch(function(){ return null; }).then(function(){
+      pdfPageCanvases[pageNum-1] = canvas;
+      return page.getTextContent().then(function(content){
+        var unscaled = page.getViewport({scale:1});
+        var pageW = unscaled.width, pageH = unscaled.height;
+        var midX = pageW/2;
+        var left=[], right=[];
+        content.items.forEach(function(item){
+          var x=item.transform[4], y=item.transform[5];
+          (x<midX?left:right).push({x:x,y:y,str:item.str});
+        });
+        function buildLines(items){
+          items.sort(function(a,b){ return b.y-a.y || a.x-b.x; });
+          var lines=[]; var curY=null, curLine=[];
+          items.forEach(function(it){
+            if(curY===null || Math.abs(it.y-curY)>4){ if(curLine.length) lines.push(curLine); curLine=[it]; curY=it.y; }
+            else curLine.push(it);
+          });
+          if(curLine.length) lines.push(curLine);
+          return lines.map(function(line){
+            line.sort(function(a,b){ return a.x-b.x; });
+            return { y:line[0].y, text: line.map(function(i){return i.str;}).join(' ') };
+          });
+        }
+        var leftLines = buildLines(left);
+        var rightLines = buildLines(right);
+        var markers = [];
+        function scanMarkers(lines, column, xStart, xEnd){
+          lines.forEach(function(ln){
+            var m = ln.text.match(/^\s*Q\s?(\d{1,3})\b/);
+            if(m){
+              markers.push({
+                number: parseInt(m[1],10), pageIndex: pageNum-1, column: column,
+                leftPct: (xStart/pageW)*100, rightPct: (xEnd/pageW)*100,
+                yTopPct: ((pageH-ln.y)/pageH)*100
+              });
+            }
+          });
+        }
+        scanMarkers(leftLines, 'left', 0, midX);
+        scanMarkers(rightLines, 'right', midX, pageW);
+        var text = leftLines.map(function(l){return l.text;}).join('\n') + '\n' + rightLines.map(function(l){return l.text;}).join('\n');
+        return { text: text, markers: markers };
+      });
+    });
+  });
+}
+
+/* Turns each detected marker into a first-guess crop box (percent of that
+   page's image) running from just above its own "Qn" label down to just
+   above the next question's label in the same column. */
+function attachAutoCropsToQuestions(paper){
+  var byNumber = {};
+  paper.subjects.forEach(function(s){ s.questions.forEach(function(q){ byNumber[q.number]=q; }); });
+
+  var markers = pdfQuestionMarkers.slice();
+  markers.sort(function(a,b){
+    if(a.pageIndex!==b.pageIndex) return a.pageIndex-b.pageIndex;
+    if(a.column!==b.column) return a.column==='left' ? -1 : 1;
+    return a.yTopPct - b.yTopPct;
+  });
+
+  markers.forEach(function(m, idx){
+    var q = byNumber[m.number];
+    if(!q) return;
+    var next = null;
+    for(var j=idx+1;j<markers.length;j++){
+      if(markers[j].pageIndex===m.pageIndex && markers[j].column===m.column){ next = markers[j]; break; }
+    }
+    var box = {
+      pageIndex: m.pageIndex,
+      leftPct: Math.max(0, m.leftPct - 1),
+      rightPct: Math.min(100, m.rightPct + 1),
+      topPct: Math.max(0, m.yTopPct - 1.5),
+      bottomPct: next ? Math.max(0, next.yTopPct - 1.5) : 97
+    };
+    if(box.bottomPct <= box.topPct + 2) box.bottomPct = Math.min(97, box.topPct + 15);
+    q._autoCropBox = box;
+    q._cropBox = { pageIndex:box.pageIndex, leftPct:box.leftPct, rightPct:box.rightPct, topPct:box.topPct, bottomPct:box.bottomPct };
+    q.image = cropFromPercentBox(box);
+  });
+}
+
+/* Crops a rectangle (percent of the full page canvas) out of the stored
+   page image and returns a PNG data URL. Shared by auto-crop and the
+   manual adjuster. */
+function cropFromPercentBox(box){
+  if(!box) return null;
+  var canvas = pdfPageCanvases[box.pageIndex];
+  if(!canvas) return null;
+  var pxLeft = box.leftPct/100*canvas.width;
+  var pxRight = box.rightPct/100*canvas.width;
+  var pxTop = box.topPct/100*canvas.height;
+  var pxBottom = box.bottomPct/100*canvas.height;
+  var w = Math.max(1, pxRight-pxLeft), h = Math.max(1, pxBottom-pxTop);
+  var out = document.createElement('canvas');
+  out.width = w; out.height = h;
+  var ctx = out.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0,0,w,h);
+  ctx.drawImage(canvas, pxLeft, pxTop, w, h, 0, 0, w, h);
+  return out.toDataURL('image/png');
+}
+
+/* =====================================================================================
+   CROP REVIEW SCREEN + ADJUSTER
+   ===================================================================================== */
+function findQuestionByNumber(n){
+  var found = null;
+  if(!app.paper) return null;
+  app.paper.subjects.forEach(function(s){ s.questions.forEach(function(q){ if(q.number===n) found=q; }); });
+  return found;
+}
+
+function proceedFromHome(){
+  if(!app.paper || subjectQuestionCount(app.paper)===0) return;
+  if(pdfPageCanvases && pdfPageCanvases.length>0){
+    renderCropReviewGrid();
+    showScreen('crop-review');
+  } else {
+    goToInstructions();
+  }
+}
+
+function renderCropReviewGrid(){
+  var grid = document.getElementById('crop-grid');
+  var total=0, withImg=0;
+  var html = '';
+  app.paper.subjects.forEach(function(s){
+    s.questions.forEach(function(q){
+      total++;
+      if(q.image) withImg++;
+      html += '<div class="crop-thumb-card" onclick="openCropAdjuster('+q.number+')">'+
+        (q.image ? '<img class="crop-thumb-img" src="'+q.image+'">' : '<div class="crop-thumb-noimg">no image</div>')+
+        '<div class="crop-thumb-label">Q'+q.number+'</div>'+
+        (q.optionImages ? '<div class="crop-thumb-flag">+options</div>' : '')+
+      '</div>';
+    });
+  });
+  grid.innerHTML = html;
+  document.getElementById('cr-count-auto').textContent = withImg;
+  document.getElementById('cr-count-total').textContent = total;
+}
+
+var cropAdjuster = { question:null, target:'stem' };
+
+function openCropAdjuster(qNumber){
+  var q = findQuestionByNumber(qNumber);
+  if(!q || !q._cropBox){ return; }
+  cropAdjuster.question = q;
+  cropAdjuster.target = 'stem';
+  document.getElementById('ca-title').textContent = 'Question ' + q.number;
+  renderCropTargetTabs();
+  loadBoxIntoSliders();
+  document.getElementById('crop-adjuster-modal').classList.add('show');
+}
+function closeCropAdjuster(){
+  document.getElementById('crop-adjuster-modal').classList.remove('show');
+  renderCropReviewGrid();
+  cropAdjuster.question = null;
+}
+
+function renderCropTargetTabs(){
+  var q = cropAdjuster.question;
+  if(!q) return;
+  var tabs = [{key:'stem', label:'Question'}];
+  if(q.type==='mcq' && q._optionCropBoxes){
+    tabs.push({key:'opt1',label:'Option 1'},{key:'opt2',label:'Option 2'},{key:'opt3',label:'Option 3'},{key:'opt4',label:'Option 4'});
+  }
+  document.getElementById('ca-target-tabs').innerHTML = tabs.map(function(t){
+    return '<button type="button" class="crop-target-tab'+(cropAdjuster.target===t.key?' active':'')+'" onclick="selectCropTarget(\''+t.key+'\')">'+t.label+'</button>';
+  }).join('');
+  document.getElementById('ca-optimg-toggle').checked = (q.type==='mcq' && !!q._optionCropBoxes);
+  document.getElementById('ca-optimg-toggle').disabled = (q.type!=='mcq');
+}
+
+function currentBoxRef(){
+  var q = cropAdjuster.question;
+  if(!q) return null;
+  if(cropAdjuster.target==='stem') return q._cropBox;
+  var idx = parseInt(cropAdjuster.target.replace('opt',''),10)-1;
+  return q._optionCropBoxes ? q._optionCropBoxes[idx] : null;
+}
+
+function loadPageImage(pageIndex){
+  var canvas = pdfPageCanvases[pageIndex];
+  var img = document.getElementById('ca-page-img');
+  if(canvas){ img.src = canvas.toDataURL('image/jpeg', 0.85); }
+}
+
+function loadBoxIntoSliders(){
+  var box = currentBoxRef();
+  if(!box) return;
+  document.getElementById('ca-slider-top').value = box.topPct;
+  document.getElementById('ca-slider-bottom').value = box.bottomPct;
+  document.getElementById('ca-slider-left').value = box.leftPct;
+  document.getElementById('ca-slider-right').value = box.rightPct;
+  loadPageImage(box.pageIndex);
+  updateCropOverlayAndPreview();
+}
+
+function selectCropTarget(key){
+  cropAdjuster.target = key;
+  renderCropTargetTabs();
+  loadBoxIntoSliders();
+}
+
+function onCropSliderChange(){
+  var box = currentBoxRef();
+  if(!box) return;
+  box.topPct = parseFloat(document.getElementById('ca-slider-top').value);
+  box.bottomPct = parseFloat(document.getElementById('ca-slider-bottom').value);
+  box.leftPct = parseFloat(document.getElementById('ca-slider-left').value);
+  box.rightPct = parseFloat(document.getElementById('ca-slider-right').value);
+  updateCropOverlayAndPreview();
+}
+
+function updateCropOverlayAndPreview(){
+  var box = currentBoxRef();
+  if(!box) return;
+  var overlay = document.getElementById('ca-box-overlay');
+  overlay.style.left = box.leftPct + '%';
+  overlay.style.right = (100 - box.rightPct) + '%';
+  overlay.style.top = box.topPct + '%';
+  overlay.style.bottom = (100 - box.bottomPct) + '%';
+  var dataUrl = cropFromPercentBox(box);
+  document.getElementById('ca-preview-img').src = dataUrl || '';
+  var q = cropAdjuster.question;
+  if(cropAdjuster.target === 'stem'){
+    q.image = dataUrl;
+  } else {
+    var idx = parseInt(cropAdjuster.target.replace('opt',''),10)-1;
+    if(q.optionImages) q.optionImages[idx] = dataUrl;
+  }
+}
+
+function resetCropToAuto(){
+  var q = cropAdjuster.question;
+  if(!q) return;
+  if(cropAdjuster.target === 'stem'){
+    if(q._autoCropBox){
+      q._cropBox = { pageIndex:q._autoCropBox.pageIndex, leftPct:q._autoCropBox.leftPct, rightPct:q._autoCropBox.rightPct, topPct:q._autoCropBox.topPct, bottomPct:q._autoCropBox.bottomPct };
+    }
+  } else if(q._optionCropBoxes){
+    var idx = parseInt(cropAdjuster.target.replace('opt',''),10)-1;
+    q._optionCropBoxes[idx] = { pageIndex:q._cropBox.pageIndex, leftPct:q._cropBox.leftPct, rightPct:q._cropBox.rightPct, topPct:q._cropBox.topPct, bottomPct:q._cropBox.bottomPct };
+  }
+  loadBoxIntoSliders();
+}
+
+function clearCropImage(){
+  var q = cropAdjuster.question;
+  if(!q) return;
+  if(cropAdjuster.target === 'stem'){
+    q.image = null;
+  } else if(q.optionImages){
+    var idx = parseInt(cropAdjuster.target.replace('opt',''),10)-1;
+    q.optionImages[idx] = null;
+  }
+  document.getElementById('ca-preview-img').src = '';
+}
+
+function toggleOptionImages(checked){
+  var q = cropAdjuster.question;
+  if(!q || q.type!=='mcq') return;
+  if(checked){
+    if(!q._optionCropBoxes){
+      q._optionCropBoxes = [0,1,2,3].map(function(){
+        return { pageIndex:q._cropBox.pageIndex, leftPct:q._cropBox.leftPct, rightPct:q._cropBox.rightPct, topPct:q._cropBox.topPct, bottomPct:q._cropBox.bottomPct };
+      });
+    }
+    if(!q.optionImages) q.optionImages = [null,null,null,null];
+    renderCropTargetTabs();
+    selectCropTarget('opt1');
+  } else {
+    q._optionCropBoxes = null;
+    q.optionImages = null;
+    renderCropTargetTabs();
+    selectCropTarget('stem');
+  }
+}
+
+/* ---------- image zoom lightbox (used on the exam screen too) ---------- */
+function openImageZoom(src){
+  if(!src) return;
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('image-lightbox').classList.add('show');
+}
+function closeImageZoom(){
+  document.getElementById('image-lightbox').classList.remove('show');
+}
+
+/* ---------- export the loaded (and possibly cropped) paper as JSON ---------- */
+function exportPaperAsJson(){
+  if(!app.paper) return;
+  var clean = JSON.parse(JSON.stringify(app.paper, function(key, value){
+    if(typeof key === 'string' && key.indexOf('_') === 0) return undefined;
+    return value;
+  }));
+  var blob = new Blob([JSON.stringify(clean, null, 2)], {type:'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  var safeName = (app.paper.title || 'paper').replace(/[^a-z0-9\-_]+/gi, '_');
+  a.href = url; a.download = safeName + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
 }
 
 /* ---------- json tab ---------- */
@@ -1600,6 +1807,7 @@ function parseJsonInput(){
   try{
     var obj = JSON.parse(text);
     var paper = parsePaperJson(obj);
+    resetPdfImageState();
     onPaperLoaded(paper, []);
     setStatus('json-status','ok','Loaded "'+esc(paper.title)+'" — '+subjectQuestionCount(paper)+' questions.');
   }catch(err){
@@ -1609,6 +1817,7 @@ function parseJsonInput(){
 
 function loadSamplePaper(){
   var paper = buildSamplePaper();
+  resetPdfImageState();
   onPaperLoaded(paper, []);
   scrollToUpload();
   setStatus('file-status','ok','Loaded the sample paper — 12 original questions with a verified answer key, ready to try the full flow.');
@@ -1654,6 +1863,9 @@ function subjectAbbrev(name){
   return (name||'General').toUpperCase();
 }
 
+/* Split every subject into Section A (MCQ) and Section B (Integer type),
+   mirroring the real JEE Main paper structure. Sections with zero questions
+   of that type are skipped. */
 function buildSections(paper){
   var sections = [];
   paper.subjects.forEach(function(s, si){
@@ -1661,10 +1873,10 @@ function buildSections(paper){
     var intQs = s.questions.filter(function(q){ return q.type === 'integer'; });
     var abbr = subjectAbbrev(s.name);
     if(mcqQs.length){
-      sections.push({ si:si, subjectName:s.name, sectionType:'A', label:s.name+' — Section A (MCQ)', shortLabel:abbr+' A', questions:mcqQs });
+      sections.push({ si:si, subjectName:s.name, sectionType:'A', label:s.name+' \u2014 Section A (MCQ)', shortLabel:abbr+' A', questions:mcqQs });
     }
     if(intQs.length){
-      sections.push({ si:si, subjectName:s.name, sectionType:'B', label:s.name+' — Section B (Numerical)', shortLabel:abbr+' B', questions:intQs });
+      sections.push({ si:si, subjectName:s.name, sectionType:'B', label:s.name+' \u2014 Section B (Numerical)', shortLabel:abbr+' B', questions:intQs });
     }
   });
   return sections;
@@ -1687,11 +1899,11 @@ function buildExamState(paper, candidateName){
     sections: sections,
     order: order,
     status: status, answers: answers, timeSpent: timeSpent, visited: visited,
-    answerFinalTs: {},
+    answerFinalTs: {}, // qid -> last save timestamp (ms since exam start)
     currentIndex: 0,
     currentSectionIdx: 0,
     lastVisitedInSection: {},
-    subjectMovements: [],
+    subjectMovements: [], // {subject, durationSeconds} -- one entry per section visited, in order
     currentMovementStart: 0,
     remainingSeconds: paper.durationMinutes*60,
     examStartTs: null,
@@ -1737,7 +1949,6 @@ function exitFullscreenSafe(){
   if(ex && (document.fullscreenElement || document.webkitFullscreenElement)){ try{ ex.call(document); }catch(e){} }
 }
 function handleFullscreenChange(){
-  if(window.innerWidth <= 768) return; // Ignore on mobile touch devices
   var inFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
   var warn = document.getElementById('fs-warning');
   if(!inFs && exam && !exam.finished){ warn.classList.add('show'); }
@@ -1811,9 +2022,21 @@ function renderCurrentQuestion(){
   var sec = exam.sections[o.secIdx];
   document.getElementById('q-heading').textContent = 'Question ' + q.number + ':';
   document.getElementById('q-meta-row').innerHTML =
-    '<span class="qmeta-tag">'+esc(sec.subjectName)+' · Section '+esc(sec.sectionType)+'</span>'+
+    '<span class="qmeta-tag">'+esc(sec.subjectName)+' \u00b7 Section '+esc(sec.sectionType)+'</span>'+
     (q.chapter ? '<span class="qmeta-tag">'+esc(q.chapter)+'</span>' : '') ;
-  document.getElementById('q-text').textContent = q.text;
+
+  var qtextEl = document.getElementById('q-text');
+  if(q.image){
+    qtextEl.innerHTML = '';
+    qtextEl.style.display = 'none';
+  } else {
+    qtextEl.style.display = '';
+    qtextEl.textContent = q.text;
+  }
+  var imgArea = document.getElementById('q-image-area');
+  imgArea.innerHTML = q.image ?
+    '<div class="q-image-wrap"><img class="q-image" src="'+q.image+'" onclick="openImageZoom(this.src)" alt="Question '+q.number+'">'+
+    '<div class="q-image-hint">\uD83D\uDD0D Tap the image to zoom in</div></div>' : '';
 
   var answerArea = document.getElementById('q-answer-area');
   var saved = exam.answers[q.number];
@@ -1821,20 +2044,24 @@ function renderCurrentQuestion(){
     answerArea.innerHTML = '<div class="options-list">' + q.options.map(function(opt, i){
       var n = i+1;
       var sel = (saved === n);
+      var optImg = (q.optionImages && q.optionImages[i]) ? q.optionImages[i] : null;
       return '<label class="option-row'+(sel?' selected':'')+'" data-optnum="'+n+'">'+
         '<input type="radio" name="opt" value="'+n+'" '+(sel?'checked':'')+' onchange="selectOption('+n+')">'+
-        '<span class="opt-num">('+n+')</span><span class="opt-text">'+esc(opt)+'</span>'+
+        '<span class="opt-num">('+n+')</span>'+
+        (optImg ?
+          '<span class="opt-image-wrap"><img class="opt-image" src="'+optImg+'" onclick="event.preventDefault(); openImageZoom(this.src)" alt="Option '+n+'"></span>' :
+          '<span class="opt-text">'+esc(opt)+'</span>') +
       '</label>';
     }).join('') + '</div>';
   } else {
     answerArea.innerHTML = '<div class="integer-input-wrap">'+
-      '<label>Enter numerical answer (Section B):</label>'+
+      '<label>Enter your numerical answer (Section B \u2014 no options, type the value)</label>'+
       '<input type="number" id="integer-answer" value="'+(saved!==undefined && saved!==null? saved : '')+'" oninput="selectIntegerAnswer(this.value)" placeholder="e.g. 47">'+
       '<div class="onscreen-keypad">'+
         [1,2,3,4,5,6,7,8,9].map(function(d){ return '<button type="button" class="keypad-btn" onclick="keypadPress(\''+d+'\')">'+d+'</button>'; }).join('')+
         '<button type="button" class="keypad-btn keypad-fn" onclick="keypadClear()">Clear</button>'+
         '<button type="button" class="keypad-btn" onclick="keypadPress(\'0\')">0</button>'+
-        '<button type="button" class="keypad-btn keypad-fn" onclick="keypadBackspace()">⌫</button>'+
+        '<button type="button" class="keypad-btn keypad-fn" onclick="keypadBackspace()">\u232B</button>'+
       '</div>'+
     '</div>';
   }
@@ -1874,6 +2101,8 @@ function selectIntegerAnswer(val){
   exam.answers[q.number] = parseInt(val,10);
 }
 
+/* Palette shows ONLY the currently active section's questions -- not the
+   whole paper -- so it always matches what's in the tab bar above it. */
 function renderPalette(){
   var body = document.getElementById('palette-body');
   var sec = exam.sections[exam.currentSectionIdx];
@@ -1891,15 +2120,10 @@ function renderPalette(){
 
 function jumpTo(idx){
   goToQuestionByIndex(idx, false);
-  // auto-close mobile palette drawer on selection
-  var pal = document.getElementById('exam-palette');
-  var bdrop = document.getElementById('palette-backdrop');
-  if(pal && pal.classList.contains('mobile-open')){
-    pal.classList.remove('mobile-open');
-    if(bdrop) bdrop.classList.remove('show');
-  }
 }
 
+/* Legend counts are also scoped to the current section, so the numbers
+   always match the squares visible in the palette below them. */
 function updateLegendCounts(){
   var counts = {'not-visited':0,'not-answered':0,'answered':0,'marked':0,'answered-marked':0};
   var sec = exam.sections[exam.currentSectionIdx];
@@ -1912,6 +2136,8 @@ function updateLegendCounts(){
   updateGlobalProgress();
 }
 
+/* Whole-paper attempted / not-attempted count, shown above the palette
+   regardless of which section is currently active. */
 function updateGlobalProgress(){
   var total = exam.order.length;
   var attempted = 0;
@@ -1989,6 +2215,7 @@ function finalizeAndSubmit(auto){
   if(exam.finished) return;
   exam.finished = true;
   if(exam.timerHandle) clearInterval(exam.timerHandle);
+  // flush time for current question
   var now = Date.now();
   var curId = exam.order[exam.currentIndex].id;
   exam.timeSpent[curId] += (now - exam.questionStartTs)/1000;
@@ -2023,9 +2250,9 @@ function computeAnalysis(){
 
   var subjectsOut = [];
   var overall = { correct:0, incorrect:0, unattempted:0, notVisited:0, score:0, maxScore:0,
-                  timeSpent:0, total:0, attempts:{perfect:0,wasted:0,overtime:0,confused:0},
-                  difficulty:{Easy:{c:0,i:0,u:0},Moderate:{c:0,i:0,u:0},Tough:{c:0,i:0,u:0}},
-                  rows:[] };
+                   timeSpent:0, total:0, attempts:{perfect:0,wasted:0,overtime:0,confused:0},
+                   difficulty:{Easy:{c:0,i:0,u:0},Moderate:{c:0,i:0,u:0},Tough:{c:0,i:0,u:0}},
+                   rows:[] };
 
   paper.subjects.forEach(function(s){
     var subj = { name:s.name, correct:0, incorrect:0, unattempted:0, notVisited:0, score:0, maxScore:0,
@@ -2101,6 +2328,7 @@ function computeAnalysis(){
   overall.accuracy = (overall.correct+overall.incorrect)>0 ? Math.round(overall.correct/(overall.correct+overall.incorrect)*100) : 0;
   overall.attemptPct = overall.total>0 ? Math.round((overall.correct+overall.incorrect)/overall.total*100) : 0;
 
+  // attempts-over-time buckets
   var nBuckets = Math.max(2, Math.min(6, Math.round(paper.durationMinutes/30) || 2));
   var bucketLen = totalDurationSeconds / nBuckets;
   var buckets = [];
@@ -2142,6 +2370,8 @@ function answerBadge(r){
   if(!r.attempted) return '<span class="badge unattempted">Unattempted</span>';
   return r.correct ? '<span class="badge correct">Correct</span>' : '<span class="badge incorrect">Incorrect</span>';
 }
+/* Renders a saved answer value in a readable form -- "(2) option text" for
+   MCQs, or the plain number for Section B / integer-type questions. */
 function formatAnswerValue(q, val){
   if(val===undefined || val===null || val===''){ return '<span style="color:var(--ink-faint);">\u2014</span>'; }
   if(q.type === 'mcq'){
@@ -2155,18 +2385,18 @@ function formatAnswerValue(q, val){
 
 function renderAnalysisReport(report, wasAuto){
   destroyCharts();
-  document.getElementById('an-subtitle').textContent = report.paperTitle + ' · ' + report.candidateName + (wasAuto ? ' · auto-submitted' : '');
+  document.getElementById('an-subtitle').textContent = report.paperTitle + ' · ' + report.candidateName + (wasAuto ? ' · auto-submitted (time up)' : '');
   var root = document.getElementById('pdf-report-root');
   var o = report.overall;
 
   var sections = [];
 
-  // Overview
+  // ---- Overview ----
   var scoreDisplay = report.hasFullKey ? (o.score+' / '+o.maxScore) : (report.coverage.withKey+'/'+report.coverage.total+' scored');
   sections.push(
     '<div class="report-section" id="sec-overview">'+
       '<h3>Overview</h3>'+
-      '<div class="sub">Attempted by <b>'+esc(report.candidateName)+'</b>. '+(report.hasFullKey?'':'<br><span style="color:#8A5A12;">Partial or no answer key provided — score reflects '+report.coverage.withKey+' known question(s).</span>')+'</div>'+
+      '<div class="sub">Attempted by <b>'+esc(report.candidateName)+'</b>. '+(report.hasFullKey?'':'<br><span style="color:#8A5A12;">Partial or no answer key was provided — score and accuracy reflect only the '+report.coverage.withKey+' question(s) with a known answer.</span>')+'</div>'+
       '<div class="overview-grid">'+
         '<div class="ov-card"><div class="l">Score</div><div class="v">'+esc(scoreDisplay)+'</div></div>'+
         '<div class="ov-card"><div class="l">Accuracy</div><div class="v">'+o.accuracy+'%</div></div>'+
@@ -2176,7 +2406,7 @@ function renderAnalysisReport(report, wasAuto){
     '</div>'
   );
 
-  // Subject-wise table
+  // ---- Subject-wise table ----
   var subjRows = '<tr><td><b>Overall</b></td><td>'+(report.hasFullKey?o.score+'/'+o.maxScore:'—')+'</td><td>'+o.correct+'/'+o.total+'</td><td>'+o.incorrect+'/'+o.total+'</td><td>'+o.unattempted+'/'+o.total+'</td><td>'+o.notVisited+'/'+o.total+'</td></tr>';
   report.subjects.forEach(function(s){
     subjRows += '<tr><td>'+esc(s.name)+'</td><td>'+(report.hasFullKey?s.score+'/'+s.maxScore:'—')+'</td><td>'+s.correct+'/'+s.total+'</td><td>'+s.incorrect+'/'+s.total+'</td><td>'+s.unattempted+'/'+s.total+'</td><td>'+s.notVisited+'/'+s.total+'</td></tr>';
@@ -2184,12 +2414,12 @@ function renderAnalysisReport(report, wasAuto){
   sections.push(
     '<div class="report-section" id="sec-analysis">'+
       '<h3>Analysis</h3>'+
-      '<div class="sub">Snapshot of correct, incorrect, unattempted, and unvisited questions.</div>'+
+      '<div class="sub">A snapshot of attempts that were correct, incorrect, unattempted, and not visited at all — per subject.</div>'+
       '<div class="tbl-wrap"><table class="data-tbl"><thead><tr><th>Subject</th><th>Score</th><th>Correct</th><th>Incorrect</th><th>Unattempted</th><th>Not visited</th></tr></thead><tbody>'+subjRows+'</tbody></table></div>'+
     '</div>'
   );
 
-  // Time & accuracy
+  // ---- Time & accuracy ----
   var taRows = '<tr><td><b>Overall</b></td><td>'+fmtMinSec(o.timeSpent)+'</td><td>'+o.attemptPct+'%</td><td>'+o.accuracy+'%</td></tr>';
   report.subjects.forEach(function(s){
     taRows += '<tr><td>'+esc(s.name)+'</td><td>'+fmtMinSec(s.timeSpent)+'</td><td>'+s.attemptPct+'%</td><td>'+s.accuracy+'%</td></tr>';
@@ -2197,40 +2427,40 @@ function renderAnalysisReport(report, wasAuto){
   sections.push(
     '<div class="report-section" id="sec-time">'+
       '<h3>Time and accuracy</h3>'+
-      '<div class="sub">How time was divided and how it converted to results.</div>'+
+      '<div class="sub">Time is the most important resource in any competitive exam — here\'s how it was spent per subject, and how it paid off.</div>'+
       '<div class="tbl-wrap"><table class="data-tbl"><thead><tr><th>Subject</th><th>Time spent</th><th>Attempt %</th><th>Accuracy %</th></tr></thead><tbody>'+taRows+'</tbody></table></div>'+
     '</div>'
   );
 
-  // Graphical view
+  // ---- Attempts pie + difficulty bar ----
   sections.push(
     '<div class="report-section" id="sec-charts">'+
       '<h3>Graphical view</h3>'+
-      '<div class="sub">Quality of attempts and breakdown by question difficulty.</div>'+
+      '<div class="sub">Perfect = correct within the allotted time. Wasted = incorrect, answered too fast. Overtime = incorrect and slow. Confused = left unanswered after spending too long.</div>'+
       '<div class="charts-grid">'+
         '<div class="chart-box"><div class="ct">Attempt quality (overall)</div><canvas id="chart-attempts"></canvas></div>'+
         '<div class="chart-box"><div class="ct">Correct / incorrect / unanswered</div><canvas id="chart-correctness"></canvas></div>'+
       '</div>'+
-      '<div class="charts-grid" style="margin-top:20px;">'+
-        '<div class="chart-box" style="grid-column:1/-1;"><div class="ct">Difficulty analysis (overall)</div><canvas id="chart-difficulty"></canvas></div>'+
+      '<div class="charts-grid" style="margin-top:28px;">'+
+        '<div class="chart-box" style="grid-column:1/3;"><div class="ct">Difficulty analysis (overall)</div><canvas id="chart-difficulty"></canvas></div>'+
       '</div>'+
     '</div>'
   );
 
-  // Attempts over time
+  // ---- Attempts over time ----
   var bucketRows = report.buckets.map(function(bk){
     return '<tr><td>'+bk.label+'</td><td>'+bk.correct+'</td><td>'+bk.incorrect+'</td><td>'+(bk.correct+bk.incorrect)+'</td></tr>';
   }).join('');
   sections.push(
     '<div class="report-section" id="sec-overtime">'+
       '<h3>Attempts over the '+report.durationMinutes+' minutes</h3>'+
-      '<div class="sub">When during the test questions were answered.</div>'+
+      '<div class="sub">When during the test you were answering correctly vs incorrectly.</div>'+
       '<div class="tbl-wrap"><table class="data-tbl"><thead><tr><th>Interval</th><th>Correct</th><th>Incorrect</th><th>Total</th></tr></thead><tbody>'+bucketRows+'</tbody></table></div>'+
-      '<div style="margin-top:18px;"><canvas id="chart-overtime" height="100"></canvas></div>'+
+      '<div style="margin-top:18px;"><canvas id="chart-overtime" height="90"></canvas></div>'+
     '</div>'
   );
 
-  // Painful questions
+  // ---- Painful questions ----
   var painHtml = report.subjects.map(function(s){
     if(!s.painful.length) return '';
     return '<div class="subject-block"><h4>'+esc(s.name)+'</h4><ul class="mini-list">'+
@@ -2240,24 +2470,24 @@ function renderAnalysisReport(report, wasAuto){
   sections.push(
     '<div class="report-section" id="sec-painful">'+
       '<h3>Painful questions</h3>'+
-      '<div class="sub">Where significant time was burned without securing marks.</div>'+
-      (painHtml || '<div style="font-size:13px; color:var(--ink-faint);">No particularly painful questions.</div>')+
+      '<div class="sub">Where the most time was burned on incorrect or overtime attempts, by subject.</div>'+
+      (painHtml || '<div style="font-size:13px; color:var(--ink-faint);">No particularly painful questions — nice and steady.</div>')+
     '</div>'
   );
 
-  // Subject movement
+  // ---- Subject movement ----
   var moveHtml = report.subjectMovements.map(function(m, i){
     return '<div class="movement-item"><span class="movement-dot"></span><div>'+(i===0?'Started with ':'Switched to ')+'<b>'+esc(m.subject)+'</b></div><span>'+fmtMinSec(m.durationSeconds)+'</span></div>';
   }).join('');
   sections.push(
     '<div class="report-section" id="sec-movement">'+
       '<h3>Subject movement</h3>'+
-      '<div class="sub">Timeline of switches across sections.</div>'+
+      '<div class="sub">How you traversed each subject, and how long you stayed each time.</div>'+
       (moveHtml || '<div style="font-size:13px; color:var(--ink-faint);">No subject switches recorded.</div>')+
     '</div>'
   );
 
-  // Missed concepts
+  // ---- Missed concepts ----
   var missedHtml = report.subjects.map(function(s){
     if(!s.missedConcepts.length) return '';
     return '<div class="subject-block"><h4>'+esc(s.name)+'</h4><ul class="mini-list">'+
@@ -2267,12 +2497,12 @@ function renderAnalysisReport(report, wasAuto){
   sections.push(
     '<div class="report-section" id="sec-missed">'+
       '<h3>Missed concepts</h3>'+
-      '<div class="sub">Topics behind incorrect answers for quick revision.</div>'+
-      (missedHtml || '<div style="font-size:13px; color:var(--ink-faint);">No incorrect answers — nothing flagged!</div>')+
+      '<div class="sub">Topics behind every incorrect answer — worth a revision pass.</div>'+
+      (missedHtml || '<div style="font-size:13px; color:var(--ink-faint);">No incorrect answers — nothing to flag.</div>')+
     '</div>'
   );
 
-  // Complete analysis table
+  // ---- Complete analysis table ----
   var completeRows = o.rows.map(function(r){
     return '<tr><td>'+r.number+'</td><td>'+esc(r.chapter)+'</td><td>'+esc(r.topic)+'</td><td>'+esc(r.difficulty)+'</td>'+
       '<td>'+Math.round(r.allotted)+'s</td><td>'+Math.round(r.spent)+'s</td><td>'+(r.attempted?'Yes':'No')+'</td>'+
@@ -2283,14 +2513,14 @@ function renderAnalysisReport(report, wasAuto){
   sections.push(
     '<div class="report-section" id="sec-complete">'+
       '<h3>Complete analysis</h3>'+
-      '<div class="sub">Every single question audited in order.</div>'+
+      '<div class="sub">Every question, in order.</div>'+
       '<div class="tbl-wrap"><table class="data-tbl"><thead><tr><th>Q</th><th>Chapter</th><th>Topic</th><th>Difficulty</th><th>Allotted</th><th>Spent</th><th>Attempted</th><th>Your Answer</th><th>Correct Answer</th><th>Result</th><th>Overview</th></tr></thead><tbody>'+completeRows+'</tbody></table></div>'+
     '</div>'
   );
 
   root.innerHTML = sections.join('');
 
-  // chart instances
+  // charts
   var isDark = document.documentElement.classList.contains('dark');
   Chart.defaults.color = isDark ? '#D7DAE3' : '#33363f';
   Chart.defaults.borderColor = isDark ? '#2A2E3D' : '#e3e0d6';
@@ -2371,7 +2601,7 @@ function addCanvasPaginated(pdf, canvas, addPageFirst){
   var margin = 10;
   var usableW = pageW - margin*2;
   var usableH = pageH - margin*2;
-  var scale = usableW / canvas.width;
+  var scale = usableW / canvas.width; // mm per px
   var pxPerPage = Math.floor(usableH / scale);
   var renderedY = 0;
   var firstSlice = true;
