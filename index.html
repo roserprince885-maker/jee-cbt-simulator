@@ -297,6 +297,11 @@ textarea.paste-area:focus{outline:none; border-color:var(--nta-blue);}
 }
 .paper-summary-head h3{font-size:16px; color:var(--white);}
 .paper-summary-head span{font-size:12px; color:rgba(255,255,255,0.65);}
+.duration-edit label{font-weight:600;}
+.duration-edit input[type=number]{
+  width:56px; padding:3px 6px; border-radius:5px; border:1px solid rgba(255,255,255,0.35);
+  background:rgba(255,255,255,0.12); color:#fff; font-size:12px; text-align:center; margin:0 2px;
+}
 .summary-stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1px; background:var(--border);}
 .summary-stat{background:var(--surface); padding:16px 20px;}
 .summary-stat .num{font-family:var(--serif); font-size:22px; color:var(--heading); font-weight:600;}
@@ -329,6 +334,10 @@ textarea.paste-area:focus{outline:none; border-color:var(--nta-blue);}
 .instr-head .meta{display:flex; gap:22px; margin-top:16px; flex-wrap:wrap;}
 .instr-head .meta div{font-size:12px; color:rgba(255,255,255,0.6);}
 .instr-head .meta div b{display:block; font-size:16px; color:var(--white); font-family:var(--serif); margin-top:2px;}
+.instr-duration-input{
+  width:56px; padding:3px 6px; border-radius:5px; border:1px solid rgba(255,255,255,0.35);
+  background:rgba(255,255,255,0.12); color:#fff; font-size:15px; font-family:var(--serif); text-align:center;
+}
 
 .instr-body{background:var(--surface); border:1px solid var(--border); border-top:none; border-radius:0 0 12px 12px; padding:30px;}
 .instr-section{margin-bottom:26px;}
@@ -517,6 +526,14 @@ html.dark .crop-thumb-label{color:var(--heading);}
 .crop-target-tabs{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;}
 .crop-target-tab{border:1.3px solid var(--border-2); background:var(--surface); color:var(--ink-soft); border-radius:16px; padding:5px 12px; font-size:11.5px; font-weight:700;}
 .crop-target-tab.active{background:var(--nta-blue); border-color:var(--nta-blue); color:#fff;}
+.crop-region-tabs{display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;}
+.crop-region-tab{border:1.3px dashed var(--border-2); background:transparent; color:var(--ink-faint); border-radius:6px; padding:4px 10px; font-size:11px; font-weight:600;}
+.crop-region-tab.active{border-style:solid; border-color:var(--nta-blue); color:var(--nta-blue);}
+.crop-region-tab.crop-region-remove{border-color:var(--red); color:var(--red);}
+.crop-addpage-row{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:12px; padding-top:12px; border-top:1px dashed var(--border);}
+.crop-addpage-row input[type=number]{width:80px; padding:7px 9px; border:1px solid var(--border-2); border-radius:6px; font-size:12.5px;}
+html.dark .crop-addpage-row{border-top-color:var(--border);}
+html.dark .crop-addpage-row input[type=number]{background:#20242F; color:#ECEDF2; border-color:#3a3f52;}
 .crop-page-wrap{border:1px solid var(--border); border-radius:8px; overflow:hidden; background:#e8e8e8; max-height:300px; overflow-y:auto;}
 .crop-page-inner{position:relative; display:inline-block; width:100%;}
 .crop-page-inner img{display:block; width:100%; height:auto;}
@@ -757,6 +774,7 @@ table.data-tbl tr:last-child td{border-bottom:none;}
       <button class="btn btn-ghost btn-sm" onclick="closeCropAdjuster()">Done</button>
     </div>
     <div class="crop-target-tabs" id="ca-target-tabs"></div>
+    <div class="crop-region-tabs" id="ca-region-tabs"></div>
     <div class="crop-page-wrap">
       <div class="crop-page-inner" id="ca-page-inner">
         <img id="ca-page-img" src="" alt="Full page">
@@ -768,6 +786,11 @@ table.data-tbl tr:last-child td{border-bottom:none;}
       <div class="crop-slider-row"><label>Bottom</label><input type="range" id="ca-slider-bottom" min="0" max="100" step="0.5" oninput="onCropSliderChange()"></div>
       <div class="crop-slider-row"><label>Left</label><input type="range" id="ca-slider-left" min="0" max="100" step="0.5" oninput="onCropSliderChange()"></div>
       <div class="crop-slider-row"><label>Right</label><input type="range" id="ca-slider-right" min="0" max="100" step="0.5" oninput="onCropSliderChange()"></div>
+    </div>
+    <div class="crop-addpage-row">
+      <span class="hint" style="margin-top:0;">Stem or options continue on another page? </span>
+      <input type="number" id="ca-addpage-input" min="1" placeholder="page #">
+      <button class="btn btn-ghost btn-sm" onclick="addRegionFromPage()">+ Add part from that page</button>
     </div>
     <div class="crop-adjuster-footer">
       <div class="crop-preview-wrap">
@@ -798,7 +821,7 @@ table.data-tbl tr:last-child td{border-bottom:none;}
       <div class="kicker">Before you begin</div>
       <h2 id="instr-title">General Instructions</h2>
       <div class="meta">
-        <div>Duration<b id="instr-duration">—</b></div>
+        <div>Duration<b><input type="number" id="instr-duration-input" min="1" max="600" class="instr-duration-input" onchange="updateDuration(this.value)"> min</b></div>
         <div>Questions<b id="instr-qcount">—</b></div>
         <div>Max marks<b id="instr-marks">—</b></div>
         <div>Sections<b id="instr-sections">—</b></div>
@@ -1328,7 +1351,10 @@ function renderPaperSummary(){
 
   box.style.display = 'block';
   box.innerHTML =
-    '<div class="paper-summary-head"><h3>'+esc(paper.title)+'</h3><span>'+total+' questions · '+paper.durationMinutes+' min</span></div>'+
+    '<div class="paper-summary-head"><h3>'+esc(paper.title)+'</h3>'+
+      '<span class="duration-edit">'+total+' questions &middot; <label for="duration-input">Duration</label> '+
+      '<input type="number" id="duration-input" min="1" max="600" value="'+paper.durationMinutes+'" onchange="updateDuration(this.value)"> min</span>'+
+    '</div>'+
     '<div class="summary-stats">'+subjHtml+'</div>'+
     warnHtml+
     '<div style="padding:12px 20px 4px; font-size:11.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.04em; font-weight:700;">Review parsed questions — remove any that look wrong</div>'+
@@ -1343,6 +1369,12 @@ function removeQuestion(si, qi){
   app.paper.subjects[si].questions.splice(qi,1);
   if(app.paper.subjects[si].questions.length===0) app.paper.subjects.splice(si,1);
   renderPaperSummary();
+}
+
+function updateDuration(val){
+  var mins = parseInt(val, 10);
+  if(!mins || mins < 1) mins = 60;
+  app.paper.durationMinutes = mins;
 }
 
 function renderAnswerKeySection(){
@@ -1544,6 +1576,16 @@ function processPdfPage(pdf, pageNum){
 /* Turns each detected marker into a first-guess crop box (percent of that
    page's image) running from just above its own "Qn" label down to just
    above the next question's label in the same column. */
+/* Turns each detected marker into a first-guess crop box (percent of that
+   page's image) running from just above its own "Qn" label down to just
+   above the next question's label in the same column.
+
+   Markers are also sanity-checked against the paper's own strict
+   1,2,3... numbering before use: a real exam paper never jumps or goes
+   backwards, so any marker that does (almost always a line-splitting
+   misread, e.g. "Q71" briefly fragmenting into something that looks like
+   a stray "Q7") is dropped rather than allowed to steal another
+   question's crop. */
 function attachAutoCropsToQuestions(paper){
   var byNumber = {};
   paper.subjects.forEach(function(s){ s.questions.forEach(function(q){ byNumber[q.number]=q; }); });
@@ -1554,6 +1596,17 @@ function attachAutoCropsToQuestions(paper){
     if(a.column!==b.column) return a.column==='left' ? -1 : 1;
     return a.yTopPct - b.yTopPct;
   });
+
+  var MAX_FORWARD_GAP = 12;
+  var validated = [];
+  var lastAccepted = 0;
+  markers.forEach(function(m){
+    if(m.number <= lastAccepted) return;
+    if(lastAccepted > 0 && (m.number - lastAccepted) > MAX_FORWARD_GAP) return;
+    validated.push(m);
+    lastAccepted = m.number;
+  });
+  markers = validated;
 
   markers.forEach(function(m, idx){
     var q = byNumber[m.number];
@@ -1571,15 +1624,14 @@ function attachAutoCropsToQuestions(paper){
     };
     if(box.bottomPct <= box.topPct + 2) box.bottomPct = Math.min(97, box.topPct + 15);
     q._autoCropBox = box;
-    q._cropBox = { pageIndex:box.pageIndex, leftPct:box.leftPct, rightPct:box.rightPct, topPct:box.topPct, bottomPct:box.bottomPct };
-    q.image = cropFromPercentBox(box);
+    q._cropRegions = [ { pageIndex:box.pageIndex, leftPct:box.leftPct, rightPct:box.rightPct, topPct:box.topPct, bottomPct:box.bottomPct } ];
+    q.image = cropRegionsToDataUrl(q._cropRegions);
   });
 }
 
 /* Crops a rectangle (percent of the full page canvas) out of the stored
-   page image and returns a PNG data URL. Shared by auto-crop and the
-   manual adjuster. */
-function cropFromPercentBox(box){
+   page image and returns a <canvas>. Shared by everything below. */
+function cropRegionToCanvas(box){
   if(!box) return null;
   var canvas = pdfPageCanvases[box.pageIndex];
   if(!canvas) return null;
@@ -1593,6 +1645,36 @@ function cropFromPercentBox(box){
   var ctx = out.getContext('2d');
   ctx.fillStyle = '#fff'; ctx.fillRect(0,0,w,h);
   ctx.drawImage(canvas, pxLeft, pxTop, w, h, 0, 0, w, h);
+  return out;
+}
+
+/* Crops one or more regions (each possibly from a different page -- for
+   questions whose stem or options are split across a page break) and
+   stacks them into a single PNG data URL, separated by a thin divider. */
+function cropRegionsToDataUrl(regions){
+  if(!regions || !regions.length) return null;
+  var canvases = regions.map(cropRegionToCanvas).filter(Boolean);
+  if(canvases.length===0) return null;
+  if(canvases.length===1) return canvases[0].toDataURL('image/png');
+  var gap = 10;
+  var maxW = Math.max.apply(null, canvases.map(function(c){ return c.width; }));
+  var totalH = canvases.reduce(function(sum,c){ return sum+c.height; }, 0) + gap*(canvases.length-1);
+  var out = document.createElement('canvas');
+  out.width = maxW; out.height = totalH;
+  var ctx = out.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0,0,maxW,totalH);
+  var y = 0;
+  canvases.forEach(function(c, i){
+    ctx.drawImage(c, 0, y);
+    y += c.height;
+    if(i < canvases.length-1){
+      ctx.strokeStyle = '#cfcfcf';
+      ctx.setLineDash([4,3]);
+      ctx.beginPath(); ctx.moveTo(0, y+gap/2); ctx.lineTo(maxW, y+gap/2); ctx.stroke();
+      ctx.setLineDash([]);
+      y += gap;
+    }
+  });
   return out.toDataURL('image/png');
 }
 
@@ -1636,15 +1718,17 @@ function renderCropReviewGrid(){
   document.getElementById('cr-count-total').textContent = total;
 }
 
-var cropAdjuster = { question:null, target:'stem' };
+var cropAdjuster = { question:null, target:'stem', regionIndex:0 };
 
 function openCropAdjuster(qNumber){
   var q = findQuestionByNumber(qNumber);
-  if(!q || !q._cropBox){ return; }
+  if(!q || !q._cropRegions){ return; }
   cropAdjuster.question = q;
   cropAdjuster.target = 'stem';
+  cropAdjuster.regionIndex = 0;
   document.getElementById('ca-title').textContent = 'Question ' + q.number;
   renderCropTargetTabs();
+  renderRegionTabs();
   loadBoxIntoSliders();
   document.getElementById('crop-adjuster-modal').classList.add('show');
 }
@@ -1658,22 +1742,74 @@ function renderCropTargetTabs(){
   var q = cropAdjuster.question;
   if(!q) return;
   var tabs = [{key:'stem', label:'Question'}];
-  if(q.type==='mcq' && q._optionCropBoxes){
+  if(q.type==='mcq' && q._optionCropRegions){
     tabs.push({key:'opt1',label:'Option 1'},{key:'opt2',label:'Option 2'},{key:'opt3',label:'Option 3'},{key:'opt4',label:'Option 4'});
   }
   document.getElementById('ca-target-tabs').innerHTML = tabs.map(function(t){
     return '<button type="button" class="crop-target-tab'+(cropAdjuster.target===t.key?' active':'')+'" onclick="selectCropTarget(\''+t.key+'\')">'+t.label+'</button>';
   }).join('');
-  document.getElementById('ca-optimg-toggle').checked = (q.type==='mcq' && !!q._optionCropBoxes);
+  document.getElementById('ca-optimg-toggle').checked = (q.type==='mcq' && !!q._optionCropRegions);
   document.getElementById('ca-optimg-toggle').disabled = (q.type!=='mcq');
 }
 
-function currentBoxRef(){
+/* Every target (the stem, or an option) holds an ARRAY of one-or-more
+   regions, stitched together -- this is what lets a question that spans
+   a page break (stem on one page, options on the next) still become a
+   single image. */
+function currentRegionsArray(){
   var q = cropAdjuster.question;
   if(!q) return null;
-  if(cropAdjuster.target==='stem') return q._cropBox;
+  if(cropAdjuster.target === 'stem') return q._cropRegions;
   var idx = parseInt(cropAdjuster.target.replace('opt',''),10)-1;
-  return q._optionCropBoxes ? q._optionCropBoxes[idx] : null;
+  return q._optionCropRegions ? q._optionCropRegions[idx] : null;
+}
+function currentBoxRef(){
+  var regions = currentRegionsArray();
+  if(!regions || !regions.length) return null;
+  return regions[cropAdjuster.regionIndex] || regions[0];
+}
+
+function renderRegionTabs(){
+  var regions = currentRegionsArray();
+  var wrap = document.getElementById('ca-region-tabs');
+  if(!regions){ wrap.innerHTML = ''; return; }
+  var html = regions.map(function(r, i){
+    return '<button type="button" class="crop-region-tab'+(i===cropAdjuster.regionIndex?' active':'')+'" onclick="selectRegion('+i+')">Part '+(i+1)+' \u00b7 page '+(r.pageIndex+1)+'</button>';
+  }).join('');
+  if(regions.length > 1){
+    html += '<button type="button" class="crop-region-tab crop-region-remove" onclick="removeCurrentRegion()">Remove this part</button>';
+  }
+  wrap.innerHTML = html;
+}
+function selectRegion(i){
+  cropAdjuster.regionIndex = i;
+  renderRegionTabs();
+  loadBoxIntoSliders();
+}
+function addRegionFromPage(){
+  var input = document.getElementById('ca-addpage-input');
+  var pageNum1 = parseInt(input.value, 10);
+  var maxPage = pdfPageCanvases.length;
+  if(!pageNum1 || pageNum1 < 1 || pageNum1 > maxPage){
+    alert('Enter a valid page number between 1 and ' + maxPage + '.');
+    return;
+  }
+  var regions = currentRegionsArray();
+  if(!regions) return;
+  var last = regions[regions.length-1];
+  regions.push({ pageIndex: pageNum1-1, leftPct: last.leftPct, rightPct: last.rightPct, topPct: 4, bottomPct: 35 });
+  cropAdjuster.regionIndex = regions.length-1;
+  input.value = '';
+  renderRegionTabs();
+  loadBoxIntoSliders();
+}
+function removeCurrentRegion(){
+  var regions = currentRegionsArray();
+  if(!regions || regions.length <= 1) return;
+  regions.splice(cropAdjuster.regionIndex, 1);
+  cropAdjuster.regionIndex = Math.max(0, cropAdjuster.regionIndex-1);
+  renderRegionTabs();
+  loadBoxIntoSliders();
 }
 
 function loadPageImage(pageIndex){
@@ -1695,7 +1831,9 @@ function loadBoxIntoSliders(){
 
 function selectCropTarget(key){
   cropAdjuster.target = key;
+  cropAdjuster.regionIndex = 0;
   renderCropTargetTabs();
+  renderRegionTabs();
   loadBoxIntoSliders();
 }
 
@@ -1717,7 +1855,9 @@ function updateCropOverlayAndPreview(){
   overlay.style.right = (100 - box.rightPct) + '%';
   overlay.style.top = box.topPct + '%';
   overlay.style.bottom = (100 - box.bottomPct) + '%';
-  var dataUrl = cropFromPercentBox(box);
+
+  var regions = currentRegionsArray();
+  var dataUrl = cropRegionsToDataUrl(regions);
   document.getElementById('ca-preview-img').src = dataUrl || '';
   var q = cropAdjuster.question;
   if(cropAdjuster.target === 'stem'){
@@ -1733,12 +1873,15 @@ function resetCropToAuto(){
   if(!q) return;
   if(cropAdjuster.target === 'stem'){
     if(q._autoCropBox){
-      q._cropBox = { pageIndex:q._autoCropBox.pageIndex, leftPct:q._autoCropBox.leftPct, rightPct:q._autoCropBox.rightPct, topPct:q._autoCropBox.topPct, bottomPct:q._autoCropBox.bottomPct };
+      q._cropRegions = [{ pageIndex:q._autoCropBox.pageIndex, leftPct:q._autoCropBox.leftPct, rightPct:q._autoCropBox.rightPct, topPct:q._autoCropBox.topPct, bottomPct:q._autoCropBox.bottomPct }];
     }
-  } else if(q._optionCropBoxes){
+  } else if(q._optionCropRegions){
     var idx = parseInt(cropAdjuster.target.replace('opt',''),10)-1;
-    q._optionCropBoxes[idx] = { pageIndex:q._cropBox.pageIndex, leftPct:q._cropBox.leftPct, rightPct:q._cropBox.rightPct, topPct:q._cropBox.topPct, bottomPct:q._cropBox.bottomPct };
+    var stemBox = q._cropRegions[0];
+    q._optionCropRegions[idx] = [{ pageIndex:stemBox.pageIndex, leftPct:stemBox.leftPct, rightPct:stemBox.rightPct, topPct:stemBox.topPct, bottomPct:stemBox.bottomPct }];
   }
+  cropAdjuster.regionIndex = 0;
+  renderRegionTabs();
   loadBoxIntoSliders();
 }
 
@@ -1758,16 +1901,17 @@ function toggleOptionImages(checked){
   var q = cropAdjuster.question;
   if(!q || q.type!=='mcq') return;
   if(checked){
-    if(!q._optionCropBoxes){
-      q._optionCropBoxes = [0,1,2,3].map(function(){
-        return { pageIndex:q._cropBox.pageIndex, leftPct:q._cropBox.leftPct, rightPct:q._cropBox.rightPct, topPct:q._cropBox.topPct, bottomPct:q._cropBox.bottomPct };
+    if(!q._optionCropRegions){
+      var stemBox = q._cropRegions[0];
+      q._optionCropRegions = [0,1,2,3].map(function(){
+        return [{ pageIndex:stemBox.pageIndex, leftPct:stemBox.leftPct, rightPct:stemBox.rightPct, topPct:stemBox.topPct, bottomPct:stemBox.bottomPct }];
       });
     }
     if(!q.optionImages) q.optionImages = [null,null,null,null];
     renderCropTargetTabs();
     selectCropTarget('opt1');
   } else {
-    q._optionCropBoxes = null;
+    q._optionCropRegions = null;
     q.optionImages = null;
     renderCropTargetTabs();
     selectCropTarget('stem');
@@ -1831,7 +1975,7 @@ function goToInstructions(){
   if(!app.paper || subjectQuestionCount(app.paper)===0){ return; }
   var paper = app.paper;
   document.getElementById('instr-title').textContent = paper.title;
-  document.getElementById('instr-duration').textContent = paper.durationMinutes + ' min';
+  document.getElementById('instr-duration-input').value = paper.durationMinutes;
   document.getElementById('instr-qcount').textContent = subjectQuestionCount(paper);
   var cov = paperAnswerKeyCoverage(paper);
   document.getElementById('instr-marks').textContent = cov.withKey===cov.total ? (cov.total*4)+' (est.)' : 'N/A';
