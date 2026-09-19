@@ -308,6 +308,12 @@ textarea.paste-area:focus{outline:none; border-color:var(--nta-blue);}
 .summary-stat .lbl{font-size:11.5px; color:var(--ink-faint); margin-top:2px; text-transform:uppercase; letter-spacing:.04em;}
 
 .review-list{max-height:280px; overflow-y:auto; border-top:1px solid var(--border);}
+.subject-split-box{padding:16px 20px; border-top:1px solid var(--border); background:var(--paper);}
+.subject-split-row{display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap;}
+.subject-split-row input.ss-name{flex:1; min-width:110px; padding:7px 10px; border:1px solid var(--border-2); border-radius:6px; font-size:12.5px; background:var(--surface); color:var(--ink);}
+.subject-split-row span{font-size:12px; color:var(--ink-faint); white-space:nowrap;}
+.subject-split-row input.ss-start{width:64px; padding:7px 8px; border:1px solid var(--border-2); border-radius:6px; font-size:12.5px; text-align:center; background:var(--surface); color:var(--ink);}
+.subject-split-row .ss-remove-btn{border:none; background:none; color:var(--red); font-size:15px; padding:2px 6px; cursor:pointer;}
 .review-row{
   display:grid; grid-template-columns:34px 1fr auto auto; gap:10px; align-items:center;
   padding:9px 20px; border-bottom:1px solid var(--border); font-size:12.8px;
@@ -1343,6 +1349,70 @@ function onPaperLoaded(paper, warnings){
   renderPaperSummary();
 }
 
+function subjectSplitDefaults(paper){
+  var total = subjectQuestionCount(paper);
+  if(paper.subjects.length > 1){
+    return paper.subjects.map(function(s){
+      var nums = s.questions.map(function(q){ return q.number; });
+      var firstNum = nums.length ? Math.min.apply(null, nums) : 1;
+      return { name: s.name, start: firstNum };
+    });
+  }
+  if(total % 3 === 0 && total >= 15){
+    var third = total/3;
+    return [ {name:'Physics', start:1}, {name:'Chemistry', start:third+1}, {name:'Mathematics', start:2*third+1} ];
+  }
+  return [ { name: (paper.subjects[0] ? paper.subjects[0].name : 'Physics'), start:1 } ];
+}
+
+function subjectSplitRowHtml(d){
+  return '<div class="subject-split-row">'+
+    '<input type="text" class="ss-name" value="'+esc(d.name)+'" placeholder="Subject name">'+
+    '<span>starts at Q</span>'+
+    '<input type="number" class="ss-start" min="1" value="'+d.start+'">'+
+    '<button type="button" class="ss-remove-btn" onclick="this.parentElement.remove()" title="Remove this subject row">✕</button>'+
+  '</div>';
+}
+
+function addSubjectSplitRow(){
+  var wrap = document.getElementById('subject-split-rows');
+  var rows = wrap.querySelectorAll('.subject-split-row');
+  var nextStart = 1;
+  if(rows.length){
+    var lastVal = parseInt(rows[rows.length-1].querySelector('.ss-start').value, 10) || 1;
+    nextStart = lastVal + 1;
+  }
+  var temp = document.createElement('div');
+  temp.innerHTML = subjectSplitRowHtml({name:'', start:nextStart});
+  wrap.appendChild(temp.firstChild);
+}
+
+function applySubjectSplit(){
+  var rows = document.querySelectorAll('#subject-split-rows .subject-split-row');
+  if(!rows.length) return;
+  var defs = Array.prototype.map.call(rows, function(row){
+    return {
+      name: row.querySelector('.ss-name').value.trim() || 'Subject',
+      start: parseInt(row.querySelector('.ss-start').value, 10) || 1
+    };
+  });
+  defs.sort(function(a,b){ return a.start - b.start; });
+
+  var allQuestions = [];
+  app.paper.subjects.forEach(function(s){ allQuestions = allQuestions.concat(s.questions); });
+  allQuestions.sort(function(a,b){ return a.number - b.number; });
+
+  var newSubjects = defs.map(function(d){ return { name: d.name, questions: [] }; });
+  allQuestions.forEach(function(q){
+    var idx = 0;
+    for(var i=0;i<defs.length;i++){ if(q.number >= defs[i].start) idx = i; }
+    q.chapter = defs[idx].name;
+    newSubjects[idx].questions.push(q);
+  });
+  app.paper.subjects = newSubjects;
+  renderPaperSummary();
+}
+
 function renderPaperSummary(){
   var paper = app.paper;
   var box = document.getElementById('paper-summary');
@@ -1364,6 +1434,18 @@ function renderPaperSummary(){
 
   var warnHtml = app.parseWarnings.length ? ('<div class="status-msg show warn" style="margin:14px 20px 0;">'+app.parseWarnings.slice(0,5).map(esc).join('<br>')+'</div>') : '';
 
+  var splitDefaults = subjectSplitDefaults(paper);
+  var splitRowsHtml = splitDefaults.map(subjectSplitRowHtml).join('');
+  var splitBoxHtml =
+    '<div class="subject-split-box">'+
+      '<div class="field-label">Subjects <span style="font-weight:400; color:var(--ink-faint); text-transform:none; letter-spacing:0;">— name each subject and the question number it starts at (only needed when the paper wasn\'t split correctly above)</span></div>'+
+      '<div id="subject-split-rows">'+splitRowsHtml+'</div>'+
+      '<div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">'+
+        '<button class="btn btn-ghost btn-sm" type="button" onclick="addSubjectSplitRow()">+ Add subject</button>'+
+        '<button class="btn btn-primary btn-sm" type="button" onclick="applySubjectSplit()">Apply split</button>'+
+      '</div>'+
+    '</div>';
+
   box.style.display = 'block';
   box.innerHTML =
     '<div class="paper-summary-head"><h3>'+esc(paper.title)+'</h3>'+
@@ -1372,6 +1454,7 @@ function renderPaperSummary(){
     '</div>'+
     '<div class="summary-stats">'+subjHtml+'</div>'+
     warnHtml+
+    splitBoxHtml+
     '<div style="padding:12px 20px 4px; font-size:11.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.04em; font-weight:700;">Review parsed questions — remove any that look wrong</div>'+
     '<div class="review-list">'+ (reviewRows.join('') || '<div style="padding:16px 20px; font-size:13px; color:var(--ink-faint);">No questions parsed.</div>') +'</div>';
 
