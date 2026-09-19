@@ -538,8 +538,18 @@ html.dark .crop-addpage-row input[type=number]{background:#20242F; color:#ECEDF2
 .crop-page-inner{position:relative; display:inline-block; width:100%;}
 .crop-page-inner img{display:block; width:100%; height:auto;}
 .crop-box-overlay{
-  position:absolute; border:2px solid #ff3d3d; background:rgba(255,61,61,0.15); pointer-events:none;
+  position:absolute; border:2px solid #ff3d3d; background:rgba(255,61,61,0.15);
+  cursor:move; touch-action:none; min-width:14px; min-height:14px;
 }
+.crop-handle{
+  position:absolute; width:18px; height:18px; background:#ff3d3d; border:2px solid #fff;
+  border-radius:50%; touch-action:none; box-shadow:0 1px 4px rgba(0,0,0,0.4);
+}
+.crop-handle[data-handle="nw"]{top:0; left:0; transform:translate(-50%,-50%); cursor:nwse-resize;}
+.crop-handle[data-handle="ne"]{top:0; right:0; transform:translate(50%,-50%); cursor:nesw-resize;}
+.crop-handle[data-handle="sw"]{bottom:0; left:0; transform:translate(-50%,50%); cursor:nesw-resize;}
+.crop-handle[data-handle="se"]{bottom:0; right:0; transform:translate(50%,50%); cursor:nwse-resize;}
+.crop-page-wrap-hint{font-size:11px; color:var(--ink-faint); margin-top:6px;}
 .crop-sliders{margin-top:12px;}
 .crop-slider-row{display:grid; grid-template-columns:52px 1fr; align-items:center; gap:10px; margin-bottom:6px;}
 .crop-slider-row label{font-size:11.5px; font-weight:700; color:var(--ink-soft);}
@@ -778,7 +788,12 @@ table.data-tbl tr:last-child td{border-bottom:none;}
     <div class="crop-page-wrap">
       <div class="crop-page-inner" id="ca-page-inner">
         <img id="ca-page-img" src="" alt="Full page">
-        <div class="crop-box-overlay" id="ca-box-overlay"></div>
+        <div class="crop-box-overlay" id="ca-box-overlay">
+          <div class="crop-handle" data-handle="nw"></div>
+          <div class="crop-handle" data-handle="ne"></div>
+          <div class="crop-handle" data-handle="sw"></div>
+          <div class="crop-handle" data-handle="se"></div>
+        </div>
       </div>
     </div>
     <div class="crop-sliders">
@@ -1821,12 +1836,16 @@ function loadPageImage(pageIndex){
 function loadBoxIntoSliders(){
   var box = currentBoxRef();
   if(!box) return;
+  syncSlidersFromBox(box);
+  loadPageImage(box.pageIndex);
+  updateCropOverlayAndPreview();
+}
+
+function syncSlidersFromBox(box){
   document.getElementById('ca-slider-top').value = box.topPct;
   document.getElementById('ca-slider-bottom').value = box.bottomPct;
   document.getElementById('ca-slider-left').value = box.leftPct;
   document.getElementById('ca-slider-right').value = box.rightPct;
-  loadPageImage(box.pageIndex);
-  updateCropOverlayAndPreview();
 }
 
 function selectCropTarget(key){
@@ -1847,14 +1866,22 @@ function onCropSliderChange(){
   updateCropOverlayAndPreview();
 }
 
-function updateCropOverlayAndPreview(){
-  var box = currentBoxRef();
-  if(!box) return;
+/* Cheap, visual-only repositioning of the red box -- safe to call on every
+   pointermove while dragging without recomputing the crop each time. */
+function updateOverlayPosition(box){
   var overlay = document.getElementById('ca-box-overlay');
   overlay.style.left = box.leftPct + '%';
   overlay.style.right = (100 - box.rightPct) + '%';
   overlay.style.top = box.topPct + '%';
   overlay.style.bottom = (100 - box.bottomPct) + '%';
+}
+
+/* Full update: reposition the box AND re-crop the actual image. Called
+   on slider input and when a drag/resize ends. */
+function updateCropOverlayAndPreview(){
+  var box = currentBoxRef();
+  if(!box) return;
+  updateOverlayPosition(box);
 
   var regions = currentRegionsArray();
   var dataUrl = cropRegionsToDataUrl(regions);
@@ -1917,6 +1944,73 @@ function toggleOptionImages(checked){
     selectCropTarget('stem');
   }
 }
+
+/* ---------- drag & resize the crop box directly (mouse + touch, via
+   Pointer Events so both work through the same code path) ---------- */
+function clampPct(v, min, max){ return Math.max(min, Math.min(max, v)); }
+
+var cropDrag = null; // {mode, startClientX, startClientY, startBox, rect}
+
+function cropDragStart(mode){
+  return function(e){
+    var box = currentBoxRef();
+    if(!box) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var rect = document.getElementById('ca-page-inner').getBoundingClientRect();
+    cropDrag = {
+      mode: mode,
+      startClientX: e.clientX, startClientY: e.clientY,
+      startBox: { topPct:box.topPct, bottomPct:box.bottomPct, leftPct:box.leftPct, rightPct:box.rightPct },
+      rect: rect
+    };
+    document.addEventListener('pointermove', cropDragMove);
+    document.addEventListener('pointerup', cropDragEnd);
+  };
+}
+
+function cropDragMove(e){
+  if(!cropDrag) return;
+  var box = currentBoxRef();
+  if(!box) return;
+  e.preventDefault();
+  var dxPct = (e.clientX - cropDrag.startClientX) / cropDrag.rect.width * 100;
+  var dyPct = (e.clientY - cropDrag.startClientY) / cropDrag.rect.height * 100;
+  var sb = cropDrag.startBox;
+
+  if(cropDrag.mode === 'move'){
+    var w = sb.rightPct - sb.leftPct, h = sb.bottomPct - sb.topPct;
+    var newLeft = clampPct(sb.leftPct + dxPct, 0, 100 - w);
+    var newTop = clampPct(sb.topPct + dyPct, 0, 100 - h);
+    box.leftPct = newLeft; box.rightPct = newLeft + w;
+    box.topPct = newTop; box.bottomPct = newTop + h;
+  } else {
+    if(cropDrag.mode.indexOf('n') >= 0) box.topPct = clampPct(sb.topPct + dyPct, 0, sb.bottomPct - 3);
+    if(cropDrag.mode.indexOf('s') >= 0) box.bottomPct = clampPct(sb.bottomPct + dyPct, sb.topPct + 3, 100);
+    if(cropDrag.mode.indexOf('w') >= 0) box.leftPct = clampPct(sb.leftPct + dxPct, 0, sb.rightPct - 3);
+    if(cropDrag.mode.indexOf('e') >= 0) box.rightPct = clampPct(sb.rightPct + dxPct, sb.leftPct + 3, 100);
+  }
+  syncSlidersFromBox(box);
+  updateOverlayPosition(box);
+}
+
+function cropDragEnd(){
+  if(!cropDrag) return;
+  cropDrag = null;
+  document.removeEventListener('pointermove', cropDragMove);
+  document.removeEventListener('pointerup', cropDragEnd);
+  updateCropOverlayAndPreview();
+}
+
+function setupCropDragHandlers(){
+  var overlay = document.getElementById('ca-box-overlay');
+  if(!overlay) return;
+  overlay.addEventListener('pointerdown', cropDragStart('move'));
+  Array.prototype.forEach.call(document.querySelectorAll('.crop-handle'), function(handle){
+    handle.addEventListener('pointerdown', cropDragStart(handle.dataset.handle));
+  });
+}
+setupCropDragHandlers();
 
 /* ---------- image zoom lightbox (used on the exam screen too) ---------- */
 function openImageZoom(src){
